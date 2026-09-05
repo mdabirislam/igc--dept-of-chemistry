@@ -1,0 +1,704 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+/* =========================================================
+   IGC CHEMISTRY DEPARTMENT
+   Global Design System
+   ========================================================= */
+
+:root {
+  --igc-green: #006b35;
+  --igc-green-dark: #00552b;
+  --igc-green-light: #08763e;
+
+  --igc-navy: #002b52;
+  --igc-navy-dark: #001d38;
+
+  --igc-white: #ffffff;
+  --igc-black: #111111;
+
+  --igc-border: #e5e5e5;
+  --igc-background: #ffffff;
+
+  --container-width: 1120px;
+
+  /* added later */
+
+  --college-green: #1b5e20;
+  --college-blue: #1a3a5c;
+  --college-red: #c62828;
+  --college-surface: #f7f9fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--igc-background);
+  color: var(--igc-black);
+
+  font-family:
+    "Noto Sans Bengali",
+    "Noto Sans",
+    sans-serif;
+/* pore aita kora , revision dorkar */
+  /* body {
+  margin: 0;
+  background: var(--college-surface);
+  color: #1f2937;
+  font-family:
+    "Tiro Bangla",
+    "Noto Serif Bengali",
+    "Noto Sans Bengali",
+    system-ui,
+    sans-serif;
+} */
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* Better Bengali rendering */
+/* added later */
+/* h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+button,
+input {
+  font-family:
+    "Tiro Bangla",
+    "Noto Serif Bengali",
+    "Noto Sans Bengali",
+    system-ui,
+    sans-serif;
+} */
+
+/* Selection */
+::selection {
+  background: rgba(27, 94, 32, 0.16);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.site-container {
+  width: min(
+    calc(100% - 32px),
+    var(--container-width)
+  );
+
+  margin-inline: auto;
+}
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.igc-topbar {
+  height: 30px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #08733d,
+      #006b35,
+      #08733d
+    );
+
+  color: white;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.igc-topbar-inner {
+  width: min(100%, 1120px);
+  height: 100%;
+  margin: auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 12px;
+}
+
+.topbar-left,
+.topbar-right {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.latest-notice {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  padding: 0 16px;
+
+  background: #d82d2d;
+
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.notice-text {
+  padding-left: 12px;
+}
+
+.topbar-right {
+  gap: 18px;
+}
+
+.topbar-right a {
+  opacity: 0.95;
+  transition: opacity 0.2s ease;
+}
+
+.topbar-right a:hover {
+  opacity: 1;
+}
+
+/* =========================================================
+   COLLEGE HEADER
+   ========================================================= */
+
+.college-header {
+  background: white;
+
+  border-bottom: 1px solid #d7d7d7;
+}
+
+.college-header-inner {
+  width: min(100%, 1120px);
+  min-height: 92px;
+
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: 150px 1fr 150px;
+  align-items: center;
+}
+
+.college-logo,
+.nu-logo {
+  display: flex;
+  align-items: center;
+}
+
+.college-logo {
+  justify-content: flex-start;
+}
+
+.nu-logo {
+  justify-content: flex-end;
+}
+
+.college-logo img,
+.nu-logo img {
+  width: 76px;
+  height: 76px;
+
+  object-fit: contain;
+}
+
+.college-identity {
+  text-align: center;
+}
+
+.college-identity h1 {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 25px;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.college-identity h2 {
+  margin: 2px 0 1px;
+
+  color: #342a72;
+
+  font-family:
+    "Noto Serif Bengali",
+    serif;
+
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.college-identity p {
+  margin: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+  color: #222;
+}
+
+/* =========================================================
+   DEPARTMENT BAR
+   ========================================================= */
+
+.department-bar {
+  background: var(--igc-navy);
+  color: white;
+
+  min-height: 47px;
+
+  display: flex;
+  align-items: center;
+}
+
+.department-bar h2 {
+  margin: 0;
+
+  font-family:
+    "Noto Serif Bengali",
+    serif;
+
+  font-size: 27px;
+  font-weight: 500;
+
+  line-height: 1.2;
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.main-navbar {
+  position: relative;
+  z-index: 20;
+
+  background: var(--igc-green);
+
+  color: white;
+}
+
+.navbar-inner {
+  width: min(100%, 1120px);
+  min-height: 43px;
+
+  margin: auto;
+
+  display: flex;
+  align-items: stretch;
+}
+
+.home-button {
+  width: 45px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: white;
+  color: var(--igc-green);
+
+  font-size: 18px;
+}
+
+.desktop-navigation {
+  flex: 1;
+
+  display: flex;
+  align-items: stretch;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+
+  padding: 0 14px;
+
+  font-family:
+    "Noto Serif Bengali",
+    serif;
+
+  font-size: 14px;
+  white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-link:hover {
+  background: var(--igc-green-dark);
+}
+
+.dropdown-arrow {
+  margin-left: 5px;
+  font-size: 13px;
+}
+
+.navbar-search {
+  width: 160px;
+
+  margin: 6px 0 6px 8px;
+
+  display: flex;
+
+  background: white;
+
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.navbar-search input {
+  min-width: 0;
+  flex: 1;
+
+  padding: 5px 8px;
+
+  border: 0;
+  outline: 0;
+
+  color: #333;
+
+  font-size: 12px;
+}
+
+.navbar-search button {
+  width: 32px;
+
+  border: 0;
+
+  background: white;
+
+  cursor: pointer;
+}
+
+.mobile-menu-button {
+  display: none;
+
+  margin-left: auto;
+
+  padding: 0 15px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 24px;
+
+  cursor: pointer;
+}
+
+.mobile-navigation {
+  display: none;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero-banner {
+  position: relative;
+
+  min-height: 370px;
+
+  overflow: hidden;
+
+  background: #222;
+}
+
+.hero-image {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.78) 0%,
+      rgba(0, 0, 0, 0.52) 35%,
+      rgba(0, 0, 0, 0.10) 75%
+    );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+
+  min-height: 370px;
+
+  display: flex;
+  align-items: center;
+}
+
+.hero-text {
+  width: min(510px, 100%);
+
+  color: white;
+}
+
+.hero-text h1 {
+  margin: 0;
+
+  font-family:
+    "Noto Serif Bengali",
+    serif;
+
+  font-size: clamp(38px, 5vw, 54px);
+  line-height: 1.15;
+  font-weight: 600;
+}
+
+.hero-text h2 {
+  margin: 0 0 12px;
+
+  font-family:
+    "Noto Serif Bengali",
+    serif;
+
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.hero-text p {
+  margin: 0 0 22px;
+
+  font-family:
+    "Noto Serif Bengali",
+    serif;
+
+  font-size: 15px;
+  line-height: 1.8;
+
+  max-width: 480px;
+}
+
+.hero-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 9px 18px;
+
+  background: var(--igc-green);
+
+  border-radius: 25px;
+
+  font-family:
+    "Noto Serif Bengali",
+    serif;
+
+  font-size: 15px;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hero-button:hover {
+  background: var(--igc-green-dark);
+  transform: translateY(-1px);
+}
+
+.hero-button span {
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: white;
+
+  color: var(--igc-green);
+
+  border-radius: 50%;
+
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+
+.hero-dots {
+  position: absolute;
+  z-index: 5;
+
+  bottom: 10px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 7px;
+}
+
+.hero-dots span {
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.85);
+
+  border: 1px solid #222;
+}
+
+.hero-dots span.active {
+  background: #174fce;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .desktop-navigation {
+    display: none;
+  }
+
+  .navbar-search {
+    margin-left: auto;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@media (max-width: 650px) {
+  .igc-topbar {
+    height: 32px;
+  }
+
+  .igc-topbar-inner {
+    padding: 0 12px;
+  }
+
+  .topbar-right {
+    gap: 10px;
+  }
+
+  .notice-text {
+    display: none;
+  }
+
+  .college-header-inner {
+    min-height: 82px;
+
+    padding: 5px 12px;
+
+    grid-template-columns: 65px 1fr 65px;
+  }
+
+  .college-logo img,
+  .nu-logo img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .college-identity h1 {
+    font-size: 17px;
+  }
+
+  .college-identity h2 {
+    font-size: 15px;
+  }
+
+  .college-identity p {
+    font-size: 10px;
+  }
+
+  .department-bar {
+    min-height: 43px;
+  }
+
+  .department-bar h2 {
+    font-size: 23px;
+  }
+
+  .navbar-search {
+    display: none;
+  }
+
+  .home-button {
+    width: 48px;
+  }
+
+  .mobile-navigation {
+    display: flex;
+
+    flex-direction: column;
+
+    background: var(--igc-green-dark);
+  }
+
+  .mobile-navigation a {
+    padding: 11px 18px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+    font-family:
+      "Noto Serif Bengali",
+      serif;
+
+    font-size: 14px;
+  }
+
+  .hero-banner,
+  .hero-content {
+    min-height: 330px;
+  }
+
+  .hero-content {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+
+  .hero-text h1 {
+    font-size: 39px;
+  }
+
+  .hero-text h2 {
+    font-size: 21px;
+  }
+
+  .hero-text p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+}
+
+
+
+/* added later */
+img {
+  max-width: 100%;
+}
