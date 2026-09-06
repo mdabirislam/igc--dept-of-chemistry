@@ -1,5 +1,4 @@
-import AdminSidebar from "@/components/admin/AdminSidebar";
-import AdminHeader from "@/components/admin/AdminHeader";
+import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
 
 export default function AdminLayout({
   children,
@@ -7,20 +6,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Header */}
-      <AdminHeader />
-
-      {/* Below Header */}
-      <div className="lg:flex">
-        {/* Left Sidebar */}
-        <AdminSidebar />
-
-        {/* Right Content */}
-        <main className="min-w-0 flex-1">
-          {children}
-        </main>
-      </div>
-    </div>
+    <AdminAuthGuard>
+      {children}
+    </AdminAuthGuard>
   );
 }
