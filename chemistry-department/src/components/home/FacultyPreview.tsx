@@ -29,52 +29,70 @@ const faculty = [
 ];
 
 export default function FacultyPreview() {
+  const head = faculty[0];
+  const otherFaculty = faculty.slice(1);
+
   return (
-    <section className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm">
-      <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-2">
-        <h2 className="flex items-center gap-2 text-lg font-bold text-gray-800">
+    <section className="rounded-lg border border-gray-100 bg-white p-3 shadow-sm sm:p-4">
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-2">
+        <h2 className="flex items-center gap-2 text-base font-bold text-gray-800 sm:text-lg">
           <Users size={19} className="text-[#1b5e20]" />
           শিক্ষকবৃন্দ
         </h2>
 
         <a
           href="/faculty"
-          className="flex items-center gap-1 text-sm font-medium text-green-700 hover:underline"
+          className="flex items-center gap-1 text-xs font-medium text-green-700 hover:underline sm:text-sm"
         >
           সব শিক্ষক দেখুন
           <ChevronRight size={15} />
         </a>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {faculty.map((person) => (
+      {/* Department Head */}
+      <div className="mb-4 flex flex-col items-center rounded-lg border border-green-100 bg-green-50/40 px-4 py-4 text-center sm:mb-5 sm:px-6 sm:py-5">
+        <div className="h-[130px] w-[105px] overflow-hidden rounded-lg border-2 border-white bg-gray-100 shadow-sm sm:h-[145px] sm:w-[118px]">
+          <img
+            src={head.image}
+            alt={head.name}
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="mt-3">
+          <h3 className="text-sm font-bold text-gray-800 sm:text-base">
+            {head.name}
+          </h3>
+
+          <p className="mt-1 text-xs font-medium text-green-700 sm:text-sm">
+            {head.designation}
+          </p>
+        </div>
+      </div>
+
+      {/* Other Faculty */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+        {otherFaculty.map((person) => (
           <a
             href="/faculty"
-            key={person.name}
-            className="group overflow-hidden rounded-lg border border-gray-100 bg-gray-50 p-2 transition hover:-translate-y-0.5 hover:bg-white hover:shadow-sm"
+            key={person.image}
+            className="group flex min-h-[125px] items-center gap-4 rounded-lg border border-gray-100 bg-gray-50 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-green-100 hover:bg-white hover:shadow-sm sm:min-h-[145px] sm:p-4"
           >
-            <div className="relative aspect-[4/4.5] overflow-hidden rounded bg-gray-100">
+            <div className="h-[105px] w-[84px] shrink-0 overflow-hidden rounded-lg bg-gray-100 sm:h-[120px] sm:w-[96px]">
               <img
                 src={person.image}
                 alt={person.name}
                 className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
               />
-
-              <div className="absolute inset-0 -z-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
-                <Users
-                  size={42}
-                  strokeWidth={1.2}
-                  className="text-gray-300"
-                />
-              </div>
             </div>
 
-            <div className="px-1 pb-1 pt-2 text-center">
-              <h3 className="truncate text-xs font-bold text-gray-800">
+            <div className="min-w-0">
+              <h3 className="break-words text-sm font-bold leading-snug text-gray-800 sm:text-base">
                 {person.name}
               </h3>
 
-              <p className="mt-0.5 truncate text-[10px] text-gray-500">
+              <p className="mt-1 break-words text-xs leading-relaxed text-gray-500 sm:text-sm">
                 {person.designation}
               </p>
             </div>

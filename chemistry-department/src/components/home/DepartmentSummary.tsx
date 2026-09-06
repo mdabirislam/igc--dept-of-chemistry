@@ -38,31 +38,41 @@ const statistics = [
 
 export default function DepartmentSummary() {
   return (
-    <section className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm">
+    <section className="rounded-lg border border-gray-100 bg-white p-3 shadow-sm sm:p-4">
       <div className="mb-3 border-b border-gray-100 pb-2">
-        <h2 className="flex items-center gap-2 text-lg font-bold text-gray-800">
-          <BookOpen size={19} className="text-[#1b5e20]" />
+        <h2 className="flex items-center gap-2 text-base font-bold text-gray-800 sm:text-lg">
+          <BookOpen
+            size={18}
+            className="text-[#1b5e20] sm:h-[19px] sm:w-[19px]"
+          />
           বিভাগের সারসংক্ষেপ
         </h2>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
         {statistics.map((item) => {
           const Icon = item.icon;
 
           return (
             <div
               key={item.title}
-              className={`flex min-h-[84px] items-center gap-3 rounded-lg px-4 ${item.className}`}
+              className={`flex min-h-[76px] items-center gap-2.5 rounded-lg px-3 sm:min-h-[84px] sm:gap-3 sm:px-4 ${item.className}`}
             >
-              <Icon size={28} strokeWidth={1.8} />
+              <Icon
+                size={25}
+                strokeWidth={1.8}
+                className="shrink-0 sm:h-7 sm:w-7"
+              />
 
-              <div>
-                <p className="text-xs text-gray-600">{item.title}</p>
+              <div className="min-w-0">
+                <p className="text-[11px] text-gray-600 sm:text-xs">
+                  {item.title}
+                </p>
 
-                <p className="mt-0.5 text-2xl font-bold leading-none text-gray-900">
+                <p className="mt-0.5 text-xl font-bold leading-none text-gray-900 sm:text-2xl">
                   {item.value}
-                  <span className="ml-1 text-xs font-medium text-gray-600">
+
+                  <span className="ml-1 text-[10px] font-medium text-gray-600 sm:text-xs">
                     {item.suffix}
                   </span>
                 </p>

@@ -2,7 +2,6 @@ import {
   Bell,
   CalendarDays,
   ChevronRight,
-  Download,
   FileText,
 } from "lucide-react";
 
@@ -17,14 +16,16 @@ type Notice = {
 const notices: Notice[] = [
   {
     id: 1,
-    title: "অনার্স ১ম বর্ষ (২০২৫-২০২৬) শিক্ষার্থীদের ওরিয়েন্টেশন বিষয়ে বিজ্ঞপ্তি",
+    title:
+      "অনার্স ১ম বর্ষ (২০২৫-২০২৬) শিক্ষার্থীদের ওরিয়েন্টেশন বিষয়ে বিজ্ঞপ্তি",
     category: "গুরুত্বপূর্ণ",
     publishedAt: "০১/০৯/২০২৬",
     pdfUrl: "/documents/notices/notice-01.pdf",
   },
   {
     id: 2,
-    title: "অনার্স ১ম বর্ষ পরীক্ষার বিষয়ে শিক্ষার্থীদের জন্য গুরুত্বপূর্ণ বিজ্ঞপ্তি",
+    title:
+      "অনার্স ১ম বর্ষ পরীক্ষার বিষয়ে শিক্ষার্থীদের জন্য গুরুত্বপূর্ণ বিজ্ঞপ্তি",
     category: "বিজ্ঞপ্তি",
     publishedAt: "৩০/০৮/২০২৬",
     pdfUrl: "/documents/notices/notice-02.pdf",
@@ -68,85 +69,102 @@ const categoryStyles: Record<string, string> = {
 
 export default function NoticeSection() {
   return (
-    <section className="rounded-lg border border-gray-100 bg-white shadow-sm">
-
+    <section className="min-w-0 overflow-hidden rounded-lg border border-gray-100 bg-white shadow-sm">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-        <h2 className="flex items-center gap-2 text-lg font-bold text-gray-800">
-          <Bell size={19} className="text-[#1b5e20]" />
-          সর্বশেষ নোটিশ
+      <div className="flex items-center justify-between gap-3 border-b border-gray-100 px-3 py-3 sm:px-4">
+        <h2 className="flex min-w-0 items-center gap-2 text-base font-bold text-gray-800 sm:text-lg">
+          <Bell
+            size={18}
+            className="shrink-0 text-[#1b5e20] sm:h-[19px] sm:w-[19px]"
+          />
+
+          <span className="truncate">সর্বশেষ নোটিশ</span>
         </h2>
 
         <a
           href="/notices"
-          className="flex items-center gap-1 text-sm font-medium text-green-700 hover:underline"
+          className="flex shrink-0 items-center gap-1 text-xs font-medium text-green-700 hover:underline sm:text-sm"
         >
-          সব নোটিশ দেখুন
-          <ChevronRight size={15} />
+          <span className="hidden sm:inline">সব নোটিশ দেখুন</span>
+          <span className="sm:hidden">সব নোটিশ</span>
+          <ChevronRight size={14} />
         </a>
       </div>
 
       {/* Category Buttons */}
-      <div className="flex flex-wrap gap-2 px-4 py-3">
+      <div className="flex flex-wrap gap-1.5 px-3 py-2.5 sm:gap-2 sm:px-4 sm:py-3">
         <button
           type="button"
-          className="rounded-full border border-[#006a35] bg-[#006a35] px-4 py-1.5 text-sm font-medium text-white"
+          className="rounded-full border border-[#006a35] bg-[#006a35] px-3 py-1 text-xs font-medium text-white sm:px-4 sm:py-1.5 sm:text-sm"
         >
           সব
         </button>
 
-        <button
-          type="button"
-          className="rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-700 transition hover:border-[#006a35] hover:text-[#006a35]"
-        >
-          গুরুত্বপূর্ণ
-        </button>
-
-        <button
-          type="button"
-          className="rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-700 transition hover:border-[#006a35] hover:text-[#006a35]"
-        >
-          বিজ্ঞপ্তি
-        </button>
-
-        <button
-          type="button"
-          className="rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-700 transition hover:border-[#006a35] hover:text-[#006a35]"
-        >
-          নোটিশ
-        </button>
-
-        <button
-          type="button"
-          className="rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-700 transition hover:border-[#006a35] hover:text-[#006a35]"
-        >
-          সেমিনার
-        </button>
+        {["গুরুত্বপূর্ণ", "বিজ্ঞপ্তি", "নোটিশ", "সেমিনার"].map(
+          (category) => (
+            <button
+              key={category}
+              type="button"
+              className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 transition hover:border-[#006a35] hover:text-[#006a35] sm:px-4 sm:py-1.5 sm:text-sm"
+            >
+              {category}
+            </button>
+          ),
+        )}
       </div>
 
       {/* Notice Table */}
-      <div className="px-4 pb-4">
-        <div className="overflow-x-auto rounded-md border border-gray-200">
-          <table className="w-full min-w-[350px] border-collapse text-sm">
+      <div className="px-3 pb-3 sm:px-4 sm:pb-4">
+        <div className="overflow-hidden rounded-md border border-gray-200">
+          <table className="w-full table-fixed border-collapse text-xs sm:text-sm">
+            {/* 
+              Mobile:
+              Serial = 48px
+              Date   = 92px
+              PDF    = 48px
+
+              Desktop:
+              Serial = 68px
+              Date   = 125px
+              PDF    = 78px
+            */}
+            <colgroup>
+              <col className="w-[48px] sm:w-[68px]" />
+              <col />
+              <col className="w-[92px] sm:w-[125px]" />
+              <col className="w-[48px] sm:w-[78px]" />
+            </colgroup>
 
             <thead>
-              <tr className="bg-gray-50 text-left text-gray-800">
-                <th className="w-[70px] border-b border-r border-gray-200 px-3 py-3 font-bold">
-                  ক্রমিক
-                  <br />
-                  নং
+              <tr className="bg-gray-50 text-gray-800">
+                {/* Serial */}
+                <th className="border-b border-r border-gray-200 px-1.5 py-3 text-center font-bold sm:px-3 sm:py-3.5">
+                  <span className="sm:hidden">নং</span>
+
+                  <span className="hidden sm:inline">
+                    ক্রমিক
+                    <br />
+                    নং
+                  </span>
                 </th>
 
-                <th className="border-b border-r border-gray-200 px-3 py-3 font-bold">
+                {/* Title */}
+                <th className="border-b border-r border-gray-200 px-2 py-3 text-left font-bold sm:px-3 sm:py-3.5">
                   শিরোনাম
                 </th>
 
-                <th className="w-[125px] border-b border-r border-gray-200 px-3 py-3 font-bold">
+                {/* Date */}
+                <th className="border-b border-r border-gray-200 px-1 py-3 text-center font-bold sm:px-3 sm:py-3.5">
                   তারিখ
                 </th>
 
-                <th className="w-[105px] border-b border-gray-200 px-3 py-3 text-center font-bold">
-                  ডাউনলোড
+                {/* PDF */}
+                <th className="border-b border-gray-200 px-1 py-3 text-center font-bold sm:px-3 sm:py-3.5">
+                  <span className="sm:hidden">PDF</span>
+
+                  <span className="hidden sm:inline">
+                    ডাউনলোড
+                  </span>
                 </th>
               </tr>
             </thead>
@@ -158,15 +176,15 @@ export default function NoticeSection() {
                   className="group transition hover:bg-green-50/40"
                 >
                   {/* Serial */}
-                  <td className="border-b border-r border-gray-200 px-3 py-3 align-top text-gray-700">
+                  <td className="border-b border-r border-gray-200 px-1.5 py-3 align-middle text-center text-gray-700 sm:px-3 sm:py-3.5">
                     {toBengaliNumber(index + 1)}
                   </td>
 
                   {/* Title */}
-                  <td className="border-b border-r border-gray-200 px-3 py-3">
-                    <div className="flex items-start gap-3">
+                  <td className="border-b border-r border-gray-200 px-2 py-3 align-middle sm:px-3 sm:py-3.5">
+                    <div className="flex min-w-0 items-start gap-1.5 sm:items-center sm:gap-2.5">
                       <span
-                        className={`mt-0.5 inline-flex shrink-0 rounded border px-2 py-0.5 text-[11px] font-medium ${
+                        className={`inline-flex shrink-0 items-center rounded border px-1.5 py-0.5 text-[9px] font-medium leading-4 sm:px-2 sm:py-0.5 sm:text-[11px] ${
                           categoryStyles[notice.category] ??
                           "border-gray-100 bg-gray-50 text-gray-600"
                         }`}
@@ -178,7 +196,7 @@ export default function NoticeSection() {
                         href={notice.pdfUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="leading-6 text-gray-800 transition group-hover:text-green-700 hover:underline"
+                        className="min-w-0 break-words text-[11px] leading-[1.55] text-gray-800 transition group-hover:text-green-700 hover:underline sm:text-sm sm:leading-6"
                       >
                         {notice.title}
                       </a>
@@ -186,27 +204,35 @@ export default function NoticeSection() {
                   </td>
 
                   {/* Date */}
-                  <td className="border-b border-r border-gray-200 px-3 py-3 align-top whitespace-nowrap text-gray-700">
-                    <span className="flex items-center gap-1.5">
+                  <td className="border-b border-r border-gray-200 px-1 py-3 align-middle text-center text-gray-700 sm:px-3 sm:py-3.5">
+                    <div className="inline-flex items-center justify-center gap-1 whitespace-nowrap text-[10px] leading-5 sm:gap-1.5 sm:text-sm">
                       <CalendarDays
-                        size={14}
-                        className="text-gray-400"
+                        size={12}
+                        strokeWidth={1.8}
+                        className="shrink-0 text-gray-400 sm:h-[14px] sm:w-[14px]"
                       />
-                      {notice.publishedAt}
-                    </span>
+
+                      <span className="whitespace-nowrap">
+                        {notice.publishedAt}
+                      </span>
+                    </div>
                   </td>
 
-                  {/* Download */}
-                  <td className="border-b border-gray-200 px-3 py-3 text-center align-top">
+                  {/* PDF */}
+                  <td className="border-b border-gray-200 px-1 py-3 text-center align-middle sm:px-3 sm:py-3.5">
                     <a
                       href={notice.pdfUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       download
                       aria-label={`${notice.title} PDF download`}
-                      className="inline-flex items-center justify-center rounded-md p-2 text-red-600 transition hover:bg-red-50"
+                      className="inline-flex items-center justify-center rounded-md p-1.5 text-red-600 transition hover:bg-red-50 sm:p-2"
                     >
-                      <FileText size={28} strokeWidth={1.6} />
+                      <FileText
+                        size={22}
+                        strokeWidth={1.8}
+                        className="sm:h-6 sm:w-6"
+                      />
                     </a>
                   </td>
                 </tr>
@@ -214,17 +240,17 @@ export default function NoticeSection() {
             </tbody>
           </table>
         </div>
+      </div>
 
-        {/* More Button */}
-        <div className="pt-4">
-          <a
-            href="/notices"
-            className="inline-flex items-center gap-2 rounded-md bg-[#007a3d] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#006632]"
-          >
-            আরও দেখুন
-            <ChevronRight size={16} />
-          </a>
-        </div>
+      {/* More Button */}
+      <div className="px-3 pb-3 pt-0.5 sm:px-4 sm:pb-4 sm:pt-1">
+        <a
+          href="/notices"
+          className="inline-flex items-center gap-1.5 rounded-md bg-[#007a3d] px-4 py-2 text-xs font-medium text-white transition hover:bg-[#006632] sm:gap-2 sm:px-5 sm:py-2 sm:text-sm"
+        >
+          আরও দেখুন
+          <ChevronRight size={15} />
+        </a>
       </div>
     </section>
   );

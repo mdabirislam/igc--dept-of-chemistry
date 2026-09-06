@@ -11,18 +11,24 @@ export default function HomeContent() {
       {/* Quick Access */}
       <QuickAccess />
 
-      {/* Notice + Events + Department Summary */}
+      {/* Notice + Events */}
       <section className="pb-4">
-        <div className="mx-auto grid max-w-[1500px] gap-4 px-4 lg:grid-cols-[1.25fr_0.95fr_1.15fr] lg:px-6">
-          <NoticeSection />
-          <EventsSection />
-          <DepartmentSummary />
+        <div className="mx-auto max-w-[1500px] px-4 lg:px-6">
+          <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+            <NoticeSection />
+            <EventsSection />
+          </div>
+
+          {/* Department Summary */}
+          <div className="mt-4">
+            <DepartmentSummary />
+          </div>
         </div>
       </section>
 
       {/* Faculty + Resources */}
       <section className="pb-5">
-        <div className="mx-auto grid max-w-[1500px] gap-4 px-4 lg:grid-cols-[1.7fr_1fr] lg:px-6">
+        <div className="mx-auto grid max-w-[1500px] gap-4 px-4 lg:grid-cols-[2fr_1fr] lg:px-6">
           <FacultyPreview />
           <ImportantResources />
         </div>
