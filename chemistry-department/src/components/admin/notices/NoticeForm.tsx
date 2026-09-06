@@ -1,7 +1,19 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import {
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FileUp, Plus, X } from "lucide-react";
+
+import {
+  apiPost,
+  apiPut,
+} from "@/lib/api";
+
+import type { ApiNotice } from "@/types/api";
 
 export interface NoticeData {
   id: number;
@@ -20,19 +32,82 @@ interface NoticeFormProps {
   onCancelEdit?: () => void;
 }
 
+const categories = [
+  { value: "academic", label: "একাডেমিক" },
+  { value: "exam", label: "পরীক্ষা" },
+  { value: "admission", label: "ভর্তি" },
+  { value: "general", label: "সাধারণ" },
+  { value: "event", label: "ইভেন্ট" },
+];
+
+function categoryLabel(value: string) {
+  return (
+    categories.find((item) => item.value === value)?.label ??
+    value
+  );
+}
+
+function formatDateTime(value: string) {
+  const date = new Date(value);
+
+  return {
+    date: date.toLocaleDateString("bn-BD", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    }),
+    time: date.toLocaleTimeString("bn-BD", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+  };
+}
+
+export function mapApiNoticeToNoticeData(
+  notice: ApiNotice
+): NoticeData {
+  const formatted = formatDateTime(notice.created_at);
+
+  return {
+    id: notice.id,
+    title: notice.title,
+    category: categoryLabel(notice.category),
+    details: notice.details,
+    date: formatted.date,
+    time: formatted.time,
+    pdfName: notice.pdf
+      ? notice.pdf.split("/").pop()
+      : undefined,
+    pdfUrl: notice.pdf_url ?? undefined,
+  };
+}
+
+export function getNoticeCategoryValue(
+  label: string
+) {
+  return (
+    categories.find((item) => item.label === label)?.value ??
+    label
+  );
+}
+
 export default function NoticeForm({
   editingNotice,
   onSave,
   onCancelEdit,
 }: NoticeFormProps) {
-  const [open, setOpen] = useState(Boolean(editingNotice));
+  const [open, setOpen] = useState(
+    Boolean(editingNotice)
+  );
 
   const [title, setTitle] = useState(
     editingNotice?.title ?? ""
   );
 
   const [category, setCategory] = useState(
-    editingNotice?.category ?? ""
+    getNoticeCategoryValue(
+      editingNotice?.category ?? ""
+    )
   );
 
   const [details, setDetails] = useState(
@@ -42,14 +117,26 @@ export default function NoticeForm({
   const [pdf, setPdf] = useState<File | null>(null);
 
   const [error, setError] = useState("");
-
   const [saving, setSaving] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef =
+    useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (
+  useEffect(() => {
+    if (!editingNotice) return;
+
+    setOpen(true);
+    setTitle(editingNotice.title);
+    setCategory(
+      getNoticeCategoryValue(editingNotice.category)
+    );
+    setDetails(editingNotice.details);
+    setPdf(null);
+  }, [editingNotice]);
+
+  function handleFileChange(
     event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  ) {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -60,15 +147,17 @@ export default function NoticeForm({
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      setError("PDF file-এর size সর্বোচ্চ 10 MB হতে হবে।");
+      setError(
+        "PDF file-এর size সর্বোচ্চ 10 MB হতে হবে।"
+      );
       return;
     }
 
     setError("");
     setPdf(file);
-  };
+  }
 
-  const resetForm = () => {
+  function resetForm() {
     setTitle("");
     setCategory("");
     setDetails("");
@@ -79,17 +168,17 @@ export default function NoticeForm({
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-  };
+  }
 
-  const closeForm = () => {
+  function closeForm() {
     resetForm();
     setOpen(false);
     onCancelEdit?.();
-  };
+  }
 
-  const handleSubmit = async (
+  async function handleSubmit(
     event: FormEvent<HTMLFormElement>
-  ) => {
+  ) {
     event.preventDefault();
 
     if (!title.trim()) {
@@ -102,52 +191,48 @@ export default function NoticeForm({
       return;
     }
 
-    if (!details.trim()) {
-      setError("নোটিশের বিস্তারিত লিখুন।");
-      return;
-    }
-
     setSaving(true);
     setError("");
 
-    // Frontend prototype save simulation
-    await new Promise((resolve) =>
-      setTimeout(resolve, 500)
-    );
+    try {
+      const formData = new FormData();
 
-    const now = new Date();
+      formData.append("title", title.trim());
+      formData.append("category", category);
+      formData.append("details", details.trim());
 
-    const notice: NoticeData = {
-      id: editingNotice?.id ?? Date.now(),
-      title: title.trim(),
-      category,
-      details: details.trim(),
+      if (pdf) {
+        formData.append("pdf", pdf);
+      }
 
-      date: now.toLocaleDateString("bn-BD", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }),
+      let saved: ApiNotice;
 
-      time: now.toLocaleTimeString("bn-BD", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      if (editingNotice) {
+        saved = await apiPut<ApiNotice>(
+          `/notices/${editingNotice.id}/`,
+          formData
+        );
+      } else {
+        saved = await apiPost<ApiNotice>(
+          "/notices/",
+          formData
+        );
+      }
 
-      pdfName:
-        pdf?.name ?? editingNotice?.pdfName,
+      onSave?.(mapApiNoticeToNoticeData(saved));
 
-      pdfUrl:
-        pdf
-          ? URL.createObjectURL(pdf)
-          : editingNotice?.pdfUrl,
-    };
-
-    onSave?.(notice);
-
-    resetForm();
-    setOpen(false);
-  };
+      resetForm();
+      setOpen(false);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "নোটিশ সংরক্ষণ করা যায়নি।"
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
 
   if (!open && !editingNotice) {
     return (
@@ -181,7 +266,6 @@ export default function NoticeForm({
           type="button"
           onClick={closeForm}
           className="rounded-lg p-2 text-gray-500 hover:bg-gray-100"
-          aria-label="বন্ধ করুন"
         >
           <X size={18} />
         </button>
@@ -191,7 +275,6 @@ export default function NoticeForm({
         onSubmit={handleSubmit}
         className="space-y-5"
       >
-        {/* Title */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
             নোটিশের শিরোনাম
@@ -208,7 +291,6 @@ export default function NoticeForm({
           />
         </div>
 
-        {/* Category */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
             ক্যাটাগরি
@@ -225,29 +307,17 @@ export default function NoticeForm({
               ক্যাটাগরি নির্বাচন করুন
             </option>
 
-            <option value="একাডেমিক">
-              একাডেমিক
-            </option>
-
-            <option value="পরীক্ষা">
-              পরীক্ষা
-            </option>
-
-            <option value="ভর্তি">
-              ভর্তি
-            </option>
-
-            <option value="সাধারণ">
-              সাধারণ
-            </option>
-
-            <option value="ইভেন্ট">
-              ইভেন্ট
-            </option>
+            {categories.map((item) => (
+              <option
+                key={item.value}
+                value={item.value}
+              >
+                {item.label}
+              </option>
+            ))}
           </select>
         </div>
 
-        {/* Details */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
             বিস্তারিত
@@ -264,7 +334,6 @@ export default function NoticeForm({
           />
         </div>
 
-        {/* PDF */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
             PDF সংযুক্ত করুন
@@ -318,14 +387,12 @@ export default function NoticeForm({
           </label>
         </div>
 
-        {/* Error */}
         {error && (
           <div className="rounded-lg border border-red-100 bg-red-50 px-3 py-2.5 text-sm text-red-600">
             {error}
           </div>
         )}
 
-        {/* Actions */}
         <div className="flex flex-wrap justify-end gap-3 border-t pt-4">
           <button
             type="button"

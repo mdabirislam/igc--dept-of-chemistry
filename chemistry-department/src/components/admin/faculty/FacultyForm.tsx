@@ -1,7 +1,20 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import {
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { ImagePlus, Plus, X } from "lucide-react";
+
+import {
+  apiPost,
+  apiPut,
+} from "@/lib/api";
+
+import type { ApiFaculty } from "@/types/api";
 
 export interface FacultyData {
   id: number;
@@ -18,33 +31,60 @@ interface FacultyFormProps {
   onCancelEdit?: () => void;
 }
 
+export function mapApiFacultyToFacultyData(
+  faculty: ApiFaculty
+): FacultyData {
+  return {
+    id: faculty.id,
+    name: faculty.name,
+    designation: faculty.designation,
+    qualification: faculty.qualification,
+    imageName: faculty.image
+      ? faculty.image.split("/").pop()
+      : undefined,
+    imageUrl: faculty.image_url ?? undefined,
+  };
+}
+
 export default function FacultyForm({
   editingFaculty,
   onSave,
   onCancelEdit,
 }: FacultyFormProps) {
-  const [open, setOpen] = useState(Boolean(editingFaculty));
-  const [name, setName] = useState(editingFaculty?.name ?? "");
+  const [open, setOpen] = useState(
+    Boolean(editingFaculty)
+  );
+
+  const [name, setName] = useState(
+    editingFaculty?.name ?? ""
+  );
+
   const [designation, setDesignation] = useState(
     editingFaculty?.designation ?? ""
   );
-  const [qualification, setQualification] = useState(
-    editingFaculty?.qualification ?? ""
-  );
-  const [image, setImage] = useState<File | null>(null);
+
+  const [qualification, setQualification] =
+    useState(
+      editingFaculty?.qualification ?? ""
+    );
+
+  const [image, setImage] =
+    useState<File | null>(null);
+
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef =
+    useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (editingFaculty) {
-      setOpen(true);
-      setName(editingFaculty.name);
-      setDesignation(editingFaculty.designation);
-      setQualification(editingFaculty.qualification);
-      setImage(null);
-    }
+    if (!editingFaculty) return;
+
+    setOpen(true);
+    setName(editingFaculty.name);
+    setDesignation(editingFaculty.designation);
+    setQualification(editingFaculty.qualification);
+    setImage(null);
   }, [editingFaculty]);
 
   function handleImageChange(
@@ -68,21 +108,28 @@ export default function FacultyForm({
     setImage(file);
   }
 
-  function closeForm() {
-    setOpen(false);
+  function resetForm() {
     setName("");
     setDesignation("");
     setQualification("");
     setImage(null);
     setError("");
-    onCancelEdit?.();
+    setSaving(false);
 
     if (fileRef.current) {
       fileRef.current.value = "";
     }
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  function closeForm() {
+    resetForm();
+    setOpen(false);
+    onCancelEdit?.();
+  }
+
+  async function submit(
+    event: FormEvent<HTMLFormElement>
+  ) {
     event.preventDefault();
 
     if (!name.trim()) {
@@ -95,31 +142,53 @@ export default function FacultyForm({
       return;
     }
 
-    if (!qualification.trim()) {
-      setError("শিক্ষাগত যোগ্যতা লিখুন।");
-      return;
-    }
-
     setSaving(true);
     setError("");
 
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    try {
+      const formData = new FormData();
 
-    const faculty: FacultyData = {
-      id: editingFaculty?.id ?? Date.now(),
-      name: name.trim(),
-      designation: designation.trim(),
-      qualification: qualification.trim(),
-      imageName: image?.name ?? editingFaculty?.imageName,
-      imageUrl: image
-        ? URL.createObjectURL(image)
-        : editingFaculty?.imageUrl,
-    };
+      formData.append("name", name.trim());
+      formData.append(
+        "designation",
+        designation.trim()
+      );
+      formData.append(
+        "qualification",
+        qualification.trim()
+      );
 
-    onSave?.(faculty);
+      if (image) {
+        formData.append("image", image);
+      }
 
-    setSaving(false);
-    closeForm();
+      let saved: ApiFaculty;
+
+      if (editingFaculty) {
+        saved = await apiPut<ApiFaculty>(
+          `/faculty/${editingFaculty.id}/`,
+          formData
+        );
+      } else {
+        saved = await apiPost<ApiFaculty>(
+          "/faculty/",
+          formData
+        );
+      }
+
+      onSave?.(mapApiFacultyToFacultyData(saved));
+
+      resetForm();
+      setOpen(false);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "শিক্ষকের তথ্য সংরক্ষণ করা যায়নি।"
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!open && !editingFaculty) {
@@ -159,7 +228,10 @@ export default function FacultyForm({
         </button>
       </div>
 
-      <form onSubmit={submit} className="max-w-3xl space-y-5">
+      <form
+        onSubmit={submit}
+        className="max-w-3xl space-y-5"
+      >
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
             নাম
@@ -169,7 +241,7 @@ export default function FacultyForm({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="শিক্ষকের নাম"
-            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20] focus:ring-1 focus:ring-[#1b5e20]"
+            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20]"
           />
         </div>
 
@@ -180,9 +252,11 @@ export default function FacultyForm({
 
           <input
             value={designation}
-            onChange={(e) => setDesignation(e.target.value)}
+            onChange={(e) =>
+              setDesignation(e.target.value)
+            }
             placeholder="যেমন: সহকারী অধ্যাপক"
-            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20] focus:ring-1 focus:ring-[#1b5e20]"
+            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20]"
           />
         </div>
 
@@ -193,9 +267,11 @@ export default function FacultyForm({
 
           <input
             value={qualification}
-            onChange={(e) => setQualification(e.target.value)}
+            onChange={(e) =>
+              setQualification(e.target.value)
+            }
             placeholder="যেমন: M.Sc. in Chemistry"
-            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20] focus:ring-1 focus:ring-[#1b5e20]"
+            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20]"
           />
         </div>
 
@@ -205,7 +281,10 @@ export default function FacultyForm({
           </label>
 
           <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 px-5 py-8 text-center hover:border-[#1b5e20] hover:bg-gray-50">
-            <ImagePlus size={28} className="mb-2 text-gray-400" />
+            <ImagePlus
+              size={28}
+              className="mb-2 text-gray-400"
+            />
 
             <span className="text-sm font-medium text-gray-700">
               {image?.name ??

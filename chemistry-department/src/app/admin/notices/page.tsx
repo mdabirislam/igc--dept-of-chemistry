@@ -1,52 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import {
+  apiDelete,
+  apiFetch,
+} from "@/lib/api";
+
+import type { ApiNotice } from "@/types/api";
 
 import NoticeForm, {
+  mapApiNoticeToNoticeData,
   NoticeData,
 } from "@/components/admin/notices/NoticeForm";
 
 import NoticeTable from "@/components/admin/notices/NoticeTable";
 
-const initialNotices: NoticeData[] = [
-  {
-    id: 1,
-    title: "রসায়ন বিভাগের ক্লাস রুটিন সংক্রান্ত নোটিশ",
-    category: "একাডেমিক",
-    details:
-      "রসায়ন বিভাগের নতুন ক্লাস রুটিন সংক্রান্ত বিজ্ঞপ্তি।",
-    date: "০৩ সেপ্টেম্বর ২০২৬",
-    time: "১০:৩০ AM",
-    pdfName: "class-routine.pdf",
-  },
-  {
-    id: 2,
-    title: "পরীক্ষার ফরম পূরণ সংক্রান্ত বিজ্ঞপ্তি",
-    category: "পরীক্ষা",
-    details:
-      "পরীক্ষার ফরম পূরণের সময়সূচি ও প্রয়োজনীয় নির্দেশনা।",
-    date: "০১ সেপ্টেম্বর ২০২৬",
-    time: "০৯:১৫ AM",
-    pdfName: "exam-form.pdf",
-  },
-  {
-    id: 3,
-    title: "বিভাগীয় সেমিনার সংক্রান্ত নোটিশ",
-    category: "ইভেন্ট",
-    details:
-      "বিভাগীয় সেমিনারের সময় ও স্থান সংক্রান্ত বিজ্ঞপ্তি।",
-    date: "২৮ আগস্ট ২০২৬",
-    time: "০২:৪৫ PM",
-    pdfName: "seminar.pdf",
-  },
-];
-
 export default function AdminNoticesPage() {
-  const [notices, setNotices] =
-    useState<NoticeData[]>(initialNotices);
-
+  const [notices, setNotices] = useState<NoticeData[]>([]);
   const [editingNotice, setEditingNotice] =
     useState<NoticeData | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  async function loadNotices() {
+    try {
+      setLoading(true);
+      setError("");
+
+      const data = await apiFetch<ApiNotice[]>(
+        "/notices/"
+      );
+
+      setNotices(data.map(mapApiNoticeToNoticeData));
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "নোটিশ লোড করা যায়নি।"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadNotices();
+  }, []);
 
   function handleSave(notice: NoticeData) {
     setNotices((current) => {
@@ -66,10 +67,26 @@ export default function AdminNoticesPage() {
     setEditingNotice(null);
   }
 
-  function handleDelete(id: number) {
-    setNotices((current) =>
-      current.filter((item) => item.id !== id)
+  async function handleDelete(id: number) {
+    const confirmed = window.confirm(
+      "এই নোটিশটি মুছে ফেলতে চান?"
     );
+
+    if (!confirmed) return;
+
+    try {
+      await apiDelete(`/notices/${id}/`);
+
+      setNotices((current) =>
+        current.filter((item) => item.id !== id)
+      );
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "নোটিশ মুছে ফেলা যায়নি।"
+      );
+    }
   }
 
   function handleEdit(notice: NoticeData) {
@@ -107,11 +124,21 @@ export default function AdminNoticesPage() {
         />
       )}
 
-      <NoticeTable
-        notices={notices}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      {loading ? (
+        <div className="rounded-xl border bg-white p-10 text-center text-sm text-gray-500">
+          নোটিশ লোড হচ্ছে...
+        </div>
+      ) : error ? (
+        <div className="rounded-xl border border-red-100 bg-red-50 p-5 text-sm text-red-600">
+          {error}
+        </div>
+      ) : (
+        <NoticeTable
+          notices={notices}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
   );
 }

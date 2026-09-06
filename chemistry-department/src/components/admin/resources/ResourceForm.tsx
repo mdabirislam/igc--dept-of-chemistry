@@ -1,7 +1,20 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import {
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
 import { FileUp, Plus, X } from "lucide-react";
+
+import {
+  apiPost,
+  apiPut,
+} from "@/lib/api";
+
+import type { ApiResource } from "@/types/api";
 
 export interface ResourceData {
   id: number;
@@ -17,27 +30,85 @@ interface ResourceFormProps {
   onCancelEdit?: () => void;
 }
 
+const resourceTypes = [
+  { value: "note", label: "নোট" },
+  {
+    value: "question-paper",
+    label: "প্রশ্নপত্র",
+  },
+  {
+    value: "lab-manual",
+    label: "ল্যাব ম্যানুয়াল",
+  },
+  {
+    value: "download",
+    label: "ডাউনলোড",
+  },
+];
+
+function getTypeValue(label: string) {
+  return (
+    resourceTypes.find(
+      (item) => item.label === label
+    )?.value ?? label
+  );
+}
+
+function getTypeLabel(value: string) {
+  return (
+    resourceTypes.find(
+      (item) => item.value === value
+    )?.label ?? value
+  );
+}
+
+export function mapApiResourceToResourceData(
+  resource: ApiResource
+): ResourceData {
+  return {
+    id: resource.id,
+    title: resource.title,
+    type: getTypeLabel(resource.type),
+    fileName: resource.file
+      ? resource.file.split("/").pop()
+      : undefined,
+    fileUrl: resource.file_url ?? undefined,
+  };
+}
+
 export default function ResourceForm({
   editingResource,
   onSave,
   onCancelEdit,
 }: ResourceFormProps) {
-  const [open, setOpen] = useState(Boolean(editingResource));
-  const [title, setTitle] = useState(editingResource?.title ?? "");
-  const [type, setType] = useState(editingResource?.type ?? "নোট");
-  const [file, setFile] = useState<File | null>(null);
+  const [open, setOpen] = useState(
+    Boolean(editingResource)
+  );
+
+  const [title, setTitle] = useState(
+    editingResource?.title ?? ""
+  );
+
+  const [type, setType] = useState(
+    getTypeValue(editingResource?.type ?? "নোট")
+  );
+
+  const [file, setFile] =
+    useState<File | null>(null);
+
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef =
+    useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (editingResource) {
-      setOpen(true);
-      setTitle(editingResource.title);
-      setType(editingResource.type);
-      setFile(null);
-    }
+    if (!editingResource) return;
+
+    setOpen(true);
+    setTitle(editingResource.title);
+    setType(getTypeValue(editingResource.type));
+    setFile(null);
   }, [editingResource]);
 
   function handleFileChange(
@@ -48,7 +119,9 @@ export default function ResourceForm({
     if (!selected) return;
 
     if (selected.size > 20 * 1024 * 1024) {
-      setError("ফাইলের size সর্বোচ্চ 20 MB হতে হবে।");
+      setError(
+        "ফাইলের size সর্বোচ্চ 20 MB হতে হবে।"
+      );
       return;
     }
 
@@ -56,20 +129,27 @@ export default function ResourceForm({
     setFile(selected);
   }
 
-  function closeForm() {
-    setOpen(false);
+  function resetForm() {
     setTitle("");
-    setType("নোট");
+    setType("note");
     setFile(null);
     setError("");
-    onCancelEdit?.();
+    setSaving(false);
 
     if (fileRef.current) {
       fileRef.current.value = "";
     }
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  function closeForm() {
+    resetForm();
+    setOpen(false);
+    onCancelEdit?.();
+  }
+
+  async function submit(
+    event: FormEvent<HTMLFormElement>
+  ) {
     event.preventDefault();
 
     if (!title.trim()) {
@@ -80,23 +160,45 @@ export default function ResourceForm({
     setSaving(true);
     setError("");
 
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    try {
+      const formData = new FormData();
 
-    const resource: ResourceData = {
-      id: editingResource?.id ?? Date.now(),
-      title: title.trim(),
-      type,
-      fileName:
-        file?.name ?? editingResource?.fileName,
-      fileUrl: file
-        ? URL.createObjectURL(file)
-        : editingResource?.fileUrl,
-    };
+      formData.append("title", title.trim());
+      formData.append("type", type);
 
-    onSave?.(resource);
+      if (file) {
+        formData.append("file", file);
+      }
 
-    setSaving(false);
-    closeForm();
+      let saved: ApiResource;
+
+      if (editingResource) {
+        saved = await apiPut<ApiResource>(
+          `/resources/${editingResource.id}/`,
+          formData
+        );
+      } else {
+        saved = await apiPost<ApiResource>(
+          "/resources/",
+          formData
+        );
+      }
+
+      onSave?.(
+        mapApiResourceToResourceData(saved)
+      );
+
+      resetForm();
+      setOpen(false);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "রিসোর্স সংরক্ষণ করা যায়নি।"
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!open && !editingResource) {
@@ -163,10 +265,14 @@ export default function ResourceForm({
             onChange={(e) => setType(e.target.value)}
             className="w-full rounded-lg border bg-white px-3 py-2.5 text-sm"
           >
-            <option>নোট</option>
-            <option>প্রশ্নপত্র</option>
-            <option>ল্যাব ম্যানুয়াল</option>
-            <option>ডাউনলোড</option>
+            {resourceTypes.map((item) => (
+              <option
+                key={item.value}
+                value={item.value}
+              >
+                {item.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -176,7 +282,10 @@ export default function ResourceForm({
           </label>
 
           <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 px-5 py-8 text-center hover:border-[#1b5e20] hover:bg-gray-50">
-            <FileUp size={28} className="mb-2 text-gray-400" />
+            <FileUp
+              size={28}
+              className="mb-2 text-gray-400"
+            />
 
             <span className="text-sm font-medium text-gray-700">
               {file?.name ??
@@ -207,6 +316,7 @@ export default function ResourceForm({
           <button
             type="button"
             onClick={closeForm}
+            disabled={saving}
             className="rounded-lg border px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50"
           >
             বাতিল

@@ -1,21 +1,94 @@
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "/api";
+  process.env.NEXT_PUBLIC_DJANGO_API_URL ||
+  "http://127.0.0.1:8000/api";
+
+function buildUrl(endpoint: string) {
+  if (endpoint.startsWith("http://") || endpoint.startsWith("https://")) {
+    return endpoint;
+  }
+
+  const normalizedEndpoint = endpoint.startsWith("/")
+    ? endpoint
+    : `/${endpoint}`;
+
+  return `${API_BASE_URL}${normalizedEndpoint}`;
+}
 
 export async function apiFetch<T>(
   endpoint: string,
-  options?: RequestInit
+  options: RequestInit = {}
 ): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const url = buildUrl(endpoint);
+
+  const headers = new Headers(options.headers);
+
+  const isFormData =
+    typeof FormData !== "undefined" &&
+    options.body instanceof FormData;
+
+  if (!isFormData && options.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  const response = await fetch(url, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options?.headers || {}),
-    },
+    headers,
+    cache: "no-store",
   });
 
   if (!response.ok) {
-    throw new Error(`API request failed: ${response.status}`);
+    let message = `API request failed: ${response.status}`;
+
+    try {
+      const errorData = await response.json();
+
+      if (typeof errorData === "object" && errorData !== null) {
+        message = Object.entries(errorData)
+          .map(([key, value]) => {
+            if (Array.isArray(value)) {
+              return `${key}: ${value.join(", ")}`;
+            }
+
+            return `${key}: ${String(value)}`;
+          })
+          .join(" | ");
+      }
+    } catch {
+      // Keep default error message.
+    }
+
+    throw new Error(message);
   }
 
-  return response.json();
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  return response.json() as Promise<T>;
+}
+
+export function apiPost<T>(
+  endpoint: string,
+  body: BodyInit
+) {
+  return apiFetch<T>(endpoint, {
+    method: "POST",
+    body,
+  });
+}
+
+export function apiPut<T>(
+  endpoint: string,
+  body: BodyInit
+) {
+  return apiFetch<T>(endpoint, {
+    method: "PUT",
+    body,
+  });
+}
+
+export function apiDelete<T = void>(endpoint: string) {
+  return apiFetch<T>(endpoint, {
+    method: "DELETE",
+  });
 }

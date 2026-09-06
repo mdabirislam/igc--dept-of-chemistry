@@ -1,57 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import {
+  apiDelete,
+  apiFetch,
+} from "@/lib/api";
+
+import type { ApiFaculty } from "@/types/api";
 
 import FacultyForm, {
   FacultyData,
+  mapApiFacultyToFacultyData,
 } from "@/components/admin/faculty/FacultyForm";
 
 import FacultyTable from "@/components/admin/faculty/FacultyTable";
 
-const initialFaculty: FacultyData[] = [
-  {
-    id: 1,
-    name: "অধ্যাপক —",
-    designation: "বিভাগীয় প্রধান",
-    qualification: "M.Sc. in Chemistry",
-    imageUrl: "/images/faculty/faculty-01.jpg",
-  },
-  {
-    id: 2,
-    name: "সহযোগী অধ্যাপক —",
-    designation: "সহযোগী অধ্যাপক",
-    qualification: "M.Sc. in Chemistry",
-    imageUrl: "/images/faculty/faculty-02.jpg",
-  },
-  {
-    id: 3,
-    name: "সহকারী অধ্যাপক —",
-    designation: "সহকারী অধ্যাপক",
-    qualification: "M.Sc. in Chemistry",
-    imageUrl: "/images/faculty/faculty-03.jpg",
-  },
-  {
-    id: 4,
-    name: "প্রভাষক —",
-    designation: "প্রভাষক",
-    qualification: "M.Sc. in Chemistry",
-    imageUrl: "/images/faculty/faculty-04.jpg",
-  },
-  {
-    id: 5,
-    name: "প্রভাষক —",
-    designation: "প্রভাষক",
-    qualification: "M.Sc. in Chemistry",
-    imageUrl: "/images/faculty/faculty-05.jpg",
-  },
-];
-
 export default function AdminFacultyPage() {
-  const [faculty, setFaculty] =
-    useState<FacultyData[]>(initialFaculty);
-
+  const [faculty, setFaculty] = useState<FacultyData[]>([]);
   const [editingFaculty, setEditingFaculty] =
     useState<FacultyData | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  async function loadFaculty() {
+    try {
+      setLoading(true);
+      setError("");
+
+      const data = await apiFetch<ApiFaculty[]>(
+        "/faculty/"
+      );
+
+      setFaculty(data.map(mapApiFacultyToFacultyData));
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "শিক্ষকের তথ্য লোড করা যায়নি।"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadFaculty();
+  }, []);
 
   function handleSave(person: FacultyData) {
     setFaculty((current) => {
@@ -71,10 +67,26 @@ export default function AdminFacultyPage() {
     setEditingFaculty(null);
   }
 
-  function handleDelete(id: number) {
-    setFaculty((current) =>
-      current.filter((item) => item.id !== id)
+  async function handleDelete(id: number) {
+    const confirmed = window.confirm(
+      "এই শিক্ষককে মুছে ফেলতে চান?"
     );
+
+    if (!confirmed) return;
+
+    try {
+      await apiDelete(`/faculty/${id}/`);
+
+      setFaculty((current) =>
+        current.filter((item) => item.id !== id)
+      );
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "শিক্ষকের তথ্য মুছে ফেলা যায়নি।"
+      );
+    }
   }
 
   function handleEdit(person: FacultyData) {
@@ -112,11 +124,21 @@ export default function AdminFacultyPage() {
         />
       )}
 
-      <FacultyTable
-        faculty={faculty}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      {loading ? (
+        <div className="rounded-xl border bg-white p-10 text-center text-sm text-gray-500">
+          শিক্ষক তালিকা লোড হচ্ছে...
+        </div>
+      ) : error ? (
+        <div className="rounded-xl border border-red-100 bg-red-50 p-5 text-sm text-red-600">
+          {error}
+        </div>
+      ) : (
+        <FacultyTable
+          faculty={faculty}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
   );
 }

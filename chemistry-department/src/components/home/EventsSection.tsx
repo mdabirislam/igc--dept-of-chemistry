@@ -1,84 +1,135 @@
-import { CalendarDays, MapPin, ChevronRight } from "lucide-react";
+"use client";
 
-const events = [
-  {
-    day: "০৫",
-    month: "জুন",
-    title: "অনার্স ২য় বর্ষ প্র্যাকটিক্যাল পরীক্ষা শুরু",
-    location: "রসায়ন বিভাগ ল্যাব",
-  },
-  {
-    day: "১২",
-    month: "জুন",
-    title: "অনার্স ৩য় বর্ষ তত্ত্বীয় পরীক্ষা শুরু",
-    location: "নির্ধারিত পরীক্ষার কেন্দ্র",
-  },
-  {
-    day: "২০",
-    month: "জুন",
-    title: "সেমিনার: গবেষণায় রসায়নের ভূমিকা",
-    location: "রসায়ন বিভাগ সেমিনার কক্ষ",
-  },
-  {
-    day: "৩০",
-    month: "জুন",
-    title: "অনার্স ১ম বর্ষ ক্লাস টেস্ট",
-    location: "নির্ধারিত ক্লাসরুম",
-  },
-];
+import { useEffect, useState } from "react";
+
+import {
+  CalendarDays,
+  MapPin,
+  ArrowRight,
+} from "lucide-react";
+
+import { apiFetch } from "@/lib/api";
+
+import type { ApiEvent } from "@/types/api";
+
+function formatDate(date: string) {
+  return new Date(date).toLocaleDateString(
+    "bn-BD",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }
+  );
+}
 
 export default function EventsSection() {
+  const [events, setEvents] =
+    useState<ApiEvent[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
+
+  useEffect(() => {
+    async function loadEvents() {
+      try {
+        const data =
+          await apiFetch<ApiEvent[]>(
+            "/events/"
+          );
+
+        setEvents(data);
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "ইভেন্ট লোড করা যায়নি।"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadEvents();
+  }, []);
+
   return (
-    <section className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm">
-      <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-2">
-        <h2 className="flex items-center gap-2 text-lg font-bold text-gray-800">
-          <CalendarDays size={19} className="text-[#1b5e20]" />
-          আসন্ন একাডেমিক ইভেন্ট
-        </h2>
+    <section className="rounded-xl border bg-white p-5 shadow-sm">
+      <div className="mb-5 flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <CalendarDays
+              size={20}
+              className="text-[#1b5e20]"
+            />
+
+            <h2 className="text-lg font-bold text-gray-800">
+              আসন্ন ইভেন্ট
+            </h2>
+          </div>
+
+          <p className="mt-1 text-sm text-gray-500">
+            বিভাগের গুরুত্বপূর্ণ অনুষ্ঠান
+          </p>
+        </div>
 
         <a
-          href="/activities"
-          className="flex items-center gap-1 text-sm font-medium text-green-700 hover:underline"
+          href="/events"
+          className="inline-flex items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
         >
-          সব ইভেন্ট দেখুন
-          <ChevronRight size={15} />
+          সব দেখুন
+          <ArrowRight size={15} />
         </a>
       </div>
 
-      <div>
-        {events.map((event, index) => (
-          <a
-            key={`${event.day}-${event.title}`}
-            href="/activities"
-            className={`flex items-start gap-3 py-2.5 transition hover:bg-gray-50 ${
-              index !== events.length - 1
-                ? "border-b border-gray-50"
-                : ""
-            }`}
-          >
-            <div className="w-12 shrink-0 rounded border border-gray-200 bg-gray-50 px-1.5 py-1 text-center">
-              <span className="block text-base font-bold leading-tight text-gray-800">
-                {event.day}
-              </span>
+      {loading ? (
+        <div className="py-10 text-center text-sm text-gray-500">
+          ইভেন্ট লোড হচ্ছে...
+        </div>
+      ) : error ? (
+        <div className="py-10 text-center text-sm text-red-600">
+          ইভেন্ট লোড করা যায়নি।
+        </div>
+      ) : events.length === 0 ? (
+        <div className="py-10 text-center text-sm text-gray-500">
+          বর্তমানে কোনো ইভেন্ট নেই।
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {events.slice(0, 5).map((event) => (
+            <div
+              key={event.id}
+              className="rounded-xl border p-4 transition hover:shadow-sm"
+            >
+              <div className="flex gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-green-50 text-[#1b5e20]">
+                  <CalendarDays size={19} />
+                </div>
 
-              <span className="block text-[11px] text-gray-500">
-                {event.month}
-              </span>
+                <div className="min-w-0">
+                  <h3 className="font-semibold text-gray-800">
+                    {event.title}
+                  </h3>
+
+                  <p className="mt-1 text-xs text-gray-500">
+                    {formatDate(event.date)}
+                  </p>
+
+                  {event.location && (
+                    <p className="mt-1 flex items-center gap-1 text-xs text-gray-500">
+                      <MapPin size={12} />
+                      {event.location}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
-
-            <div className="min-w-0">
-              <h3 className="text-[13px] font-bold leading-5 text-gray-700 hover:text-[#1a3a5c]">
-                {event.title}
-              </h3>
-
-              <p className="mt-0.5 flex items-center gap-1 text-[11px] text-gray-500">
-                <MapPin size={12} />
-                {event.location}
-              </p>
-            </div>
-          </a>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

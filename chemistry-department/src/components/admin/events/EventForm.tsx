@@ -1,7 +1,23 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import { CalendarPlus, Plus, X } from "lucide-react";
+import {
+  FormEvent,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  CalendarPlus,
+  Plus,
+  X,
+} from "lucide-react";
+
+import {
+  apiPost,
+  apiPut,
+} from "@/lib/api";
+
+import type { ApiEvent } from "@/types/api";
 
 export interface EventData {
   id: number;
@@ -18,50 +34,76 @@ interface EventFormProps {
   onCancelEdit?: () => void;
 }
 
+export function mapApiEventToEventData(
+  event: ApiEvent
+): EventData {
+  return {
+    id: event.id,
+    title: event.title,
+    date: event.date,
+    time: "",
+    location: event.location,
+    description: event.details,
+  };
+}
+
 export default function EventForm({
   editingEvent,
   onSave,
   onCancelEdit,
 }: EventFormProps) {
-  const [open, setOpen] = useState(Boolean(editingEvent));
+  const [open, setOpen] = useState(
+    Boolean(editingEvent)
+  );
 
-  const [title, setTitle] = useState(editingEvent?.title ?? "");
-  const [date, setDate] = useState(editingEvent?.date ?? "");
-  const [time, setTime] = useState(editingEvent?.time ?? "");
+  const [title, setTitle] = useState(
+    editingEvent?.title ?? ""
+  );
+
+  const [date, setDate] = useState(
+    editingEvent?.date ?? ""
+  );
+
   const [location, setLocation] = useState(
     editingEvent?.location ?? ""
   );
-  const [description, setDescription] = useState(
-    editingEvent?.description ?? ""
-  );
+
+  const [description, setDescription] =
+    useState(
+      editingEvent?.description ?? ""
+    );
 
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (editingEvent) {
-      setOpen(true);
-      setTitle(editingEvent.title);
-      setDate(editingEvent.date);
-      setTime(editingEvent.time);
-      setLocation(editingEvent.location);
-      setDescription(editingEvent.description);
-    }
+    if (!editingEvent) return;
+
+    setOpen(true);
+    setTitle(editingEvent.title);
+    setDate(editingEvent.date);
+    setLocation(editingEvent.location);
+    setDescription(editingEvent.description);
   }, [editingEvent]);
 
-  function closeForm() {
-    setOpen(false);
+  function resetForm() {
     setTitle("");
     setDate("");
-    setTime("");
     setLocation("");
     setDescription("");
     setError("");
+    setSaving(false);
+  }
 
+  function closeForm() {
+    resetForm();
+    setOpen(false);
     onCancelEdit?.();
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(
+    event: FormEvent<HTMLFormElement>
+  ) {
     event.preventDefault();
 
     if (!title.trim()) {
@@ -77,21 +119,41 @@ export default function EventForm({
     setSaving(true);
     setError("");
 
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    try {
+      const body = {
+        title: title.trim(),
+        date,
+        location: location.trim(),
+        details: description.trim(),
+      };
 
-    const item: EventData = {
-      id: editingEvent?.id ?? Date.now(),
-      title: title.trim(),
-      date,
-      time,
-      location: location.trim(),
-      description: description.trim(),
-    };
+      let saved: ApiEvent;
 
-    onSave?.(item);
+      if (editingEvent) {
+        saved = await apiPut<ApiEvent>(
+          `/events/${editingEvent.id}/`,
+          JSON.stringify(body)
+        );
+      } else {
+        saved = await apiPost<ApiEvent>(
+          "/events/",
+          JSON.stringify(body)
+        );
+      }
 
-    setSaving(false);
-    closeForm();
+      onSave?.(mapApiEventToEventData(saved));
+
+      resetForm();
+      setOpen(false);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "ইভেন্ট সংরক্ষণ করা যায়নি।"
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!open && !editingEvent) {
@@ -148,32 +210,17 @@ export default function EventForm({
           />
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">
-              তারিখ
-            </label>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">
+            তারিখ
+          </label>
 
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded-lg border px-3 py-2.5 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">
-              সময়
-            </label>
-
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="w-full rounded-lg border px-3 py-2.5 text-sm"
-            />
-          </div>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full rounded-lg border px-3 py-2.5 text-sm"
+          />
         </div>
 
         <div>
@@ -183,7 +230,9 @@ export default function EventForm({
 
           <input
             value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            onChange={(e) =>
+              setLocation(e.target.value)
+            }
             placeholder="ইভেন্টের স্থান"
             className="w-full rounded-lg border px-3 py-2.5 text-sm"
           />
@@ -197,7 +246,9 @@ export default function EventForm({
           <textarea
             rows={4}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) =>
+              setDescription(e.target.value)
+            }
             placeholder="ইভেন্টের বিস্তারিত..."
             className="w-full resize-y rounded-lg border px-3 py-2.5 text-sm"
           />
@@ -213,6 +264,7 @@ export default function EventForm({
           <button
             type="button"
             onClick={closeForm}
+            disabled={saving}
             className="rounded-lg border px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50"
           >
             বাতিল

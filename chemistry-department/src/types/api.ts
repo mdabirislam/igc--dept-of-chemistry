@@ -1,37 +1,41 @@
-export interface Notice {
-  id: string;
+export interface ApiNotice {
+  id: number;
   title: string;
-  description?: string;
   category: string;
-  date: string;
-  time: string;
-  pdfUrl?: string;
-  createdAt: string;
+  details: string;
+  pdf: string | null;
+  pdf_url: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface FacultyMember {
-  id: string;
+export interface ApiFaculty {
+  id: number;
   name: string;
   designation: string;
-  image?: string;
-  email?: string;
-  phone?: string;
+  qualification: string;
+  image: string | null;
+  image_url: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface Resource {
-  id: string;
+export interface ApiResource {
+  id: number;
   title: string;
   type: string;
-  description?: string;
-  fileUrl?: string;
-  date: string;
+  file: string | null;
+  file_url: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface Event {
-  id: string;
+export interface ApiEvent {
+  id: number;
   title: string;
-  description?: string;
   date: string;
-  time?: string;
-  location?: string;
+  location: string;
+  details: string;
+  created_at: string;
+  updated_at: string;
 }

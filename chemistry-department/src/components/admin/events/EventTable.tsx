@@ -64,10 +64,6 @@ export default function EventTable({
               </th>
 
               <th className="px-5 py-3 font-semibold">
-                সময়
-              </th>
-
-              <th className="px-5 py-3 font-semibold">
                 স্থান
               </th>
 
@@ -105,10 +101,6 @@ export default function EventTable({
 
                 <td className="px-5 py-4 text-gray-600">
                   {event.date}
-                </td>
-
-                <td className="px-5 py-4 text-gray-600">
-                  {event.time || "—"}
                 </td>
 
                 <td className="px-5 py-4 text-gray-600">
