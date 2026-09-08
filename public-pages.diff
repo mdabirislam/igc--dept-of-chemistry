@@ -1,0 +1,151 @@
+diff --git a/src/components/home/QuickAccess.tsx b/src/components/home/QuickAccess.tsx
+index 46ea8dad..a6c00e68 100644
+--- a/src/components/home/QuickAccess.tsx
++++ b/src/components/home/QuickAccess.tsx
+@@ -2,11 +2,8 @@ import {
+   Bell,
+   CalendarDays,
+   BookOpen,
+-  Layers3,
+-  FileQuestion,
++  GraduationCap,
+   FolderOpen,
+-  FlaskConical,
+-  ClipboardCheck,
+ } from "lucide-react";
+ 
+ const quickLinks = [
+@@ -18,52 +15,24 @@ const quickLinks = [
+     iconClass: "bg-blue-50 text-blue-700",
+   },
+   {
+-    title: "ক্লাস রুটিন",
+-    subtitle: "বর্তমান সময়সূচি",
+-    href: "/academics/routine",
+-    icon: CalendarDays,
++    title: "শিক্ষকবৃন্দ",
++    subtitle: "শিক্ষক ও কর্মকর্তা",
++    href: "/faculty",
++    icon: GraduationCap,
+     iconClass: "bg-purple-50 text-purple-700",
+   },
+   {
+-    title: "পাঠ্যসূচি",
+-    subtitle: "বিভাগীয় সিলেবাস",
+-    href: "/academics/syllabus",
+-    icon: BookOpen,
+-    iconClass: "bg-red-50 text-red-700",
+-  },
+-  {
+-    title: "কোর্সসমূহ",
+-    subtitle: "একাডেমিক কোর্স",
+-    href: "/academics/courses",
+-    icon: Layers3,
+-    iconClass: "bg-orange-50 text-orange-600",
+-  },
+-  {
+-    title: "প্রশ্ন ব্যাংক",
+-    subtitle: "পুরাতন প্রশ্নপত্র",
+-    href: "/resources/question-papers",
+-    icon: FileQuestion,
+-    iconClass: "bg-blue-50 text-blue-700",
+-  },
+-  {
+-    title: "নোট ও উপকরণ",
+-    subtitle: "পাঠ্য সহায়ক রিসোর্স",
++    title: "শিক্ষাসামগ্রী",
++    subtitle: "নোট ও উপকরণ",
+     href: "/resources",
+     icon: FolderOpen,
+     iconClass: "bg-orange-50 text-orange-600",
+   },
+   {
+-    title: "ল্যাবরেটরি",
+-    subtitle: "ল্যাব সম্পর্কিত তথ্য",
+-    href: "/laboratory",
+-    icon: FlaskConical,
+-    iconClass: "bg-purple-50 text-purple-700",
+-  },
+-  {
+-    title: "পরীক্ষা ও রেজাল্ট",
+-    subtitle: "পরীক্ষা ও ফলাফল",
+-    href: "/academics/examination",
+-    icon: ClipboardCheck,
++    title: "ইভেন্ট",
++    subtitle: "বিভাগীয় অনুষ্ঠান",
++    href: "/events",
++    icon: CalendarDays,
+     iconClass: "bg-green-50 text-green-700",
+   },
+ ];
+diff --git a/src/components/layout/Footer.tsx b/src/components/layout/Footer.tsx
+index 92bf8f82..5c9012cd 100644
+--- a/src/components/layout/Footer.tsx
++++ b/src/components/layout/Footer.tsx
+@@ -64,7 +64,7 @@ export default function Footer() {
+             <div className="mb-4 flex items-center gap-3">
+               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white p-1.5">
+                 <img
+-                  src="/images/branding/igc-logo.png"
++                  src="/images/branding/igc-logo.jpg"
+                   alt="Ishwardi Government College"
+                   className="h-full w-full object-contain"
+                 />
+diff --git a/src/components/layout/Navbar.tsx b/src/components/layout/Navbar.tsx
+index bf89d24f..19796a6b 100644
+--- a/src/components/layout/Navbar.tsx
++++ b/src/components/layout/Navbar.tsx
+@@ -4,39 +4,11 @@ import Link from "next/link";
+ import { useState } from "react";
+ 
+ const navigationItems = [
+-  {
+-    label: "বিভাগ সম্পর্কে",
+-    href: "/about",
+-  },
+-  {
+-    label: "পাঠ্যক্রম",
+-    href: "/academics",
+-    dropdown: true,
+-  },
+-  {
+-    label: "শিক্ষকবৃন্দ",
+-    href: "/faculty",
+-  },
+-  {
+-    label: "একাডেমিক",
+-    href: "/academics",
+-  },
+-  {
+-    label: "শিক্ষার্থী কর্নার",
+-    href: "/resources",
+-  },
+-  {
+-    label: "গবেষণা ও প্রকাশনা",
+-    href: "/research",
+-  },
+-  {
+-    label: "নোটিশ",
+-    href: "/notices",
+-  },
+-  {
+-    label: "যোগাযোগ",
+-    href: "/contact",
+-  },
++  { label: "হোম", href: "/" },
++  { label: "শিক্ষকবৃন্দ", href: "/faculty" },
++  { label: "শিক্ষাসামগ্রী", href: "/resources" },
++  { label: "ইভেন্ট", href: "/events" },
++  { label: "নোটিশ", href: "/notices" },
+ ];
+ 
+ export default function Navbar() {
+@@ -58,7 +30,7 @@ export default function Navbar() {
+               className="nav-link"
+             >
+               {item.label}
+-              {item.dropdown && <span className="dropdown-arrow">⌄</span>}
++
+             </Link>
+           ))}
+         </div>
