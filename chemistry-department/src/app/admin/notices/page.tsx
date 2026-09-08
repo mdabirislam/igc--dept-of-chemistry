@@ -7,10 +7,10 @@ import {
   apiFetch,
 } from "@/lib/api";
 
-import type { ApiNotice } from "@/types/api";
+import type { Notice } from "@/types/api";
 
 import NoticeForm, {
-  mapApiNoticeToNoticeData,
+  mapNoticeToNoticeData,
   NoticeData,
 } from "@/components/admin/notices/NoticeForm";
 
@@ -29,11 +29,11 @@ export default function AdminNoticesPage() {
       setLoading(true);
       setError("");
 
-      const data = await apiFetch<ApiNotice[]>(
+      const data = await apiFetch<Notice[]>(
         "/notices/"
       );
 
-      setNotices(data.map(mapApiNoticeToNoticeData));
+      setNotices(data.map(mapNoticeToNoticeData));
     } catch (error) {
       setError(
         error instanceof Error

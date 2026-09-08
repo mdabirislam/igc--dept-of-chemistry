@@ -14,7 +14,7 @@ import {
   apiPut,
 } from "@/lib/api";
 
-import type { ApiResource } from "@/types/api";
+import type { Resource } from "@/types/api";
 
 export interface ResourceData {
   id: number;
@@ -62,8 +62,8 @@ function getTypeLabel(value: string) {
   );
 }
 
-export function mapApiResourceToResourceData(
-  resource: ApiResource
+export function mapResourceToResourceData(
+  resource: Resource
 ): ResourceData {
   return {
     id: resource.id,
@@ -170,22 +170,22 @@ export default function ResourceForm({
         formData.append("file", file);
       }
 
-      let saved: ApiResource;
+      let saved: Resource;
 
       if (editingResource) {
-        saved = await apiPut<ApiResource>(
+        saved = await apiPut<Resource>(
           `/resources/${editingResource.id}/`,
           formData
         );
       } else {
-        saved = await apiPost<ApiResource>(
+        saved = await apiPost<Resource>(
           "/resources/",
           formData
         );
       }
 
       onSave?.(
-        mapApiResourceToResourceData(saved)
+        mapResourceToResourceData(saved)
       );
 
       resetForm();

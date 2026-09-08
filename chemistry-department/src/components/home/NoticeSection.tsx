@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
-import type { ApiNotice } from "@/types/api";
+import type { Notice } from "@/types/api";
 
 const categoryLabels: Record<string, string> = {
   academic: "একাডেমিক",
@@ -47,7 +47,7 @@ function formatDate(value: string) {
 }
 
 export default function NoticeSection() {
-  const [notices, setNotices] = useState<ApiNotice[]>([]);
+  const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -57,7 +57,7 @@ export default function NoticeSection() {
         setLoading(true);
         setError("");
 
-        const data = await apiFetch<ApiNotice[]>(
+        const data = await apiFetch<Notice[]>(
           "/notices/"
         );
 

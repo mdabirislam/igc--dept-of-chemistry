@@ -1,17 +1,21 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
-class IsAuthenticatedOrReadOnly(BasePermission):
+class IsStaffOrReadOnly(BasePermission):
     """
-    Anyone can read public data.
-    Only authenticated users can create/update/delete.
+    Public users can read public API data.
+    Only active staff users can create, update, or delete data.
     """
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
 
+        user = request.user
+
         return bool(
-            request.user
-            and request.user.is_authenticated
+            user
+            and user.is_authenticated
+            and user.is_active
+            and user.is_staff
         )

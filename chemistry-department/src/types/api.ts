@@ -1,4 +1,4 @@
-export interface ApiNotice {
+export interface Notice {
   id: number;
   title: string;
   category: string;
@@ -9,7 +9,7 @@ export interface ApiNotice {
   updated_at: string;
 }
 
-export interface ApiFaculty {
+export interface Faculty {
   id: number;
   name: string;
   designation: string;
@@ -20,7 +20,7 @@ export interface ApiFaculty {
   updated_at: string;
 }
 
-export interface ApiResource {
+export interface Resource {
   id: number;
   title: string;
   type: string;
@@ -30,7 +30,7 @@ export interface ApiResource {
   updated_at: string;
 }
 
-export interface ApiEvent {
+export interface Event {
   id: number;
   title: string;
   date: string;

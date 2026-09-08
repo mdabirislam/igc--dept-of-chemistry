@@ -20,6 +20,7 @@ from .serializers import (
     ResourceSerializer,
 )
 
+from .permissions import IsStaffOrReadOnly
 
 class NoticeViewSet(viewsets.ModelViewSet):
     queryset = Notice.objects.all()
@@ -27,6 +28,10 @@ class NoticeViewSet(viewsets.ModelViewSet):
 
     permission_classes = [
         IsAuthenticatedOrReadOnly,
+    ]
+
+    permission_classes = [
+        IsStaffOrReadOnly,
     ]
 
     parser_classes = [
@@ -44,6 +49,10 @@ class FacultyViewSet(viewsets.ModelViewSet):
         IsAuthenticatedOrReadOnly,
     ]
 
+    permission_classes = [
+        IsStaffOrReadOnly,
+    ]
+
     parser_classes = [
         MultiPartParser,
         FormParser,
@@ -59,6 +68,10 @@ class ResourceViewSet(viewsets.ModelViewSet):
         IsAuthenticatedOrReadOnly,
     ]
 
+    permission_classes = [
+        IsStaffOrReadOnly,
+    ]
+
     parser_classes = [
         MultiPartParser,
         FormParser,
@@ -72,6 +85,10 @@ class EventViewSet(viewsets.ModelViewSet):
 
     permission_classes = [
         IsAuthenticatedOrReadOnly,
+    ]
+
+    permission_classes = [
+        IsStaffOrReadOnly,
     ]
 
     parser_classes = [

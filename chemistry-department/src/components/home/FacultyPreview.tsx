@@ -10,11 +10,11 @@ import {
 
 import { apiFetch } from "@/lib/api";
 
-import type { ApiFaculty } from "@/types/api";
+import type { Faculty } from "@/types/api";
 
 export default function FacultyPreview() {
   const [faculty, setFaculty] =
-    useState<ApiFaculty[]>([]);
+    useState<Faculty[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -26,7 +26,7 @@ export default function FacultyPreview() {
     async function loadFaculty() {
       try {
         const data =
-          await apiFetch<ApiFaculty[]>(
+          await apiFetch<Faculty[]>(
             "/faculty/"
           );
 

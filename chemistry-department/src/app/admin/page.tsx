@@ -16,10 +16,10 @@ import {
 import { apiFetch } from "@/lib/api";
 
 import type {
-  ApiEvent,
-  ApiFaculty,
-  ApiNotice,
-  ApiResource,
+  Event,
+  Faculty,
+  Notice,
+  Resource,
 } from "@/types/api";
 
 export default function AdminPage() {
@@ -48,16 +48,16 @@ export default function AdminPage() {
         resources,
         events,
       ] = await Promise.all([
-        apiFetch<ApiNotice[]>(
+        apiFetch<Notice[]>(
           "/notices/"
         ),
-        apiFetch<ApiFaculty[]>(
+        apiFetch<Faculty[]>(
           "/faculty/"
         ),
-        apiFetch<ApiResource[]>(
+        apiFetch<Resource[]>(
           "/resources/"
         ),
-        apiFetch<ApiEvent[]>(
+        apiFetch<Event[]>(
           "/events/"
         ),
       ]);

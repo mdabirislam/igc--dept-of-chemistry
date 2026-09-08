@@ -7,11 +7,11 @@ import {
   apiFetch,
 } from "@/lib/api";
 
-import type { ApiEvent } from "@/types/api";
+import type { Event } from "@/types/api";
 
 import EventForm, {
   EventData,
-  mapApiEventToEventData,
+  mapEventToEventData,
 } from "@/components/admin/events/EventForm";
 
 import EventTable from "@/components/admin/events/EventTable";
@@ -31,12 +31,12 @@ export default function AdminEventsPage() {
       setLoading(true);
       setError("");
 
-      const data = await apiFetch<ApiEvent[]>(
+      const data = await apiFetch<Event[]>(
         "/events/"
       );
 
       setEvents(
-        data.map(mapApiEventToEventData)
+        data.map(mapEventToEventData)
       );
     } catch (error) {
       setError(

@@ -7,11 +7,11 @@ import {
   apiFetch,
 } from "@/lib/api";
 
-import type { ApiFaculty } from "@/types/api";
+import type { Faculty } from "@/types/api";
 
 import FacultyForm, {
   FacultyData,
-  mapApiFacultyToFacultyData,
+  mapFacultyToFacultyData,
 } from "@/components/admin/faculty/FacultyForm";
 
 import FacultyTable from "@/components/admin/faculty/FacultyTable";
@@ -29,11 +29,11 @@ export default function AdminFacultyPage() {
       setLoading(true);
       setError("");
 
-      const data = await apiFetch<ApiFaculty[]>(
+      const data = await apiFetch<Faculty[]>(
         "/faculty/"
       );
 
-      setFaculty(data.map(mapApiFacultyToFacultyData));
+      setFaculty(data.map(mapFacultyToFacultyData));
     } catch (error) {
       setError(
         error instanceof Error

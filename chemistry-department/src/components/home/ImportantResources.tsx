@@ -12,7 +12,7 @@ import {
 
 import { apiFetch } from "@/lib/api";
 
-import type { ApiResource } from "@/types/api";
+import type { Resource } from "@/types/api";
 
 const typeLabels: Record<string, string> = {
   note: "নোট",
@@ -39,7 +39,7 @@ function getIcon(type: string) {
 
 export default function ImportantResources() {
   const [resources, setResources] =
-    useState<ApiResource[]>([]);
+    useState<Resource[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -51,7 +51,7 @@ export default function ImportantResources() {
     async function loadResources() {
       try {
         const data =
-          await apiFetch<ApiResource[]>(
+          await apiFetch<Resource[]>(
             "/resources/"
           );
 

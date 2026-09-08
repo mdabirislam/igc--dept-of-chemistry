@@ -14,7 +14,7 @@ import {
   apiPut,
 } from "@/lib/api";
 
-import type { ApiFaculty } from "@/types/api";
+import type { Faculty } from "@/types/api";
 
 export interface FacultyData {
   id: number;
@@ -31,8 +31,8 @@ interface FacultyFormProps {
   onCancelEdit?: () => void;
 }
 
-export function mapApiFacultyToFacultyData(
-  faculty: ApiFaculty
+export function mapFacultyToFacultyData(
+  faculty: Faculty
 ): FacultyData {
   return {
     id: faculty.id,
@@ -162,21 +162,21 @@ export default function FacultyForm({
         formData.append("image", image);
       }
 
-      let saved: ApiFaculty;
+      let saved: Faculty;
 
       if (editingFaculty) {
-        saved = await apiPut<ApiFaculty>(
+        saved = await apiPut<Faculty>(
           `/faculty/${editingFaculty.id}/`,
           formData
         );
       } else {
-        saved = await apiPost<ApiFaculty>(
+        saved = await apiPost<Faculty>(
           "/faculty/",
           formData
         );
       }
 
-      onSave?.(mapApiFacultyToFacultyData(saved));
+      onSave?.(mapFacultyToFacultyData(saved));
 
       resetForm();
       setOpen(false);

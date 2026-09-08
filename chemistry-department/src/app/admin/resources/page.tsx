@@ -7,11 +7,11 @@ import {
   apiFetch,
 } from "@/lib/api";
 
-import type { ApiResource } from "@/types/api";
+import type { Resource } from "@/types/api";
 
 import ResourceForm, {
   ResourceData,
-  mapApiResourceToResourceData,
+  mapResourceToResourceData,
 } from "@/components/admin/resources/ResourceForm";
 
 import ResourceTable from "@/components/admin/resources/ResourceTable";
@@ -31,12 +31,12 @@ export default function AdminResourcesPage() {
       setLoading(true);
       setError("");
 
-      const data = await apiFetch<ApiResource[]>(
+      const data = await apiFetch<Resource[]>(
         "/resources/"
       );
 
       setResources(
-        data.map(mapApiResourceToResourceData)
+        data.map(mapResourceToResourceData)
       );
     } catch (error) {
       setError(

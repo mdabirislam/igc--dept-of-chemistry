@@ -17,7 +17,7 @@ import {
   apiPut,
 } from "@/lib/api";
 
-import type { ApiEvent } from "@/types/api";
+import type { Event } from "@/types/api";
 
 export interface EventData {
   id: number;
@@ -34,8 +34,8 @@ interface EventFormProps {
   onCancelEdit?: () => void;
 }
 
-export function mapApiEventToEventData(
-  event: ApiEvent
+export function mapEventToEventData(
+  event: Event
 ): EventData {
   return {
     id: event.id,
@@ -127,21 +127,21 @@ export default function EventForm({
         details: description.trim(),
       };
 
-      let saved: ApiEvent;
+      let saved: Event;
 
       if (editingEvent) {
-        saved = await apiPut<ApiEvent>(
+        saved = await apiPut<Event>(
           `/events/${editingEvent.id}/`,
           JSON.stringify(body)
         );
       } else {
-        saved = await apiPost<ApiEvent>(
+        saved = await apiPost<Event>(
           "/events/",
           JSON.stringify(body)
         );
       }
 
-      onSave?.(mapApiEventToEventData(saved));
+      onSave?.(mapEventToEventData(saved));
 
       resetForm();
       setOpen(false);

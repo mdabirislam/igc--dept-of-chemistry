@@ -45,6 +45,12 @@ class LoginView(APIView):
         token, _ = Token.objects.get_or_create(
             user=user
         )
+        if not user.is_staff:
+            return Response(
+                {
+                    "detail": "এই account-এর admin access নেই।"},
+                    status=status.HTTP_403_FORBIDDEN,
+            )
 
         return Response(
             {

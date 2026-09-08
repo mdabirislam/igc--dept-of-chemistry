@@ -10,7 +10,7 @@ import {
 
 import { apiFetch } from "@/lib/api";
 
-import type { ApiEvent } from "@/types/api";
+import type { Event } from "@/types/api";
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString(
@@ -25,7 +25,7 @@ function formatDate(date: string) {
 
 export default function EventsSection() {
   const [events, setEvents] =
-    useState<ApiEvent[]>([]);
+    useState<Event[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -37,7 +37,7 @@ export default function EventsSection() {
     async function loadEvents() {
       try {
         const data =
-          await apiFetch<ApiEvent[]>(
+          await apiFetch<Event[]>(
             "/events/"
           );
 

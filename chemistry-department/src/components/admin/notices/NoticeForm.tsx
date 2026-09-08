@@ -13,7 +13,7 @@ import {
   apiPut,
 } from "@/lib/api";
 
-import type { ApiNotice } from "@/types/api";
+import type { Notice } from "@/types/api";
 
 export interface NoticeData {
   id: number;
@@ -63,8 +63,8 @@ function formatDateTime(value: string) {
   };
 }
 
-export function mapApiNoticeToNoticeData(
-  notice: ApiNotice
+export function mapNoticeToNoticeData(
+  notice: Notice
 ): NoticeData {
   const formatted = formatDateTime(notice.created_at);
 
@@ -205,21 +205,21 @@ export default function NoticeForm({
         formData.append("pdf", pdf);
       }
 
-      let saved: ApiNotice;
+      let saved: Notice;
 
       if (editingNotice) {
-        saved = await apiPut<ApiNotice>(
+        saved = await apiPut<Notice>(
           `/notices/${editingNotice.id}/`,
           formData
         );
       } else {
-        saved = await apiPost<ApiNotice>(
+        saved = await apiPost<Notice>(
           "/notices/",
           formData
         );
       }
 
-      onSave?.(mapApiNoticeToNoticeData(saved));
+      onSave?.(mapNoticeToNoticeData(saved));
 
       resetForm();
       setOpen(false);
