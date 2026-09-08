@@ -127,10 +127,10 @@ export async function logoutAdmin(): Promise<void> {
   } catch {
     // Local logout still happens.
   } finally {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+      clearAdminSession();
 
-    window.location.href =
-      "/admin/login";
-  }
+      window.location.replace(
+        "/admin/login"
+  );
+}
 }

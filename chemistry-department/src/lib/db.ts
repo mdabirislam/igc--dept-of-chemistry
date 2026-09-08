@@ -6,36 +6,23 @@
  */
 
 export const database = {
-  async get<T>(_collection: string): Promise<T[]> {
+  async get<T>(): Promise<T[]> {
     return [];
   },
 
-  async find<T>(
-    _collection: string,
-    _id: string
-  ): Promise<T | null> {
+  async find<T>(): Promise<T | null> {
     return null;
   },
 
-  async create<T>(
-    _collection: string,
-    data: T
-  ): Promise<T> {
+  async create<T>(data: T): Promise<T> {
     return data;
   },
 
-  async update<T>(
-    _collection: string,
-    _id: string,
-    data: Partial<T>
-  ): Promise<T> {
+  async update<T>(data: Partial<T>): Promise<T> {
     return data as T;
   },
 
-  async remove(
-    _collection: string,
-    _id: string
-  ): Promise<boolean> {
+  async remove(): Promise<boolean> {
     return true;
   },
 };
