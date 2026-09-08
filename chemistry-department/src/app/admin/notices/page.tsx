@@ -24,29 +24,31 @@ export default function AdminNoticesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  async function loadNotices() {
-    try {
-      setLoading(true);
-      setError("");
-
-      const data = await apiFetch<Notice[]>(
-        "/notices/"
-      );
-
-      setNotices(data.map(mapNoticeToNoticeData));
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "নোটিশ লোড করা যায়নি।"
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadNotices();
+    async function fetchNotices() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await apiFetch<Notice[]>(
+          "/notices/"
+        );
+
+        setNotices(
+          data.map(mapNoticeToNoticeData)
+        );
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "নোটিশ লোড করা যায়নি।"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void fetchNotices();
   }, []);
 
   function handleSave(notice: NoticeData) {

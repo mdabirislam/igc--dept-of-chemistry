@@ -2,7 +2,6 @@
 
 import {
   FormEvent,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -121,18 +120,6 @@ export default function NoticeForm({
 
   const fileInputRef =
     useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!editingNotice) return;
-
-    setOpen(true);
-    setTitle(editingNotice.title);
-    setCategory(
-      getNoticeCategoryValue(editingNotice.category)
-    );
-    setDetails(editingNotice.details);
-    setPdf(null);
-  }, [editingNotice]);
 
   function handleFileChange(
     event: React.ChangeEvent<HTMLInputElement>

@@ -1,4 +1,7 @@
-import { getAdminToken } from "@/lib/auth";
+import {
+  clearAdminSession,
+  getAdminToken,
+} from "@/lib/auth";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_DJANGO_API_URL ||
@@ -88,10 +91,18 @@ export async function apiFetch<T>(
     }
 
     if (response.status === 401) {
-      message =
-        "আপনার admin session শেষ হয়েছে। আবার login করুন।";
-    }
+      clearAdminSession();
 
+      if (
+        typeof window !== "undefined" &&
+       window.location.pathname !== "/admin/login"
+    ) {
+      window.location.replace("/admin/login");
+   }
+
+  message =
+    "আপনার admin session শেষ হয়েছে। আবার login করুন।";
+    }
     if (response.status === 403) {
       message =
         "এই কাজটি করার অনুমতি আপনার নেই।";

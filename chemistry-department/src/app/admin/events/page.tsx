@@ -26,31 +26,31 @@ export default function AdminEventsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  async function loadEvents() {
-    try {
-      setLoading(true);
-      setError("");
-
-      const data = await apiFetch<Event[]>(
-        "/events/"
-      );
-
-      setEvents(
-        data.map(mapEventToEventData)
-      );
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "ইভেন্ট লোড করা যায়নি।"
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadEvents();
+    async function fetchEvents() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await apiFetch<Event[]>(
+          "/events/"
+        );
+
+        setEvents(
+          data.map(mapEventToEventData)
+        );
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "ইভেন্ট লোড করা যায়নি।"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void fetchEvents();
   }, []);
 
   function handleSave(event: EventData) {

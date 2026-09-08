@@ -26,31 +26,54 @@ export default function AdminResourcesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  async function loadResources() {
-    try {
-      setLoading(true);
-      setError("");
+  // async function loadResources() {
+  //   try {
+  //     setLoading(true);
+  //     setError("");
 
-      const data = await apiFetch<Resource[]>(
-        "/resources/"
-      );
+  //     const data = await apiFetch<Resource[]>(
+  //       "/resources/"
+  //     );
 
-      setResources(
-        data.map(mapResourceToResourceData)
-      );
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "রিসোর্স লোড করা যায়নি।"
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
+  //     setResources(
+  //       data.map(mapResourceToResourceData)
+  //     );
+  //   } catch (error) {
+  //     setError(
+  //       error instanceof Error
+  //         ? error.message
+  //         : "রিসোর্স লোড করা যায়নি।"
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
   useEffect(() => {
-    loadResources();
+    async function fetchResources() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await apiFetch<Resource[]>(
+          "/resources/"
+        );
+
+        setResources(
+          data.map(mapResourceToResourceData)
+        );
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "রিসোর্স লোড করা যায়নি।"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void fetchResources();
   }, []);
 
   function handleSave(resource: ResourceData) {

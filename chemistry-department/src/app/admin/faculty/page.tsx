@@ -24,30 +24,32 @@ export default function AdminFacultyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  async function loadFaculty() {
-    try {
-      setLoading(true);
-      setError("");
-
-      const data = await apiFetch<Faculty[]>(
-        "/faculty/"
-      );
-
-      setFaculty(data.map(mapFacultyToFacultyData));
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "শিক্ষকের তথ্য লোড করা যায়নি।"
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadFaculty();
-  }, []);
+    async function fetchFaculty() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await apiFetch<Faculty[]>(
+            "/faculty/"
+          );  
+
+        setFaculty(
+          data.map(mapFacultyToFacultyData)
+        );
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "শিক্ষকের তথ্য লোড করা যায়নি।"
+        );
+      } finally   {
+           setLoading(false) ;
+       }
+  } 
+
+     void fetchFaculty();
+  } , []); 
 
   function handleSave(person: FacultyData) {
     setFaculty((current) => {

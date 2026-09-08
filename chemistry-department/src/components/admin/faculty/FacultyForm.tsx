@@ -2,7 +2,6 @@
 
 import {
   FormEvent,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -76,16 +75,6 @@ export default function FacultyForm({
 
   const fileRef =
     useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!editingFaculty) return;
-
-    setOpen(true);
-    setName(editingFaculty.name);
-    setDesignation(editingFaculty.designation);
-    setQualification(editingFaculty.qualification);
-    setImage(null);
-  }, [editingFaculty]);
 
   function handleImageChange(
     event: React.ChangeEvent<HTMLInputElement>

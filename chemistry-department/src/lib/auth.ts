@@ -99,6 +99,15 @@ export async function loginAdmin(
   return data.user;
 }
 
+export function clearAdminSession(): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+}
+
 export async function logoutAdmin(): Promise<void> {
   const token = getAdminToken();
 

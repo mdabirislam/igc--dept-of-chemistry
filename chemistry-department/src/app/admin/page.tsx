@@ -80,8 +80,50 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    void loadDashboard();
-  }, []);
+    async function fetchDashboard() {
+      try {
+        setLoading(true);
+        setError("");
+      
+        const [
+          notices,
+          faculty,
+          resources,
+          events,
+        ] = await Promise.all([
+          apiFetch<Notice[]>(
+            "/notices/"
+          ),
+          apiFetch<Faculty[]>(
+            "/faculty/"
+          ),
+          apiFetch<Resource[]>(
+            "/resources/"
+          ),
+          apiFetch<Event[]>(
+            "/events/"
+          ),
+        ]);
+      
+        setCounts({
+          notices: notices.length,
+          faculty: faculty.length,
+          resources: resources.length,
+          events: events.length,
+        });
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Dashboard data লোড করা যায়নি।"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+  void fetchDashboard();
+}, []);
 
   return (
     <div className="space-y-6 p-5 lg:p-8">

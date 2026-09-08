@@ -2,7 +2,6 @@
 
 import {
   FormEvent,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -101,15 +100,6 @@ export default function ResourceForm({
 
   const fileRef =
     useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!editingResource) return;
-
-    setOpen(true);
-    setTitle(editingResource.title);
-    setType(getTypeValue(editingResource.type));
-    setFile(null);
-  }, [editingResource]);
 
   function handleFileChange(
     event: React.ChangeEvent<HTMLInputElement>

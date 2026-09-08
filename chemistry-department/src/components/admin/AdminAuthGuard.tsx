@@ -1,15 +1,10 @@
 "use client";
 
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect } from "react";
 
 import { usePathname } from "next/navigation";
 
-import {
-  isAdminAuthenticated,
-} from "@/lib/auth";
+import { isAdminAuthenticated } from "@/lib/auth";
 
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -23,30 +18,21 @@ export default function AdminAuthGuard({
 }: AdminAuthGuardProps) {
   const pathname = usePathname();
 
-  const [checked, setChecked] =
-    useState(false);
-
   useEffect(() => {
     if (pathname === "/admin/login") {
-      setChecked(true);
       return;
     }
 
     if (!isAdminAuthenticated()) {
-      window.location.replace(
-        "/admin/login"
-      );
-      return;
+      window.location.replace("/admin/login");
     }
-
-    setChecked(true);
   }, [pathname]);
 
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
 
-  if (!checked) {
+  if (!isAdminAuthenticated()) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-sm text-gray-500">
