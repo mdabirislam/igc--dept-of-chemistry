@@ -2,7 +2,6 @@
 
 import {
   FormEvent,
-  // useEffect,
   useState,
 } from "react";
 
@@ -75,16 +74,6 @@ export default function EventForm({
 
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-
-  // useEffect(() => {
-  //   if (!editingEvent) return;
-
-  //   setOpen(true);
-  //   setTitle(editingEvent.title);
-  //   setDate(editingEvent.date);
-  //   setLocation(editingEvent.location);
-  //   setDescription(editingEvent.description);
-  // }, [editingEvent]);
 
   function resetForm() {
     setTitle("");
