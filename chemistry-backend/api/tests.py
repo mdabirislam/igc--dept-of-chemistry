@@ -92,6 +92,12 @@ class AuthenticationTests(APITestCase):
 
         self.assertNotIn("token", response.data)
 
+        self.assertFalse(
+            Token.objects.filter(
+                user=self.normal_user
+            ).exists()
+        )
+
     def test_inactive_user_cannot_login(self):
         response = self.client.post(
             self.login_url,
@@ -111,11 +117,6 @@ class AuthenticationTests(APITestCase):
     )
 
         self.assertNotIn("token", response.data)
-
-    def test_non_staff_does_not_receive_admin_token(self):
-        self.assertFalse(
-            Token.objects.filter(user=self.normal_user).exists()
-        )
 
 
 class PublicReadAccessTests(APITestCase):
