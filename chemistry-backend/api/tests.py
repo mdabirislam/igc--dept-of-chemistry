@@ -265,6 +265,91 @@ class NonStaffWriteProtectionTests(APITestCase):
             user=self.normal_user
         )
 
+    def test_non_staff_cannot_update_notice(self):
+        notice = Notice.objects.create(
+            title="Original Notice",
+            category="general",
+            details="Original details",
+        )
+
+        response = self.client.patch(
+            f"/api/notices/{notice.id}/",
+            {
+                "title": "Unauthorized Update",
+            },
+            format="json",
+        )
+
+        self.assertIn(
+            response.status_code,
+            [
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ],
+        )
+
+        notice.refresh_from_db()
+
+        self.assertEqual(
+            notice.title,
+            "Original Notice",
+        )
+
+    def test_non_staff_cannot_put_notice(self):
+        notice = Notice.objects.create(
+            title="Original Notice",
+            category="general",
+            details="Original details",
+        )
+
+        response = self.client.put(
+            f"/api/notices/{notice.id}/",
+            {
+                "title": "Unauthorized PUT",
+                "category": "general",
+                "details": "Changed details",
+            },
+            format="json",
+        )
+
+        self.assertIn(
+            response.status_code,
+            [
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ],
+        )
+
+        notice.refresh_from_db()
+
+        self.assertEqual(
+            notice.title,
+            "Original Notice",
+        )
+
+    def test_non_staff_cannot_delete_notice(self):
+        notice = Notice.objects.create(
+            title="Protected Notice",
+            category="general",
+            details="Should remain",
+        )
+
+        response = self.client.delete(
+            f"/api/notices/{notice.id}/"
+        )
+
+        self.assertIn(
+            response.status_code,
+            [
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ],
+        )
+
+        self.assertTrue(
+            Notice.objects.filter(id=notice.id).exists()
+        )
+
     def test_non_staff_cannot_create_notice(self):
         response = self.client.post(
             "/api/notices/",
