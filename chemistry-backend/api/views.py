@@ -4,7 +4,6 @@ from rest_framework.parsers import (
     JSONParser,
     MultiPartParser,
 )
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import (
     Event,
@@ -13,6 +12,8 @@ from .models import (
     Resource,
 )
 
+from .permissions import IsStaffOrReadOnly
+
 from .serializers import (
     EventSerializer,
     FacultySerializer,
@@ -20,15 +21,10 @@ from .serializers import (
     ResourceSerializer,
 )
 
-from .permissions import IsStaffOrReadOnly
 
 class NoticeViewSet(viewsets.ModelViewSet):
     queryset = Notice.objects.all()
     serializer_class = NoticeSerializer
-
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
 
     permission_classes = [
         IsStaffOrReadOnly,
@@ -46,10 +42,6 @@ class FacultyViewSet(viewsets.ModelViewSet):
     serializer_class = FacultySerializer
 
     permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    permission_classes = [
         IsStaffOrReadOnly,
     ]
 
@@ -65,10 +57,6 @@ class ResourceViewSet(viewsets.ModelViewSet):
     serializer_class = ResourceSerializer
 
     permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    permission_classes = [
         IsStaffOrReadOnly,
     ]
 
@@ -82,10 +70,6 @@ class ResourceViewSet(viewsets.ModelViewSet):
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
 
     permission_classes = [
         IsStaffOrReadOnly,

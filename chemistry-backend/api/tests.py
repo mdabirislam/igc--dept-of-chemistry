@@ -252,7 +252,92 @@ class AnonymousWriteProtectionTests(APITestCase):
             ],
         )
 
+class NonStaffWriteProtectionTests(APITestCase):
+    def setUp(self):
+        self.normal_user = User.objects.create_user(
+            username="student",
+            password="StudentPass123!",
+            is_staff=False,
+            is_active=True,
+        )
 
+        self.client.force_authenticate(
+            user=self.normal_user
+        )
+
+    def test_non_staff_cannot_create_notice(self):
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Unauthorized Notice",
+                "category": "general",
+                "details": "Should fail",
+            },
+            format="json",
+        )
+
+        self.assertIn(
+            response.status_code,
+            [
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ],
+        )
+
+    def test_non_staff_cannot_create_faculty(self):
+        response = self.client.post(
+            "/api/faculty/",
+            {
+                "name": "Unauthorized Teacher",
+                "designation": "Lecturer",
+            },
+            format="json",
+        )
+
+        self.assertIn(
+            response.status_code,
+            [
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ],
+        )
+
+    def test_non_staff_cannot_create_resource(self):
+        response = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Unauthorized Resource",
+                "type": "note",
+            },
+            format="json",
+        )
+
+        self.assertIn(
+            response.status_code,
+            [
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ],
+        )
+
+    def test_non_staff_cannot_create_event(self):
+        response = self.client.post(
+            "/api/events/",
+            {
+                "title": "Unauthorized Event",
+                "date": "2026-09-08",
+            },
+            format="json",
+        )
+
+        self.assertIn(
+            response.status_code,
+            [
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ],
+        )
+        
 class StaffCRUDTests(APITestCase):
     def setUp(self):
         self.staff_user = User.objects.create_user(
