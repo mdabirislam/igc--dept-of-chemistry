@@ -565,3 +565,91 @@ class StaffCRUDTests(APITestCase):
         self.assertFalse(
             Notice.objects.filter(id=notice.id).exists()
         )
+
+class SerializerValidationTests(APITestCase):
+    def setUp(self):
+        self.staff_user = User.objects.create_user(
+            username="staff",
+            password="StaffPass123!",
+            is_staff=True,
+            is_active=True,
+        )
+
+        self.client.force_authenticate(
+            user=self.staff_user
+        )
+
+    def test_notice_rejects_invalid_category(self):
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Invalid Notice",
+                "category": "invalid-category",
+                "details": "Should fail",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_resource_rejects_invalid_type(self):
+        response = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Invalid Resource",
+                "type": "invalid-type",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_notice_requires_title(self):
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "category": "general",
+                "details": "Missing title",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_faculty_requires_name(self):
+        response = self.client.post(
+            "/api/faculty/",
+            {
+                "designation": "Lecturer",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_event_requires_date(self):
+        response = self.client.post(
+            "/api/events/",
+            {
+                "title": "Event Without Date",
+                "location": "Chemistry Department",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
