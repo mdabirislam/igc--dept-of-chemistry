@@ -733,3 +733,25 @@ class SerializerValidationTests(APITestCase):
         )
 
         self.assertTrue(resource.file.name)
+
+    def test_faculty_rejects_oversized_image(self):
+        oversized_file = SimpleUploadedFile(
+            "large-image.jpg",
+            b"x" * (5 * 1024 * 1024),
+            content_type="image/jpeg",
+        )
+
+        response = self.client.post(
+            "/api/faculty/",
+            {
+                "name": "Large Image Teacher",
+                "designation": "Lecturer",
+                "image": oversized_file,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
