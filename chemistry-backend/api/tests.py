@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import Event, Faculty, Notice, Resource
 
@@ -653,3 +654,82 @@ class SerializerValidationTests(APITestCase):
             response.status_code,
             status.HTTP_400_BAD_REQUEST,
         )
+
+    def test_faculty_rejects_invalid_image(self):
+        invalid_file = SimpleUploadedFile(
+            "not-an-image.txt",
+            b"This is not an image.",
+            content_type="text/plain",
+        )
+
+        response = self.client.post(
+            "/api/faculty/",
+            {
+                "name": "Test Teacher",
+                "designation": "Lecturer",
+                "image": invalid_file,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_notice_accepts_pdf_file(self):
+        pdf_file = SimpleUploadedFile(
+            "notice.pdf",
+            b"%PDF-1.4 test pdf content",
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "PDF Notice",
+                "category": "general",
+                "details": "Notice with PDF",
+                "pdf": pdf_file,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        notice = Notice.objects.get(
+            id=response.data["id"]
+        )
+
+        self.assertTrue(notice.pdf.name)
+
+    def test_resource_accepts_file(self):
+        resource_file = SimpleUploadedFile(
+            "notes.txt",
+            b"Chemistry notes",
+            content_type="text/plain",
+        )
+
+        response = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Chemistry Notes",
+                "type": "note",
+                "file": resource_file,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        resource = Resource.objects.get(
+            id=response.data["id"]
+        )
+
+        self.assertTrue(resource.file.name)
