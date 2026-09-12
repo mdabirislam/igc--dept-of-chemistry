@@ -755,3 +755,19 @@ class SerializerValidationTests(APITestCase):
             response.status_code,
             status.HTTP_400_BAD_REQUEST,
         )
+
+    def test_notice_rejects_title_over_max_length(self):
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "A" * 256,
+                "category": "general",
+                "details": "Test notice",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
