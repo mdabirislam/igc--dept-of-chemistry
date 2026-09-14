@@ -119,7 +119,130 @@ class AuthenticationTests(APITestCase):
 
         self.assertNotIn("token", response.data)
 
+    def test_missing_token_rejected_for_write(self):
+        self.client.credentials()
 
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Unauthorized Notice",
+                "category": "general",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
+
+    def test_invalid_token_rejected_for_write(self):
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Token invalid-token-123"
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Invalid Token Notice",
+                "category": "general",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
+
+    def test_valid_staff_token_allows_write(self):
+        user = User.objects.create_user(
+            username="tokenstaff",
+            password="testpass123",
+            is_staff=True,
+        )
+
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Authorized Notice",
+                "category": "general",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+    def test_logout_invalidates_token(self):
+        user = User.objects.create_user(
+            username="logoutstaff",
+            password="testpass123",
+            is_staff=True,
+        )
+
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        logout_response = self.client.post(
+            "/api/auth/logout/"
+        )
+
+        self.assertEqual(
+            logout_response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "After Logout",
+                "category": "general",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
+
+    def test_logout_deletes_user_tokens(self):
+        user = User.objects.create_user(
+            username="tokendelete",
+            password="testpass123",
+            is_staff=True,
+        )
+
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        response = self.client.post(
+            "/api/auth/logout/"
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        self.assertFalse(
+            Token.objects.filter(user=user).exists()
+        )
 class PublicReadAccessTests(APITestCase):
     def setUp(self):
         Notice.objects.create(
@@ -875,27 +998,6 @@ class SerializerValidationTests(APITestCase):
 
         self.assertTrue(resource.file.name)
 
-    def test_faculty_rejects_oversized_image(self):
-        oversized_file = SimpleUploadedFile(
-            "large-image.jpg",
-            b"x" * (5 * 1024 * 1024),
-            content_type="image/jpeg",
-        )
-
-        response = self.client.post(
-            "/api/faculty/",
-            {
-                "name": "Large Image Teacher",
-                "designation": "Lecturer",
-                "image": oversized_file,
-            },
-            format="multipart",
-        )
-
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_400_BAD_REQUEST,
-        )
 
     def test_notice_rejects_title_over_max_length(self):
         response = self.client.post(
@@ -911,4 +1013,202 @@ class SerializerValidationTests(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_notice_rejects_non_pdf_file(self):
+        user = User.objects.create_user(
+            username="pdfcheck",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        fake_pdf = SimpleUploadedFile(
+            "notice.txt",
+            b"This is not a PDF file.",
+            content_type="text/plain",
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Invalid PDF",
+                "category": "general",
+                "pdf": fake_pdf,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_notice_rejects_oversized_pdf(self):
+        user = User.objects.create_user(
+            username="largepdf",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        large_pdf = SimpleUploadedFile(
+            "large.pdf",
+            b"x" * (10 * 1024 * 1024 + 1),
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Large PDF",
+                "category": "general",
+                "pdf": large_pdf,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_faculty_rejects_oversized_valid_image(self):
+        user = User.objects.create_user(
+            username="largeimage",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        image = SimpleUploadedFile(
+            "large.jpg",
+            b"\xff\xd8\xff" + b"x" * (5 * 1024 * 1024),
+            content_type="image/jpeg",
+        )
+
+        response = self.client.post(
+            "/api/faculty/",
+            {
+                "name": "Large Image Teacher",
+                "designation": "Lecturer",
+                "image": image,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_resource_rejects_oversized_file(self):
+        user = User.objects.create_user(
+            username="largeresource",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        large_file = SimpleUploadedFile(
+            "large.pdf",
+            b"x" * (10 * 1024 * 1024 + 1),
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Large Resource",
+                "type": "note",
+                "file": large_file,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_notice_accepts_pdf_within_size_limit(self):
+        user = User.objects.create_user(
+            username="validpdf",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        pdf = SimpleUploadedFile(
+            "valid.pdf",
+            b"%PDF-1.4\nvalid test content",
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Valid PDF",
+                "category": "general",
+                "pdf": pdf,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+    def test_resource_accepts_file_within_size_limit(self):
+        user = User.objects.create_user(
+            username="validresource",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        resource_file = SimpleUploadedFile(
+            "resource.pdf",
+            b"%PDF-1.4\nresource test content",
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Valid Resource",
+                "type": "note",
+                "file": resource_file,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
         )

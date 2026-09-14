@@ -3,6 +3,10 @@ from rest_framework import serializers
 from .models import Event, Faculty, Notice, Resource
 
 
+MAX_IMAGE_SIZE = 5 * 1024 * 1024
+MAX_DOCUMENT_SIZE = 10 * 1024 * 1024
+
+
 class NoticeSerializer(serializers.ModelSerializer):
     pdf_url = serializers.SerializerMethodField()
 
@@ -24,6 +28,21 @@ class NoticeSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+    def validate_pdf(self, value):
+        if value.size > MAX_DOCUMENT_SIZE:
+            raise serializers.ValidationError(
+                "PDF file size cannot exceed 10 MB."
+            )
+
+        content_type = getattr(value, "content_type", "").lower()
+
+        if content_type != "application/pdf":
+            raise serializers.ValidationError(
+                "Only PDF files are allowed."
+            )
+
+        return value
 
     def get_pdf_url(self, obj):
         if not obj.pdf:
@@ -59,6 +78,14 @@ class FacultySerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+    def validate_image(self, value):
+        if value.size > MAX_IMAGE_SIZE:
+            raise serializers.ValidationError(
+                "Image file size cannot exceed 5 MB."
+            )
+
+        return value
+
     def get_image_url(self, obj):
         if not obj.image:
             return None
@@ -91,6 +118,14 @@ class ResourceSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+    def validate_file(self, value):
+        if value.size > MAX_DOCUMENT_SIZE:
+            raise serializers.ValidationError(
+                "File size cannot exceed 10 MB."
+            )
+
+        return value
 
     def get_file_url(self, obj):
         if not obj.file:
