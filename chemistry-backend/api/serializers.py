@@ -42,6 +42,14 @@ class NoticeSerializer(serializers.ModelSerializer):
                 "Only PDF files are allowed."
             )
 
+        header = value.read(5)
+        value.seek(0)
+
+        if header != b"%PDF-":
+            raise serializers.ValidationError(
+                "The uploaded file is not a valid PDF."
+            )
+
         return value
 
     def get_pdf_url(self, obj):

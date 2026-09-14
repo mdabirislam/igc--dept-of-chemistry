@@ -1212,3 +1212,36 @@ class SerializerValidationTests(APITestCase):
             response.status_code,
             status.HTTP_201_CREATED,
         )
+
+    def test_notice_rejects_fake_pdf_content(self):
+        user = User.objects.create_user(
+            username="fakepdf",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        fake_pdf = SimpleUploadedFile(
+            "fake.pdf",
+            b"This is actually a text file.",
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Fake PDF",
+                "category": "general",
+                "pdf": fake_pdf,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
