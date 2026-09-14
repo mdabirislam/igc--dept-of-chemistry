@@ -567,6 +567,147 @@ class StaffCRUDTests(APITestCase):
             Notice.objects.filter(id=notice.id).exists()
         )
 
+    def test_staff_can_update_faculty(self):
+        faculty = Faculty.objects.create(
+            name="Old Teacher",
+            designation="Lecturer",
+        )
+
+        response = self.client.patch(
+            f"/api/faculty/{faculty.id}/",
+            {
+                "name": "Updated Teacher",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        faculty.refresh_from_db()
+
+        self.assertEqual(
+            faculty.name,
+            "Updated Teacher",
+        )
+
+    def test_staff_can_update_resource(self):
+        resource = Resource.objects.create(
+            title="Old Resource",
+            type="note",
+        )
+
+        response = self.client.patch(
+            f"/api/resources/{resource.id}/",
+            {
+                "title": "Updated Resource",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        resource.refresh_from_db()
+
+        self.assertEqual(
+            resource.title,
+            "Updated Resource",
+        )
+
+    def test_staff_can_update_event(self):
+        event = Event.objects.create(
+            title="Old Event",
+            date="2026-09-08",
+        )
+
+        response = self.client.patch(
+            f"/api/events/{event.id}/",
+            {
+                "title": "Updated Event",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        event.refresh_from_db()
+
+        self.assertEqual(
+            event.title,
+            "Updated Event",
+        )
+
+    def test_staff_can_delete_faculty(self):
+        faculty = Faculty.objects.create(
+            name="Delete Teacher",
+            designation="Lecturer",
+        )
+
+        response = self.client.delete(
+            f"/api/faculty/{faculty.id}/"
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+
+        self.assertFalse(
+            Faculty.objects.filter(
+                id=faculty.id
+            ).exists()
+        )
+
+    def test_staff_can_delete_resource(self):
+        resource = Resource.objects.create(
+            title="Delete Resource",
+            type="note",
+        )
+
+        response = self.client.delete(
+            f"/api/resources/{resource.id}/"
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+
+        self.assertFalse(
+            Resource.objects.filter(
+                id=resource.id
+            ).exists()
+        )
+
+    def test_staff_can_delete_event(self):
+        event = Event.objects.create(
+            title="Delete Event",
+            date="2026-09-08",
+        )
+
+        response = self.client.delete(
+            f"/api/events/{event.id}/"
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
+        )
+
+        self.assertFalse(
+            Event.objects.filter(
+                id=event.id
+            ).exists()
+        )
+
 class SerializerValidationTests(APITestCase):
     def setUp(self):
         self.staff_user = User.objects.create_user(
