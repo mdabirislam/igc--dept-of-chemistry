@@ -52,11 +52,10 @@ class FacultyAdmin(admin.ModelAdmin):
 class ResourceAdmin(admin.ModelAdmin):
     list_display = (
         "title",
-        "type",
         "created_at",
     )
 
-    list_filter = ("type", "created_at")
+    list_filter = ("created_at",)
 
     search_fields = ("title",)
 

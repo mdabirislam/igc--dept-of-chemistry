@@ -259,7 +259,6 @@ class PublicReadAccessTests(APITestCase):
 
         Resource.objects.create(
             title="Test Resource",
-            type="note",
         )
 
         Event.objects.create(
@@ -345,7 +344,6 @@ class AnonymousWriteProtectionTests(APITestCase):
             "/api/resources/",
             {
                 "title": "Unauthorized",
-                "type": "note",
             },
             format="json",
         )
@@ -516,7 +514,6 @@ class NonStaffWriteProtectionTests(APITestCase):
             "/api/resources/",
             {
                 "title": "Unauthorized Resource",
-                "type": "note",
             },
             format="json",
         )
@@ -546,7 +543,7 @@ class NonStaffWriteProtectionTests(APITestCase):
                 status.HTTP_403_FORBIDDEN,
             ],
         )
-        
+
 class StaffCRUDTests(APITestCase):
     def setUp(self):
         self.staff_user = User.objects.create_user(
@@ -607,7 +604,6 @@ class StaffCRUDTests(APITestCase):
             "/api/resources/",
             {
                 "title": "New Resource",
-                "type": "note",
             },
             format="json",
         )
@@ -719,7 +715,6 @@ class StaffCRUDTests(APITestCase):
     def test_staff_can_update_resource(self):
         resource = Resource.objects.create(
             title="Old Resource",
-            type="note",
         )
 
         response = self.client.patch(
@@ -792,7 +787,6 @@ class StaffCRUDTests(APITestCase):
     def test_staff_can_delete_resource(self):
         resource = Resource.objects.create(
             title="Delete Resource",
-            type="note",
         )
 
         response = self.client.delete(
@@ -851,21 +845,6 @@ class SerializerValidationTests(APITestCase):
                 "title": "Invalid Notice",
                 "category": "invalid-category",
                 "details": "Should fail",
-            },
-            format="json",
-        )
-
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_400_BAD_REQUEST,
-        )
-
-    def test_resource_rejects_invalid_type(self):
-        response = self.client.post(
-            "/api/resources/",
-            {
-                "title": "Invalid Resource",
-                "type": "invalid-type",
             },
             format="json",
         )
@@ -981,7 +960,6 @@ class SerializerValidationTests(APITestCase):
             "/api/resources/",
             {
                 "title": "Chemistry Notes",
-                "type": "note",
                 "file": resource_file,
             },
             format="multipart",
@@ -1136,7 +1114,6 @@ class SerializerValidationTests(APITestCase):
             "/api/resources/",
             {
                 "title": "Large Resource",
-                "type": "note",
                 "file": large_file,
             },
             format="multipart",
@@ -1202,7 +1179,6 @@ class SerializerValidationTests(APITestCase):
             "/api/resources/",
             {
                 "title": "Valid Resource",
-                "type": "note",
                 "file": resource_file,
             },
             format="multipart",

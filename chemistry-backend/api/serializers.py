@@ -114,7 +114,6 @@ class ResourceSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
-            "type",
             "file",
             "file_url",
             "created_at",

@@ -56,18 +56,7 @@ class Faculty(models.Model):
 
 
 class Resource(models.Model):
-    TYPE_CHOICES = [
-        ("note", "নোট"),
-        ("question-paper", "প্রশ্নপত্র"),
-        ("lab-manual", "ল্যাব ম্যানুয়াল"),
-        ("download", "ডাউনলোড"),
-    ]
-
     title = models.CharField(max_length=255)
-    type = models.CharField(
-        max_length=30,
-        choices=TYPE_CHOICES
-    )
     file = models.FileField(
         upload_to="resources/",
         blank=True,
