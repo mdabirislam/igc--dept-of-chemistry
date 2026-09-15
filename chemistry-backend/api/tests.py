@@ -1734,3 +1734,53 @@ class ModelOrderingTests(APITestCase):
 
         self.assertEqual(events[0].id, second.id)
         self.assertEqual(events[1].id, first.id)
+
+class MissingObjectCRUDTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="missing-object-staff",
+            password="testpass123",
+            is_staff=True,
+            is_active=True,
+        )
+        self.client.force_authenticate(user=self.user)
+
+    def test_nonexistent_notice_get_returns_404(self):
+        response = self.client.get("/api/notices/999999/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonexistent_faculty_get_returns_404(self):
+        response = self.client.get("/api/faculty/999999/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonexistent_resource_get_returns_404(self):
+        response = self.client.get("/api/resources/999999/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonexistent_event_get_returns_404(self):
+        response = self.client.get("/api/events/999999/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonexistent_notice_patch_returns_404(self):
+        response = self.client.patch(
+            "/api/notices/999999/",
+            {"title": "Updated"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonexistent_faculty_patch_returns_404(self):
+        response = self.client.patch(
+            "/api/faculty/999999/",
+            {"name": "Updated"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonexistent_resource_delete_returns_404(self):
+        response = self.client.delete("/api/resources/999999/")
+        self.assertEqual(response.status_code, 404)
+
+    def test_nonexistent_event_delete_returns_404(self):
+        response = self.client.delete("/api/events/999999/")
+        self.assertEqual(response.status_code, 404)
