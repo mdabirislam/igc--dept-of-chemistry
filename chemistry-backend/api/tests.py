@@ -1664,3 +1664,73 @@ class ModelConstraintTests(APITestCase):
         )
         with self.assertRaises(ValidationError):
             event.full_clean()
+
+class ModelOrderingTests(APITestCase):
+    def test_notice_ordering_newest_first(self):
+        first = Notice.objects.create(
+            title="First Notice",
+            category="general",
+        )
+        second = Notice.objects.create(
+            title="Second Notice",
+            category="general",
+        )
+
+        notices = list(Notice.objects.all())
+
+        self.assertEqual(notices[0].id, second.id)
+        self.assertEqual(notices[1].id, first.id)
+
+    def test_resource_ordering_newest_first(self):
+        first = Resource.objects.create(title="First Resource")
+        second = Resource.objects.create(title="Second Resource")
+
+        resources = list(Resource.objects.all())
+
+        self.assertEqual(resources[0].id, second.id)
+        self.assertEqual(resources[1].id, first.id)
+
+    def test_faculty_ordering_by_id(self):
+        first = Faculty.objects.create(
+            name="First Teacher",
+            designation="Lecturer",
+        )
+        second = Faculty.objects.create(
+            name="Second Teacher",
+            designation="Lecturer",
+        )
+
+        faculty = list(Faculty.objects.all())
+
+        self.assertEqual(faculty[0].id, first.id)
+        self.assertEqual(faculty[1].id, second.id)
+
+    def test_event_ordering_by_date(self):
+        later = Event.objects.create(
+            title="Later Event",
+            date="2026-12-01",
+        )
+        earlier = Event.objects.create(
+            title="Earlier Event",
+            date="2026-10-01",
+        )
+
+        events = list(Event.objects.all())
+
+        self.assertEqual(events[0].id, earlier.id)
+        self.assertEqual(events[1].id, later.id)
+
+    def test_event_same_date_newest_created_first(self):
+        first = Event.objects.create(
+            title="First Event",
+            date="2026-10-01",
+        )
+        second = Event.objects.create(
+            title="Second Event",
+            date="2026-10-01",
+        )
+
+        events = list(Event.objects.all())
+
+        self.assertEqual(events[0].id, second.id)
+        self.assertEqual(events[1].id, first.id)
