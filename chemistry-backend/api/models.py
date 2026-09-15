@@ -1,4 +1,18 @@
+import uuid
+
 from django.db import models
+
+def notice_upload_path(instance, filename):
+    extension = filename.rsplit(".", 1)[-1].lower()
+    return f"notices/{uuid.uuid4().hex}.{extension}"
+
+def faculty_upload_path(instance, filename):
+    extension = filename.rsplit(".", 1)[-1].lower()
+    return f"faculty/{uuid.uuid4().hex}.{extension}"
+
+def resource_upload_path(instance, filename):
+    extension = filename.rsplit(".", 1)[-1].lower()
+    return f"resources/{uuid.uuid4().hex}.{extension}"
 
 
 class Notice(models.Model):
@@ -17,7 +31,7 @@ class Notice(models.Model):
     )
     details = models.TextField(blank=True)
     pdf = models.FileField(
-        upload_to="notices/",
+        upload_to=notice_upload_path,
         blank=True,
         null=True
     )
@@ -40,7 +54,7 @@ class Faculty(models.Model):
         blank=True
     )
     image = models.ImageField(
-        upload_to="faculty/",
+        upload_to=faculty_upload_path,
         blank=True,
         null=True
     )
@@ -58,7 +72,7 @@ class Faculty(models.Model):
 class Resource(models.Model):
     title = models.CharField(max_length=255)
     file = models.FileField(
-        upload_to="resources/",
+        upload_to=resource_upload_path,
         blank=True,
         null=True
     )

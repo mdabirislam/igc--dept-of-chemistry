@@ -4,8 +4,13 @@ from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .models import Event, Faculty, Notice, Resource
-
+from .models import (
+    Event,
+    Faculty,
+    Notice,
+    Resource,
+    faculty_upload_path,
+)
 
 User = get_user_model()
 
@@ -1334,4 +1339,123 @@ class SerializerValidationTests(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_notice_upload_generates_unique_filename(self):
+        user = User.objects.create_user(
+            username="uniquenotice",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        pdf = SimpleUploadedFile(
+            "same-name.pdf",
+            b"%PDF-1.4\nfirst",
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Unique Notice",
+                "category": "general",
+                "pdf": pdf,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        notice = Notice.objects.get(
+            id=response.data["id"]
+        )
+
+        self.assertTrue(
+            notice.pdf.name.startswith("notices/")
+        )
+        self.assertNotEqual(
+            notice.pdf.name,
+            "notices/same-name.pdf",
+        )
+
+    def test_resource_upload_generates_unique_filename(self):
+        user = User.objects.create_user(
+            username="uniqueresource",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        resource_file = SimpleUploadedFile(
+            "same-name.pdf",
+            b"resource content",
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Unique Resource",
+                "file": resource_file,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        resource = Resource.objects.get(
+            id=response.data["id"]
+        )
+
+        self.assertTrue(
+            resource.file.name.startswith("resources/")
+        )
+        self.assertNotEqual(
+            resource.file.name,
+            "resources/same-name.pdf",
+        )
+
+    def test_faculty_upload_generates_unique_filename(self):
+        user = User.objects.create_user(
+            username="uniquefaculty",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        # ImageField validation is tested separately.
+        # This test only verifies the upload-path function directly.
+        filename = faculty_upload_path(
+            None,
+            "teacher.jpg",
+        )
+
+        self.assertTrue(
+            filename.startswith("faculty/")
+        )
+        self.assertTrue(
+            filename.endswith(".jpg")
+        )
+        self.assertNotEqual(
+            filename,
+            "faculty/teacher.jpg",
         )
