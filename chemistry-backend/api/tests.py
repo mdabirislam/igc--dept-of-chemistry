@@ -1528,3 +1528,95 @@ class FileCleanupTests(APITestCase):
         self.assertFalse(
             __import__("os").path.exists(file_path)
         )
+
+    def test_old_notice_file_deleted_when_replaced(self):
+        notice = Notice.objects.create(
+            title="Replace Notice",
+            category="general",
+            pdf=SimpleUploadedFile(
+                "old.pdf",
+                b"%PDF-1.4\nold",
+                content_type="application/pdf",
+            ),
+        )
+
+        old_file_path = notice.pdf.path
+        old_file_name = notice.pdf.name
+
+        notice.pdf = SimpleUploadedFile(
+            "new.pdf",
+            b"%PDF-1.4\nnew",
+            content_type="application/pdf",
+        )
+        notice.save()
+
+        self.assertFalse(
+            notice.pdf.storage.exists(old_file_name)
+        )
+        self.assertTrue(
+            notice.pdf.storage.exists(notice.pdf.name)
+        )
+        self.assertFalse(
+            __import__("os").path.exists(old_file_path)
+        )
+
+    def test_old_faculty_image_deleted_when_replaced(self):
+        faculty = Faculty.objects.create(
+            name="Replace Teacher",
+            designation="Lecturer",
+            image=SimpleUploadedFile(
+                "old.jpg",
+                b"old image",
+                content_type="image/jpeg",
+            ),
+        )
+
+        old_file_path = faculty.image.path
+        old_file_name = faculty.image.name
+
+        faculty.image = SimpleUploadedFile(
+            "new.jpg",
+            b"new image",
+            content_type="image/jpeg",
+        )
+        faculty.save()
+
+        self.assertFalse(
+            faculty.image.storage.exists(old_file_name)
+        )
+        self.assertTrue(
+            faculty.image.storage.exists(faculty.image.name)
+        )
+        self.assertFalse(
+            __import__("os").path.exists(old_file_path)
+        )
+
+    def test_old_resource_file_deleted_when_replaced(self):
+        resource = Resource.objects.create(
+            title="Replace Resource",
+            file=SimpleUploadedFile(
+                "old.pdf",
+                b"old resource",
+                content_type="application/pdf",
+            ),
+        )
+
+        old_file_path = resource.file.path
+        old_file_name = resource.file.name
+
+        resource.file = SimpleUploadedFile(
+            "new.pdf",
+            b"new resource",
+            content_type="application/pdf",
+        )
+        resource.save()
+
+        self.assertFalse(
+            resource.file.storage.exists(old_file_name)
+        )
+        self.assertTrue(
+            resource.file.storage.exists(resource.file.name)
+        )
+        self.assertFalse(
+            __import__("os").path.exists(old_file_path)
+        )
