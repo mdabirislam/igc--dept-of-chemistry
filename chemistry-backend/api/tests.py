@@ -1221,3 +1221,117 @@ class SerializerValidationTests(APITestCase):
             response.status_code,
             status.HTTP_400_BAD_REQUEST,
         )
+
+    def test_resource_upload_stays_inside_resource_directory(self):
+        user = User.objects.create_user(
+            username="pathcheck",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        resource_file = SimpleUploadedFile(
+            "../../outside.txt",
+            b"test resource",
+            content_type="text/plain",
+        )
+
+        response = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Path Test",
+                "file": resource_file,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        resource = Resource.objects.get(
+            id=response.data["id"]
+        )
+
+        self.assertTrue(
+            resource.file.name.startswith("resources/")
+        )
+
+    def test_notice_upload_stays_inside_notice_directory(self):
+        user = User.objects.create_user(
+            username="noticepath",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        pdf = SimpleUploadedFile(
+            "../../outside.pdf",
+            b"%PDF-1.4\npath test",
+            content_type="application/pdf",
+        )
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Notice Path Test",
+                "category": "general",
+                "pdf": pdf,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        notice = Notice.objects.get(
+            id=response.data["id"]
+        )
+
+        self.assertTrue(
+            notice.pdf.name.startswith("notices/")
+        )
+
+    def test_faculty_upload_stays_inside_faculty_directory(self):
+        user = User.objects.create_user(
+            username="facultypath",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        image = SimpleUploadedFile(
+            "../../teacher.jpg",
+            b"not a real image",
+            content_type="image/jpeg",
+        )
+
+        response = self.client.post(
+            "/api/faculty/",
+            {
+                "name": "Path Test Teacher",
+                "designation": "Lecturer",
+                "image": image,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
