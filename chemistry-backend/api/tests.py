@@ -2098,3 +2098,136 @@ class APISecurityBoundaryTests(APITestCase):
         self.assertTrue(
             Notice.objects.filter(id=self.notice.id).exists()
         )
+
+class StaffCRUDIntegrationTests(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.user = User.objects.create_user(
+            username="crud-integration-staff",
+            password="crud-pass-123",
+            is_staff=True,
+            is_active=True,
+        )
+
+        self.client.force_authenticate(user=self.user)
+
+    def test_staff_notice_crud_workflow(self):
+        create = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Integration Notice",
+                "category": "general",
+                "details": "Notice CRUD test",
+            },
+            format="json",
+        )
+        self.assertEqual(create.status_code, 201)
+
+        notice_id = create.data["id"]
+
+        update = self.client.patch(
+            f"/api/notices/{notice_id}/",
+            {"details": "Updated notice"},
+            format="json",
+        )
+        self.assertEqual(update.status_code, 200)
+
+        read = self.client.get(f"/api/notices/{notice_id}/")
+        self.assertEqual(read.status_code, 200)
+        self.assertEqual(read.data["details"], "Updated notice")
+
+        delete = self.client.delete(f"/api/notices/{notice_id}/")
+        self.assertEqual(delete.status_code, 204)
+
+    def test_staff_faculty_crud_workflow(self):
+        create = self.client.post(
+            "/api/faculty/",
+            {
+                "name": "Integration Teacher",
+                "designation": "Lecturer",
+                "qualification": "M.Sc. Chemistry",
+            },
+            format="json",
+        )
+        self.assertEqual(create.status_code, 201)
+
+        faculty_id = create.data["id"]
+
+        update = self.client.patch(
+            f"/api/faculty/{faculty_id}/",
+            {"designation": "Assistant Professor"},
+            format="json",
+        )
+        self.assertEqual(update.status_code, 200)
+
+        read = self.client.get(f"/api/faculty/{faculty_id}/")
+        self.assertEqual(read.status_code, 200)
+        self.assertEqual(
+            read.data["designation"],
+            "Assistant Professor",
+        )
+
+        delete = self.client.delete(f"/api/faculty/{faculty_id}/")
+        self.assertEqual(delete.status_code, 204)
+
+    def test_staff_resource_crud_workflow(self):
+        create = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Integration Resource",
+            },
+            format="json",
+        )
+        self.assertEqual(create.status_code, 201)
+
+        resource_id = create.data["id"]
+
+        update = self.client.patch(
+            f"/api/resources/{resource_id}/",
+            {"title": "Updated Resource"},
+            format="json",
+        )
+        self.assertEqual(update.status_code, 200)
+
+        read = self.client.get(f"/api/resources/{resource_id}/")
+        self.assertEqual(read.status_code, 200)
+        self.assertEqual(
+            read.data["title"],
+            "Updated Resource",
+        )
+
+        delete = self.client.delete(f"/api/resources/{resource_id}/")
+        self.assertEqual(delete.status_code, 204)
+
+    def test_staff_event_crud_workflow(self):
+        create = self.client.post(
+            "/api/events/",
+            {
+                "title": "Integration Event",
+                "date": "2026-11-15",
+                "location": "Chemistry Department",
+                "details": "Event CRUD test",
+            },
+            format="json",
+        )
+        self.assertEqual(create.status_code, 201)
+
+        event_id = create.data["id"]
+
+        update = self.client.patch(
+            f"/api/events/{event_id}/",
+            {"location": "Updated Location"},
+            format="json",
+        )
+        self.assertEqual(update.status_code, 200)
+
+        read = self.client.get(f"/api/events/{event_id}/")
+        self.assertEqual(read.status_code, 200)
+        self.assertEqual(
+            read.data["location"],
+            "Updated Location",
+        )
+
+        delete = self.client.delete(f"/api/events/{event_id}/")
+        self.assertEqual(delete.status_code, 204)
