@@ -1,6 +1,8 @@
 import uuid
 
 from django.db import models
+from django.db.models.signals import post_delete, pre_save
+from django.dispatch import receiver
 
 def notice_upload_path(instance, filename):
     extension = filename.rsplit(".", 1)[-1].lower()
@@ -104,3 +106,74 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+@receiver(post_delete, sender=Notice)
+def delete_notice_file(sender, instance, **kwargs):
+    if instance.pdf:
+        instance.pdf.delete(save=False)
+
+
+@receiver(post_delete, sender=Faculty)
+def delete_faculty_image(sender, instance, **kwargs):
+    if instance.image:
+        instance.image.delete(save=False)
+
+
+@receiver(post_delete, sender=Resource)
+def delete_resource_file(sender, instance, **kwargs):
+    if instance.file:
+        instance.file.delete(save=False)
+
+
+@receiver(pre_save, sender=Notice)
+def delete_old_notice_file(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+
+    try:
+        old_instance = Notice.objects.get(pk=instance.pk)
+    except Notice.DoesNotExist:
+        return
+
+    if (
+        old_instance.pdf
+        and old_instance.pdf.name
+        != getattr(instance.pdf, "name", None)
+    ):
+        old_instance.pdf.delete(save=False)
+
+
+@receiver(pre_save, sender=Faculty)
+def delete_old_faculty_image(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+
+    try:
+        old_instance = Faculty.objects.get(pk=instance.pk)
+    except Faculty.DoesNotExist:
+        return
+
+    if (
+        old_instance.image
+        and old_instance.image.name
+        != getattr(instance.image, "name", None)
+    ):
+        old_instance.image.delete(save=False)
+
+
+@receiver(pre_save, sender=Resource)
+def delete_old_resource_file(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+
+    try:
+        old_instance = Resource.objects.get(pk=instance.pk)
+    except Resource.DoesNotExist:
+        return
+
+    if (
+        old_instance.file
+        and old_instance.file.name
+        != getattr(instance.file, "name", None)
+    ):
+        old_instance.file.delete(save=False)

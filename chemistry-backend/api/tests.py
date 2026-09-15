@@ -1459,3 +1459,72 @@ class SerializerValidationTests(APITestCase):
             filename,
             "faculty/teacher.jpg",
         )
+
+class FileCleanupTests(APITestCase):
+    def test_notice_file_deleted_when_notice_deleted(self):
+        notice = Notice.objects.create(
+            title="Delete Notice File",
+            category="general",
+            pdf=SimpleUploadedFile(
+                "notice.pdf",
+                b"%PDF-1.4\ntest",
+                content_type="application/pdf",
+            ),
+        )
+
+        file_path = notice.pdf.path
+
+        self.assertTrue(
+            notice.pdf.storage.exists(notice.pdf.name)
+        )
+
+        notice.delete()
+
+        self.assertFalse(
+            __import__("os").path.exists(file_path)
+        )
+
+    def test_faculty_image_deleted_when_faculty_deleted(self):
+        faculty = Faculty.objects.create(
+            name="Delete Image Teacher",
+            designation="Lecturer",
+            image=SimpleUploadedFile(
+                "teacher.txt",
+                b"test image content",
+                content_type="text/plain",
+            ),
+        )
+
+        file_path = faculty.image.path
+
+        self.assertTrue(
+            faculty.image.storage.exists(faculty.image.name)
+        )
+
+        faculty.delete()
+
+        self.assertFalse(
+            __import__("os").path.exists(file_path)
+        )
+
+    def test_resource_file_deleted_when_resource_deleted(self):
+        resource = Resource.objects.create(
+            title="Delete Resource File",
+            file=SimpleUploadedFile(
+                "resource.txt",
+                b"test resource",
+                content_type="text/plain",
+            ),
+        )
+
+        file_path = resource.file.path
+
+        self.assertTrue(
+            resource.file.storage.exists(resource.file.name)
+        )
+
+        resource.delete()
+
+        self.assertFalse(
+            __import__("os").path.exists(file_path)
+        )
