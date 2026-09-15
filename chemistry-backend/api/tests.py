@@ -3,6 +3,8 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 
 from .models import (
     Event,
@@ -1620,3 +1622,45 @@ class FileCleanupTests(APITestCase):
         self.assertFalse(
             __import__("os").path.exists(old_file_path)
         )
+
+class ModelConstraintTests(APITestCase):
+    def test_notice_title_max_length(self):
+        notice = Notice(
+            title="A" * 255,
+            category="general",
+        )
+        notice.full_clean()
+
+    def test_faculty_name_max_length(self):
+        faculty = Faculty(
+            name="A" * 255,
+            designation="Lecturer",
+        )
+        faculty.full_clean()
+
+    def test_faculty_designation_max_length(self):
+        faculty = Faculty(
+            name="Test Teacher",
+            designation="A" * 255,
+        )
+        faculty.full_clean()
+
+    def test_resource_title_max_length(self):
+        resource = Resource(
+            title="A" * 255,
+        )
+        resource.full_clean()
+
+    def test_event_title_max_length(self):
+        event = Event(
+            title="A" * 255,
+            date="2026-01-01",
+        )
+        event.full_clean()
+
+    def test_event_date_required(self):
+        event = Event(
+            title="Test Event",
+        )
+        with self.assertRaises(ValidationError):
+            event.full_clean()
