@@ -1784,3 +1784,108 @@ class MissingObjectCRUDTests(APITestCase):
     def test_nonexistent_event_delete_returns_404(self):
         response = self.client.delete("/api/events/999999/")
         self.assertEqual(response.status_code, 404)
+
+class ModelIntegrityTests(APITestCase):
+    def test_notice_can_be_created_without_pdf(self):
+        notice = Notice.objects.create(
+            title="Notice Without PDF",
+            category="general",
+        )
+
+        self.assertIsNotNone(notice.pk)
+        self.assertFalse(bool(notice.pdf))
+
+    def test_faculty_can_be_created_without_image(self):
+        faculty = Faculty.objects.create(
+            name="No Image Teacher",
+            designation="Lecturer",
+        )
+
+        self.assertIsNotNone(faculty.pk)
+        self.assertFalse(bool(faculty.image))
+
+    def test_resource_can_be_created_without_file(self):
+        resource = Resource.objects.create(
+            title="Resource Without File",
+        )
+
+        self.assertIsNotNone(resource.pk)
+        self.assertFalse(bool(resource.file))
+
+    def test_notice_category_is_stored_correctly(self):
+        notice = Notice.objects.create(
+            title="Category Test",
+            category="exam",
+        )
+
+        notice.refresh_from_db()
+
+        self.assertEqual(notice.category, "exam")
+
+    def test_event_records_with_same_date_are_preserved(self):
+        first = Event.objects.create(
+            title="First Same Date",
+            date="2026-10-01",
+        )
+        second = Event.objects.create(
+            title="Second Same Date",
+            date="2026-10-01",
+        )
+
+        self.assertNotEqual(first.pk, second.pk)
+        self.assertEqual(Event.objects.filter(date="2026-10-01").count(), 2)
+
+    def test_all_model_primary_keys_are_unique(self):
+        notice1 = Notice.objects.create(
+            title="Notice One",
+            category="general",
+        )
+        notice2 = Notice.objects.create(
+            title="Notice Two",
+            category="general",
+        )
+
+        faculty1 = Faculty.objects.create(
+            name="Teacher One",
+            designation="Lecturer",
+        )
+        faculty2 = Faculty.objects.create(
+            name="Teacher Two",
+            designation="Lecturer",
+        )
+
+        resource1 = Resource.objects.create(title="Resource One")
+        resource2 = Resource.objects.create(title="Resource Two")
+
+        event1 = Event.objects.create(
+            title="Event One",
+            date="2026-10-01",
+        )
+        event2 = Event.objects.create(
+            title="Event Two",
+            date="2026-10-02",
+        )
+
+        self.assertNotEqual(notice1.pk, notice2.pk)
+        self.assertNotEqual(faculty1.pk, faculty2.pk)
+        self.assertNotEqual(resource1.pk, resource2.pk)
+        self.assertNotEqual(event1.pk, event2.pk)
+
+    def test_optional_text_fields_default_to_empty(self):
+        notice = Notice.objects.create(
+            title="Optional Fields",
+            category="general",
+        )
+        faculty = Faculty.objects.create(
+            name="Optional Teacher",
+            designation="Lecturer",
+        )
+        event = Event.objects.create(
+            title="Optional Event",
+            date="2026-10-01",
+        )
+
+        self.assertEqual(notice.details, "")
+        self.assertEqual(faculty.qualification, "")
+        self.assertEqual(event.location, "")
+        self.assertEqual(event.details, "")
