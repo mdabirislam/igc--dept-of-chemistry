@@ -6,6 +6,7 @@ from rest_framework.test import APITestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
+from rest_framework.test import APIClient
 
 from .models import (
     Event,
@@ -2012,4 +2013,88 @@ class APIIntegrationTests(APITestCase):
             Token.objects.filter(
                 key=token
             ).exists()
+        )
+
+class APISecurityBoundaryTests(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.notice = Notice.objects.create(
+            title="Security Boundary Notice",
+            category="general",
+            details="Security test",
+        )
+
+        self.user = User.objects.create_user(
+            username="regular-user",
+            password="regular-pass-123",
+            is_staff=False,
+            is_active=True,
+        )
+
+    def test_anonymous_can_read_notice(self):
+        response = self.client.get("/api/notices/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_anonymous_cannot_create_notice(self):
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Anonymous Notice",
+                "category": "general",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_non_staff_can_read_notice(self):
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.get("/api/notices/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_non_staff_cannot_create_notice(self):
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Unauthorized Notice",
+                "category": "general",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_non_staff_cannot_update_notice(self):
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.patch(
+            f"/api/notices/{self.notice.id}/",
+            {
+                "title": "Unauthorized Update",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+        self.notice.refresh_from_db()
+        self.assertEqual(
+            self.notice.title,
+            "Security Boundary Notice",
+        )
+
+    def test_non_staff_cannot_delete_notice(self):
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.delete(
+            f"/api/notices/{self.notice.id}/"
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTrue(
+            Notice.objects.filter(id=self.notice.id).exists()
         )
