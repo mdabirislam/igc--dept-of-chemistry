@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
+from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -1889,3 +1890,126 @@ class ModelIntegrityTests(APITestCase):
         self.assertEqual(faculty.qualification, "")
         self.assertEqual(event.location, "")
         self.assertEqual(event.details, "")
+
+class APIIntegrationTests(APITestCase):
+    def test_staff_complete_notice_workflow(self):
+        username = "integration-staff"
+        password = "integration-pass-123"
+
+        User.objects.create_user(
+            username=username,
+            password=password,
+            is_staff=True,
+            is_active=True,
+        )
+
+        # 1. Login
+        login_response = self.client.post(
+            "/api/auth/login/",
+            {
+                "username": username,
+                "password": password,
+            },
+            format="json",
+        )
+
+        self.assertEqual(login_response.status_code, 200)
+        self.assertIn("token", login_response.data)
+
+        token = login_response.data["token"]
+        self.assertTrue(token)
+
+        # 2. Use token for authenticated requests
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token}"
+        )
+
+        # 3. Create
+        create_response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Integration Test Notice",
+                "category": "general",
+                "details": "Created through complete API workflow.",
+            },
+            format="json",
+        )
+
+        self.assertEqual(create_response.status_code, 201)
+        notice_id = create_response.data["id"]
+
+        # 4. Update
+        update_response = self.client.patch(
+            f"/api/notices/{notice_id}/",
+            {
+                "title": "Updated Integration Notice",
+            },
+            format="json",
+        )
+
+        self.assertEqual(update_response.status_code, 200)
+        self.assertEqual(
+            update_response.data["title"],
+            "Updated Integration Notice",
+        )
+
+        # 5. Read
+        get_response = self.client.get(
+            f"/api/notices/{notice_id}/"
+        )
+
+        self.assertEqual(get_response.status_code, 200)
+        self.assertEqual(
+            get_response.data["id"],
+            notice_id,
+        )
+        self.assertEqual(
+            get_response.data["title"],
+            "Updated Integration Notice",
+        )
+
+        # 6. Delete
+        delete_response = self.client.delete(
+            f"/api/notices/{notice_id}/"
+        )
+
+        self.assertEqual(delete_response.status_code, 204)
+
+        # Confirm deleted
+        missing_response = self.client.get(
+            f"/api/notices/{notice_id}/"
+        )
+
+        self.assertEqual(missing_response.status_code, 404)
+
+        # 7. Logout
+        logout_response = self.client.post(
+            "/api/auth/logout/"
+        )
+
+        self.assertEqual(logout_response.status_code, 200)
+
+        # 8. Old token must no longer work
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token}"
+        )
+
+        after_logout_response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Should Not Be Created",
+                "category": "general",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            after_logout_response.status_code,
+            401,
+        )
+
+        self.assertFalse(
+            Token.objects.filter(
+                key=token
+            ).exists()
+        )
