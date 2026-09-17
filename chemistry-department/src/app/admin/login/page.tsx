@@ -2,6 +2,7 @@
 
 import {
   FormEvent,
+  useEffect,
   useState,
 } from "react";
 
@@ -27,6 +28,13 @@ export default function AdminLoginPage() {
 
   const [loading, setLoading] =
     useState(false);
+
+  useEffect(() => {
+    if (isAdminAuthenticated()) {
+      router.replace("/admin");
+      router.refresh();
+    }
+  }, [router]);
 
   function handleSubmit(
     event: FormEvent<HTMLFormElement>
@@ -65,14 +73,6 @@ export default function AdminLoginPage() {
       .finally(() => {
         setLoading(false);
       });
-  }
-
-  if (
-    typeof window !== "undefined" &&
-    isAdminAuthenticated()
-  ) {
-    router.replace("/admin");
-    return null;
   }
 
   return (
