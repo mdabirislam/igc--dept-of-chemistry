@@ -1,17 +1,45 @@
 "use client";
 
-import {
-  LogOut,
-  UserCircle,
-} from "lucide-react";
+import { useSyncExternalStore } from "react";
+import { LogOut, UserCircle } from "lucide-react";
+import { getAdminUser, logoutAdmin } from "@/lib/auth";
 
-import {
-  getAdminUser,
-  logoutAdmin,
-} from "@/lib/auth";
+function subscribeToAdminSession(
+  onStoreChange: () => void
+) {
+  window.addEventListener(
+    "storage",
+    onStoreChange
+  );
+
+  return () => {
+    window.removeEventListener(
+      "storage",
+      onStoreChange
+    );
+  };
+}
+
+function getDisplayName() {
+  const user = getAdminUser();
+
+  return (
+    user?.name ||
+    user?.username ||
+    "Admin"
+  );
+}
+
+function getServerDisplayName() {
+  return "Admin";
+}
 
 export default function AdminHeader() {
-  const user = getAdminUser();
+  const displayName = useSyncExternalStore(
+    subscribeToAdminSession,
+    getDisplayName,
+    getServerDisplayName
+  );
 
   return (
     <header className="flex items-center justify-between border-b bg-white px-5 py-4">
@@ -34,9 +62,7 @@ export default function AdminHeader() {
 
           <div className="text-right">
             <p className="text-sm font-medium text-gray-700">
-              {user?.name ||
-                user?.username ||
-                "Admin"}
+              {displayName}
             </p>
 
             <p className="text-[11px] text-gray-400">
@@ -47,9 +73,7 @@ export default function AdminHeader() {
 
         <button
           type="button"
-          onClick={() => {
-            void logoutAdmin();
-          }}
+          onClick={() => void logoutAdmin()}
           className="flex items-center gap-2 rounded-lg border px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50"
         >
           <LogOut size={16} />
