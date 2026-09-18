@@ -427,7 +427,7 @@ input {
 }
 
 .hero-image {
-  position: absolute;
+  position: relative;
   inset: 0;
 
   width: 100%;

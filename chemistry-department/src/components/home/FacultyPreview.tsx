@@ -8,6 +8,8 @@ import {
   UserRound,
 } from "lucide-react";
 
+import Image from "next/image";
+
 import { apiFetch } from "@/lib/api";
 
 import type { Faculty } from "@/types/api";
@@ -95,9 +97,12 @@ export default function FacultyPreview() {
             >
               <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gray-100">
                 {person.image_url ? (
-                  <img
+                  <Image
                     src={person.image_url}
                     alt={person.name}
+                    width={64}
+                    height={64}
+                    unoptimized
                     className="h-full w-full object-cover"
                   />
                 ) : (

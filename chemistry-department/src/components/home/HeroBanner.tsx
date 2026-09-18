@@ -1,12 +1,15 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function HeroBanner() {
   return (
     <section className="hero-banner">
 
-      <img
+      <Image
         src="/images/banners/campus-01.jpg"
         alt="ঈশ্বরদী সরকারি কলেজ"
+        fill
+        priority
         className="hero-image"
       />
 

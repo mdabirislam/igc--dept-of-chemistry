@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, GraduationCap, UserRound } from "lucide-react";
-
+import Image from "next/image";
 import { apiFetch } from "@/lib/api";
 import type { Faculty } from "@/types/api";
 
@@ -79,9 +79,12 @@ export default function FacultyPage() {
                 <div className="flex items-start gap-4">
                   <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full bg-gray-100">
                     {person.image_url ? (
-                      <img
+                      <Image
                         src={person.image_url}
                         alt={person.name}
+                        width={80}
+                        height={80}
+                        unoptimized
                         className="h-full w-full object-cover"
                       />
                     ) : (

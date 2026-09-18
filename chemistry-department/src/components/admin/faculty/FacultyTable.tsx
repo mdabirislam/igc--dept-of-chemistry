@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import type { FacultyData } from "./FacultyForm";
+import Image from "next/image";
 
 interface FacultyTableProps {
   faculty: FacultyData[];
@@ -74,9 +75,12 @@ export default function FacultyTable({
                   <div className="flex items-center gap-3">
                     <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg border bg-gray-100">
                       {person.imageUrl ? (
-                        <img
+                        <Image
                           src={person.imageUrl}
                           alt={person.name}
+                          width={48}
+                          height={48}
+                          unoptimized
                           className="h-full w-full object-cover"
                         />
                       ) : (

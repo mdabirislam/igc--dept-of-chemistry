@@ -1,12 +1,16 @@
+import Image from "next/image";
+
 export default function Header() {
   return (
     <header className="college-header">
       <div className="college-header-inner">
 
         <div className="college-logo">
-          <img
+          <Image
             src="/images/branding/bd-govt-logo.jpg"
             alt="Bangladesh government Logo"
+            width={64}
+            height={64}
           />
         </div>
 
@@ -20,9 +24,11 @@ export default function Header() {
         </div>
 
         <div className="nu-logo">
-          <img
+          <Image
             src="/images/branding/igc-logo.jpg"
             alt="Ishwardi Government College Logo"
+            width={64}
+            height={64}
           />
         </div>
 

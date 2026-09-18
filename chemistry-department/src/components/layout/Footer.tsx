@@ -5,6 +5,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 
+import Image from "next/image";
+
 const importantLinks = [
   {
     label: "ঈশ্বরদী সরকারি কলেজ",
@@ -63,10 +65,11 @@ export default function Footer() {
           <div>
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white p-1.5">
-                <img
-                  src="/images/branding/igc-logo.png"
-                  alt="Ishwardi Government College"
-                  className="h-full w-full object-contain"
+                <Image
+                  src="/images/branding/igc-logo.jpg"
+                  alt="Bangladesh government Logo"
+                  width={64}
+                  height={64}
                 />
               </div>
 
