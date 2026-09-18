@@ -6,36 +6,11 @@ import {
   ArrowDownToLine,
   BookOpen,
   FileText,
-  FlaskConical,
-  NotebookPen,
 } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 
 import type { Resource } from "@/types/api";
-
-const typeLabels: Record<string, string> = {
-  note: "নোট",
-  "question-paper": "প্রশ্নপত্র",
-  "lab-manual": "ল্যাব ম্যানুয়াল",
-  download: "ডাউনলোড",
-};
-
-function getIcon(type: string) {
-  switch (type) {
-    case "question-paper":
-      return FileText;
-
-    case "lab-manual":
-      return FlaskConical;
-
-    case "download":
-      return ArrowDownToLine;
-
-    default:
-      return NotebookPen;
-  }
-}
 
 export default function ImportantResources() {
   const [resources, setResources] =
@@ -104,7 +79,7 @@ export default function ImportantResources() {
       ) : (
         <div className="space-y-3">
           {resources.slice(0, 6).map((resource) => {
-            const Icon = getIcon(resource.type);
+            const Icon = FileText;
 
             return (
               <a
@@ -135,9 +110,7 @@ export default function ImportantResources() {
                   </p>
 
                   <p className="mt-0.5 text-xs text-gray-500">
-                    {typeLabels[
-                      resource.type
-                    ] ?? resource.type}
+                    শিক্ষা উপকরণ
                   </p>
                 </div>
 

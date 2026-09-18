@@ -49,15 +49,11 @@ export default function ResourceTable({
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[750px] text-sm">
+        <table className="w-full min-w-[650px] text-sm">
           <thead>
             <tr className="border-b bg-gray-50 text-left text-xs text-gray-500">
               <th className="px-5 py-3 font-semibold">
                 রিসোর্স
-              </th>
-
-              <th className="px-5 py-3 font-semibold">
-                ধরন
               </th>
 
               <th className="px-5 py-3 font-semibold">
@@ -88,12 +84,6 @@ export default function ResourceTable({
                       </p>
                     </div>
                   </div>
-                </td>
-
-                <td className="px-5 py-4">
-                  <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-600">
-                    {resource.type}
-                  </span>
                 </td>
 
                 <td className="px-5 py-4">

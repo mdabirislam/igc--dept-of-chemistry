@@ -7,32 +7,10 @@ import {
   BookOpen,
   ChevronLeft,
   FileText,
-  FlaskConical,
-  NotebookPen,
 } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import type { Resource } from "@/types/api";
-
-const typeLabels: Record<string, string> = {
-  note: "নোট",
-  "question-paper": "প্রশ্নপত্র",
-  "lab-manual": "ল্যাব ম্যানুয়াল",
-  download: "ডাউনলোড",
-};
-
-function getIcon(type: string) {
-  switch (type) {
-    case "question-paper":
-      return FileText;
-    case "lab-manual":
-      return FlaskConical;
-    case "download":
-      return ArrowDownToLine;
-    default:
-      return NotebookPen;
-  }
-}
 
 export default function ResourcesPage() {
   const [resources, setResources] = useState<Resource[]>([]);
@@ -76,7 +54,7 @@ export default function ResourcesPage() {
             <div>
               <h1 className="text-3xl font-bold">শিক্ষাসামগ্রী ও রিসোর্স</h1>
               <p className="mt-1 text-sm text-white/75">
-                শিক্ষার্থীদের জন্য প্রয়োজনীয় নোট, প্রশ্নপত্র ও ল্যাব ম্যানুয়াল
+                শিক্ষার্থীদের জন্য প্রয়োজনীয় শিক্ষা উপকরণ ও রিসোর্স
               </p>
             </div>
           </div>
@@ -99,7 +77,7 @@ export default function ResourcesPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {resources.map((resource) => {
-              const Icon = getIcon(resource.type);
+              const Icon = FileText;
 
               return (
                 <article
@@ -115,7 +93,7 @@ export default function ResourcesPage() {
                         {resource.title}
                       </h2>
                       <p className="mt-1 text-xs text-gray-500">
-                        {typeLabels[resource.type] ?? resource.type}
+                        শিক্ষা উপকরণ
                       </p>
                     </div>
                   </div>

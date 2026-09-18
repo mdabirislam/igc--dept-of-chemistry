@@ -18,7 +18,6 @@ import type { Resource } from "@/types/api";
 export interface ResourceData {
   id: number;
   title: string;
-  type: string;
   fileName?: string;
   fileUrl?: string;
 }
@@ -29,45 +28,12 @@ interface ResourceFormProps {
   onCancelEdit?: () => void;
 }
 
-const resourceTypes = [
-  { value: "note", label: "নোট" },
-  {
-    value: "question-paper",
-    label: "প্রশ্নপত্র",
-  },
-  {
-    value: "lab-manual",
-    label: "ল্যাব ম্যানুয়াল",
-  },
-  {
-    value: "download",
-    label: "ডাউনলোড",
-  },
-];
-
-function getTypeValue(label: string) {
-  return (
-    resourceTypes.find(
-      (item) => item.label === label
-    )?.value ?? label
-  );
-}
-
-function getTypeLabel(value: string) {
-  return (
-    resourceTypes.find(
-      (item) => item.value === value
-    )?.label ?? value
-  );
-}
-
 export function mapResourceToResourceData(
   resource: Resource
 ): ResourceData {
   return {
     id: resource.id,
     title: resource.title,
-    type: getTypeLabel(resource.type),
     fileName: resource.file
       ? resource.file.split("/").pop()
       : undefined,
@@ -88,10 +54,6 @@ export default function ResourceForm({
     editingResource?.title ?? ""
   );
 
-  const [type, setType] = useState(
-    getTypeValue(editingResource?.type ?? "নোট")
-  );
-
   const [file, setFile] =
     useState<File | null>(null);
 
@@ -108,9 +70,9 @@ export default function ResourceForm({
 
     if (!selected) return;
 
-    if (selected.size > 20 * 1024 * 1024) {
+    if (selected.size > 10 * 1024 * 1024) {
       setError(
-        "ফাইলের size সর্বোচ্চ 20 MB হতে হবে।"
+        "ফাইলের size সর্বোচ্চ 10 MB হতে হবে।"
       );
       return;
     }
@@ -121,7 +83,6 @@ export default function ResourceForm({
 
   function resetForm() {
     setTitle("");
-    setType("note");
     setFile(null);
     setError("");
     setSaving(false);
@@ -154,7 +115,6 @@ export default function ResourceForm({
       const formData = new FormData();
 
       formData.append("title", title.trim());
-      formData.append("type", type);
 
       if (file) {
         formData.append("file", file);
@@ -247,27 +207,6 @@ export default function ResourceForm({
 
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            ধরন
-          </label>
-
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="w-full rounded-lg border bg-white px-3 py-2.5 text-sm"
-          >
-            {resourceTypes.map((item) => (
-              <option
-                key={item.value}
-                value={item.value}
-              >
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
             ফাইল
           </label>
 
@@ -284,7 +223,7 @@ export default function ResourceForm({
             </span>
 
             <span className="mt-1 text-xs text-gray-400">
-              সর্বোচ্চ 20 MB
+              সর্বোচ্চ 10 MB
             </span>
 
             <input
