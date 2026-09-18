@@ -56,11 +56,19 @@ export async function apiFetch<T>(
     );
   }
 
-  const response = await fetch(url, {
-    ...options,
-    headers,
-    cache: "no-store",
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(url, {
+      ...options,
+      headers,
+      cache: "no-store",
+    });
+  } catch {
+    throw new Error(
+      "Server-এর সাথে সংযোগ করা যাচ্ছে না। Django server চালু আছে কি না পরীক্ষা করুন।"
+    );
+  }
 
   if (!response.ok) {
     let message =

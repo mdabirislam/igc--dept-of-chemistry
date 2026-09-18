@@ -54,19 +54,27 @@ export async function loginAdmin(
   username: string,
   password: string
 ): Promise<AdminUser> {
-  const response = await fetch(
-    `${API_BASE_URL}/auth/login/`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    }
-  );
+  let response: Response;
+  
+  try {
+    response = await fetch(
+      `${API_BASE_URL}/auth/login/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      }
+    );
+  } catch {
+    throw new Error(
+      "Could not connect to the server. Please check your internet connection."
+    );
+  }
 
   const data =
     (await response.json()) as Partial<LoginResponse> & {
