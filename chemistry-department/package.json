@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify:api": "node scripts/verify-api-contract.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.39.0",
