@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import "./navbar.css";
-
+import { ChevronDown } from "react-bootstrap-icons";
 type NavigationItem = {
   label: string;
   href: string;
@@ -154,18 +154,28 @@ export default function Navbar() {
                 item.children ? "has-submenu" : ""
               }`}
             >
-              <Link
-                href={item.href}
-                className="nav-link"
-              >
-                <span>{item.label}</span>
-
-                {item.children && (
-                  <span className="dropdown-arrow">
-                   ⌄
-                  </span>
-                )}
-              </Link>
+              {item.children ? (
+                <button
+                  type="button"
+                  className="nav-link nav-parent-button"
+                  aria-haspopup="true"
+                >
+                  <span>{item.label}</span>
+              
+                  <ChevronDown
+                    className="nav-chevron"
+                    size={15}
+                    strokeWidth={1.8}
+                  />
+                </button>
+              ) : (
+                <Link
+                  href={item.href || "#"}
+                  className="nav-link"
+                >
+                  <span>{item.label}</span>
+                </Link>
+              )}
 
               {item.children && (
                 <div className="desktop-submenu">
@@ -182,22 +192,6 @@ export default function Navbar() {
               )}
             </div>
           ))}
-        </div>
-
-        {/* Search */}
-        <div className="navbar-search">
-          <input
-            type="search"
-            placeholder="সাইটে খুঁজুন..."
-            aria-label="সাইটে খুঁজুন"
-          />
-
-          <button
-            type="button"
-            aria-label="অনুসন্ধান"
-          >
-            🔍
-          </button>
         </div>
 
         {/* Mobile menu button */}
@@ -282,27 +276,23 @@ export default function Navbar() {
                   isOpen ? "mobile-nav-group-open" : ""
                 }`}
               >
-                <div className="mobile-nav-parent">
-                  <Link
-                    href={item.href}
-                    className="mobile-nav-parent-link"
-                    onClick={closeMobileMenu}
-                  >
+                <button
+                  type="button"
+                  className="mobile-nav-parent"
+                  onClick={() => toggleSubmenu(item.label)}
+                  aria-expanded={isOpen}
+                >
+                  <span className="mobile-nav-parent-link">
                     {item.label}
-                  </Link>
-
-                  <button
-                    type="button"
+                  </span>
+                              
+                  <span
                     className="mobile-submenu-toggle"
-                    onClick={() =>
-                      toggleSubmenu(item.label)
-                    }
-                    aria-label={`${item.label} submenu`}
-                    aria-expanded={isOpen}
+                    aria-hidden="true"
                   >
-                    ›
-                  </button>
-                </div>
+                    <ChevronDown size={18} strokeWidth={1.8} />
+                  </span>
+                </button>
 
                 <div className="mobile-submenu">
                   {item.children?.map((child) => (
