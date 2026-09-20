@@ -1,0 +1,391 @@
+/* =========================================================
+   UNDER CONSTRUCTION PAGE
+   ========================================================= */
+
+.uc-shell {
+  min-height: 70vh;
+  background: #f7f9fb;
+}
+
+.uc-page {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px 56px;
+}
+
+.uc-card {
+  width: min(100%, 560px);
+  padding: 32px 24px 36px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  text-align: center;
+}
+
+/* ---------- cartoon ---------- */
+
+.uc-art {
+  display: block;
+  width: 230px;
+  max-width: 70%;
+  height: auto;
+  margin: 0 auto 8px;
+  overflow: visible;
+}
+
+.uc-shadow {
+  fill: #1a3a5c;
+  opacity: 0.12;
+
+  transform-origin: 160px 270px;
+  animation: uc-shadow 1.6s ease-in-out infinite;
+}
+
+.uc-flask {
+  transform-origin: 160px 256px;
+  animation: uc-wobble 3.2s ease-in-out infinite;
+}
+
+.uc-glass {
+  fill: #e8f4fb;
+  stroke: #1a3a5c;
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+
+.uc-wave-back {
+  fill: #81c784;
+  animation: uc-wave 3.6s linear infinite reverse;
+}
+
+.uc-wave-front {
+  fill: #43a047;
+  animation: uc-wave 2.4s linear infinite;
+}
+
+.uc-bubble {
+  fill: rgba(255, 255, 255, 0.75);
+  opacity: 0;
+  animation: uc-bubble 2.8s ease-in infinite;
+}
+
+.uc-b1 {
+  animation-delay: 0s;
+}
+
+.uc-b2 {
+  animation-delay: 0.9s;
+  animation-duration: 3.2s;
+}
+
+.uc-b3 {
+  animation-delay: 1.7s;
+  animation-duration: 2.6s;
+}
+
+.uc-b4 {
+  animation-delay: 2.2s;
+  animation-duration: 3s;
+}
+
+.uc-shine {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+.uc-eyes {
+  transform-origin: 160px 206px;
+  animation: uc-blink 4s infinite;
+}
+
+.uc-eye-white {
+  fill: #ffffff;
+}
+
+.uc-pupil {
+  fill: #1a3a5c;
+}
+
+.uc-cheek {
+  fill: #ff8a80;
+  opacity: 0.6;
+}
+
+.uc-mouth {
+  fill: none;
+  stroke: #1a3a5c;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.uc-hat {
+  transform-origin: 160px 46px;
+  animation: uc-hat 3.2s ease-in-out infinite;
+}
+
+.uc-hat-dome,
+.uc-hat-brim {
+  fill: #fbc02d;
+  stroke: #1a3a5c;
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.uc-hat-ridge {
+  fill: #f9a825;
+  stroke: #1a3a5c;
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+/* ---------- text ---------- */
+
+.uc-title {
+  margin: 12px 0 0;
+
+  color: #1a3a5c;
+
+  font-family: "Noto Sans Bengali", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.uc-status {
+  margin: 6px 0 0;
+
+  color: #1b5e20;
+
+  font-family: "Noto Sans Bengali", sans-serif;
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.uc-english {
+  margin: 4px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+.uc-text {
+  max-width: 400px;
+  margin: 16px auto 0;
+
+  color: #4b5563;
+
+  font-family: "Noto Sans Bengali", sans-serif;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.uc-dots {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.uc-dots i {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+  background: #1b5e20;
+
+  animation: uc-dot 1.2s ease-in-out infinite;
+}
+
+.uc-dots i:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.uc-dots i:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* ---------- warning tape ---------- */
+
+.uc-tape {
+  width: 220px;
+  max-width: 70%;
+  height: 8px;
+  margin: 24px auto 0;
+
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #fbc02d 0 12px,
+    #1a3a5c 12px 24px
+  );
+}
+
+/* ---------- buttons ---------- */
+
+.uc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+
+  margin-top: 24px;
+}
+
+.uc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 20px;
+
+  border: 1px solid #1b5e20;
+  border-radius: 8px;
+
+  font-family: "Noto Sans Bengali", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.uc-button:focus-visible {
+  outline: 2px solid #1a3a5c;
+  outline-offset: 2px;
+}
+
+.uc-button-primary {
+  background: #1b5e20;
+  color: #ffffff;
+}
+
+.uc-button-primary:hover {
+  background: #145218;
+}
+
+.uc-button-outline {
+  background: #ffffff;
+  color: #1b5e20;
+}
+
+.uc-button-outline:hover {
+  background: #e8f5e9;
+}
+
+/* ---------- keyframes ---------- */
+
+@keyframes uc-wobble {
+  0%,
+  100% {
+    transform: rotate(-2.5deg);
+  }
+
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+
+@keyframes uc-hat {
+  0%,
+  100% {
+    transform: rotate(2deg) translateY(0);
+  }
+
+  50% {
+    transform: rotate(-2deg) translateY(-2px);
+  }
+}
+
+@keyframes uc-shadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+
+  50% {
+    transform: scaleX(0.92);
+  }
+}
+
+@keyframes uc-wave {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-80px);
+  }
+}
+
+@keyframes uc-bubble {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.9;
+  }
+
+  80% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translateY(-58px);
+    opacity: 0;
+  }
+}
+
+@keyframes uc-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes uc-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uc-art *,
+  .uc-dots i {
+    animation: none !important;
+  }
+
+  .uc-dots i {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .uc-card {
+    padding: 24px 16px 28px;
+  }
+
+  .uc-title {
+    font-size: 24px;
+  }
+}
