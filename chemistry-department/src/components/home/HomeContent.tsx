@@ -1,36 +1,45 @@
-import QuickAccess from "@/components/home/QuickAccess";
 import NoticeSection from "@/components/home/NoticeSection";
 import EventsSection from "@/components/home/EventsSection";
 import DepartmentSummary from "@/components/home/DepartmentSummary";
 import FacultyPreview from "@/components/home/FacultyPreview";
 import ImportantResources from "@/components/home/ImportantResources";
+import HeadMessage from "@/components/home/HeadMessage";
+import GalleryPreview from "@/components/home/GalleryPreview";
 
 export default function HomeContent() {
   return (
     <main className="bg-[#f7f9fb]">
-      {/* Quick Access */}
-      <QuickAccess />
+      {/* Message from Department Head */}
+      <HeadMessage />
 
-      {/* Notice + Events */}
+      {/* Notice + Events + Resources */}
       <section className="pb-4">
         <div className="mx-auto max-w-[1500px] px-4 lg:px-6">
-          <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-            <NoticeSection />
+          <div className="grid gap-4 lg:grid-cols-[2fr_1fr] lg:grid-rows-2">
+            {/* Notice spans both rows on the left */}
+            <div className="lg:row-span-2">
+              <NoticeSection />
+            </div>
             <EventsSection />
-          </div>
-
-          {/* Department Summary */}
-          <div className="mt-4">
-            <DepartmentSummary />
+            <ImportantResources />
           </div>
         </div>
       </section>
 
-      {/* Faculty + Resources */}
+      {/* Faculty - full width */}
       <section className="pb-5">
-        <div className="mx-auto grid max-w-[1500px] gap-4 px-4 lg:grid-cols-[2fr_1fr] lg:px-6">
+        <div className="mx-auto max-w-[1500px] px-4 lg:px-6">
           <FacultyPreview />
-          <ImportantResources />
+        </div>
+      </section>
+
+      {/* Gallery */}
+      <GalleryPreview />
+
+      {/* Department Summary */}
+      <section className="pb-5">
+        <div className="mx-auto max-w-[1500px] px-4 lg:px-6">
+          <DepartmentSummary />
         </div>
       </section>
     </main>
