@@ -1,5 +1,6 @@
  "use client";
 
+import PublicSiteLayout from "@/components/layout/PublicSiteLayout";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Bell, ChevronLeft, Download, FileText } from "lucide-react";
@@ -55,7 +56,8 @@ export default function NoticesPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#f7f9fb]">
+    <PublicSiteLayout>
+      <main className="min-h-screen bg-[#f7f9fb]">
       <section className="bg-[#1a3a5c] text-white">
         <div className="mx-auto max-w-[1500px] px-4 py-10 lg:px-6">
           <Link
@@ -165,6 +167,7 @@ export default function NoticesPage() {
           </div>
         )}
       </section>
-    </main>
+      </main>
+    </PublicSiteLayout>
   );
 }

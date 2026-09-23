@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "রসায়ন বিভাগ | ঈশ্বরদী সরকারি কলেজ",
@@ -17,7 +16,6 @@ export default function RootLayout({
     <html lang="bn">
       <body>
         {children}
-        <Footer />
       </body>
     </html>
   );

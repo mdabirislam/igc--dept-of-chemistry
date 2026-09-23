@@ -1,5 +1,6 @@
  "use client";
 
+import PublicSiteLayout from "@/components/layout/PublicSiteLayout";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CalendarDays, ChevronLeft, MapPin } from "lucide-react";
@@ -38,7 +39,8 @@ export default function EventsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#f7f9fb]">
+    <PublicSiteLayout>
+      <main className="min-h-screen bg-[#f7f9fb]">
       <section className="bg-[#1a3a5c] text-white">
         <div className="mx-auto max-w-[1500px] px-4 py-10 lg:px-6">
           <Link
@@ -115,6 +117,7 @@ export default function EventsPage() {
           </div>
         )}
       </section>
-    </main>
+      </main>
+    </PublicSiteLayout>
   );
 }

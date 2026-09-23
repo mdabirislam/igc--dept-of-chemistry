@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-import Header from "@/components/layout/Header";
-import Navbar from "@/components/layout/Navbar";
+import PublicSiteLayout from "@/components/layout/PublicSiteLayout";
 
 import "./under-construction.css";
 
@@ -14,10 +13,7 @@ export default function UnderConstruction({
   title,
 }: UnderConstructionProps) {
   return (
-    <div className="uc-shell">
-      <Header />
-      <Navbar />
-
+    <PublicSiteLayout>
       <main className="uc-page">
         <div className="uc-card">
           <svg
@@ -143,6 +139,6 @@ export default function UnderConstruction({
           </div>
         </div>
       </main>
-    </div>
+    </PublicSiteLayout>
   );
 }

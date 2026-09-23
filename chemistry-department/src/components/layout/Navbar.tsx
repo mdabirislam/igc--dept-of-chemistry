@@ -22,11 +22,11 @@ const navigationItems: NavigationItem[] = [
       { label: "ইতিহাস", href: "/about/history" },
       { label: "মিশন", href: "/about/mission" },
       { label: "ভিশন", href: "/about/vision" },
-      { label: "সুবিধাসমূহ", href: "/about/facilities" },
+      // { label: "সুবিধাসমূহ", href: "/about/facilities" },
     ],
   },
   {
-    label: "পাঠ্যক্রম",
+    label: "একাডেমিক",
     href: "/academics",
     children: [
       { label: "রুটিন", href: "/academics/routine" },
@@ -40,10 +40,6 @@ const navigationItems: NavigationItem[] = [
     href: "/faculty",
   },
   {
-    label: "একাডেমিক",
-    href: "/academics",
-  },
-  {
     label: "শিক্ষার্থী কর্নার",
     href: "/resources",
   },
@@ -51,26 +47,27 @@ const navigationItems: NavigationItem[] = [
     label: "কার্যক্রম",
     href: "/activities",
   },
-  {
-    label: "গবেষণা ও প্রকাশনা",
-    href: "/research",
-    children: [
-      { label: "গবেষণা", href: "/research" },
-      { label: "Under Construction", href: "/research" },
-    ],
-  },
-  {
-    label: "ল্যাবরেটরি",
-    href: "/laboratory",
-    children: [
-      { label: "Under Construction", href: "/laboratory" },
-    ],
-  },
+  // {
+  //   label: "গবেষণা ও প্রকাশনা",
+  //   href: "/research",
+  //   children: [
+  //     { label: "গবেষণা", href: "/research" },
+  //     { label: "Under Construction", href: "/research" },
+  //   ],
+  // },
+  // {
+  //   label: "ল্যাবরেটরি",
+  //   href: "/laboratory",
+  //   children: [
+  //     { label: "Under Construction", href: "/laboratory" },
+  //   ],
+  // },
   {
     label: "রিসোর্স",
     href: "/resources",
     children: [
-      { label: "Under Construction", href: "/resources" },
+       { label: "ল্যাবরেটরি", href: "/laboratory" },
+       { label: "লাইব্রেরি", href: "/library" },
     ],
   },
   {
@@ -89,9 +86,6 @@ const navigationItems: NavigationItem[] = [
   {
     label: "যোগাযোগ",
     href: "/contact",
-    children: [
-      { label: "Under Construction", href: "/contact" },
-    ],
   },
 ];
 
