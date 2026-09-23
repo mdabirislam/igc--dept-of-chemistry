@@ -17,11 +17,17 @@ export default function HomeContent() {
         <div className="mx-auto max-w-[1500px] px-4 lg:px-6">
           <div className="grid gap-4 lg:grid-cols-[2fr_1fr] lg:grid-rows-2">
             {/* Notice spans both rows on the left */}
-            <div className="lg:row-span-2">
+            <div className="lg:row-span-2 lg:min-h-[580px]">
               <NoticeSection />
             </div>
-            <EventsSection />
-            <ImportantResources />
+              
+            <div className="lg:min-h-[280px]">
+              <EventsSection />
+            </div>
+              
+            <div className="lg:min-h-[280px]">
+              <ImportantResources />
+            </div>
           </div>
         </div>
       </section>

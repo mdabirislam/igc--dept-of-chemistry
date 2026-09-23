@@ -419,7 +419,7 @@ input {
 .hero-banner {
   position: relative;
 
-  min-height: 370px;
+  min-height: 430px;
 
   overflow: hidden;
 
@@ -453,7 +453,7 @@ input {
   position: relative;
   z-index: 2;
 
-  min-height: 370px;
+  min-height: 430px;
 
   display: flex;
   align-items: center;
