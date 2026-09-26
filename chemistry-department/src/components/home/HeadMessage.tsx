@@ -9,26 +9,23 @@ export default function HeadMessage() {
       <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
         <div className="grid lg:grid-cols-[30%_70%]">
           {/* Department Head Photo */}
-          <div className="relative min-h-[300px] bg-gray-100 sm:min-h-[360px] lg:min-h-[390px]">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-40 w-40 items-center justify-center rounded-full border-4 border-white bg-green-50 text-[#1b5e20] shadow-md sm:h-48 sm:w-48">
-                <div className="text-center">
-                  <Sparkles
+          <div className="relative min-h-[300px] bg-gray-100 sm:min-h-[360px] lg:min-h-[390px] p-6 sm:p-8 lg:p-0 pr-0 lg:pr-0">
+            {/* <div className="absolute inset-0 flex items-center justify-center"> */}
+              {/* <div className="flex h-40 w-40 items-center justify-center rounded-full border-4 border-white bg-green-50 text-[#1b5e20] shadow-md sm:h-48 sm:w-48"> */}
+                {/* <div className="text-center"> */}
+                  {/* <Sparkles
                     size={38}
                     strokeWidth={1.5}
                     className="mx-auto mb-2"
+                  /> */}
+                  <img
+                    src="/images/dept-head/dept-head.jpeg"
+                    alt="Department Head"
+                    className="mx-auto h-full w-full object-cover"
                   />
-
-                  <p className="text-sm font-medium">
-                    Department Head
-                  </p>
-
-                  <p className="mt-1 text-xs text-gray-500">
-                    Photo will be added
-                  </p>
-                </div>
-              </div>
-            </div>
+                {/* </div> */}
+              {/* </div> */}
+            {/* </div> */}
           </div>
 
           {/* Message */}
