@@ -824,7 +824,15 @@ HERO
 .hero-banner {
 position: relative;
 
-min-height: 430px;
+/* 
+top bar height 30px
+header height 92px
+department bar height 47px
+navbar height 48px
+Total height = 30 + 92 + 47 + 48 = 217px
+*/
+
+min-height: calc(100vh - 217px);
 
 overflow: hidden;
 
@@ -860,7 +868,7 @@ position: relative;
 
 z-index: 2;
 
-min-height: 430px;
+min-height: calc(100vh - 217px);
 
 display: flex;
 align-items: center;
@@ -896,7 +904,7 @@ font-size: 24px;
 font-weight: 500;
 }
 
-.hero-text p {
+/* .hero-text p {
 margin: 0 0 22px;
 
 font-family:
@@ -907,7 +915,7 @@ font-size: 15px;
 line-height: 1.8;
 
 max-width: 480px;
-}
+} */
 
 .hero-button {
 display: inline-flex;
@@ -1072,7 +1080,7 @@ width: 48px;
 
 .hero-banner,
 .hero-content {
-min-height: 330px;
+min-height: calc(100vh - 217px);
 }
 
 .hero-content {
