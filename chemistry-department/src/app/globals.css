@@ -344,44 +344,52 @@ align-items: stretch;
 }
 
 .nav-link {
-display: flex;
-align-items: center;
-gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 
-padding: 0 13px;
+  padding: 0 13px;
 
-color: #fff;
-text-decoration: none;
+  color: #fff;
+  text-decoration: none;
 
-font-family:
-"Noto Serif Bengali",
-serif;
+  font-family:
+    "Noto Serif Bengali",
+    serif;
 
-font-size: 14px;
-font-weight: 500;
+  font-size: 15px;
+  font-weight: 400;
 
-white-space: nowrap;
+  line-height: 1;
 
-transition:
-background-color 0.2s ease,
-color 0.2s ease;
+  white-space: nowrap;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .nav-link:hover,
 .nav-item:focus-within > .nav-link {
-background: var(--igc-green-dark);
+  background: var(--igc-green-dark);
 }
 
 .nav-parent-button {
-border: 0;
-margin: 0;
+  border: 0;
+  margin: 0;
 
-color: #fff;
-background: transparent;
+  color: #fff;
+  background: transparent;
 
-font: inherit;
+  font-family:
+    "Noto Serif Bengali",
+    serif;
 
-cursor: default;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+
+  cursor: default;
 }
 
 .nav-parent-button:hover,
@@ -458,6 +466,8 @@ font-family:
 sans-serif;
 
 font-size: 13px;
+font-weight: 400;
+line-height: 1.5;
 
 border-radius: 5px;
 
@@ -634,7 +644,7 @@ font-family:
 "Noto Sans Bengali",
 sans-serif;
 
-font-size: 14px;
+font-size: 15px;
 
 transition:
 background-color 0.16s ease,
@@ -982,13 +992,12 @@ RESPONSIVE
 /* ---------- Navbar tablet ---------- */
 
 @media (max-width: 1100px) {
-.nav-link {
-padding-left: 9px;
-padding-right: 9px;
+  .nav-link {
+    padding-left: 10px;
+    padding-right: 10px;
 
-font-size: 13px;
-
-}
+    font-size: 14px;
+  }
 }
 
 /* ---------- Main responsive breakpoint ---------- */
