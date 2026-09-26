@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import "./navbar.css";
 import { ChevronDown } from "react-bootstrap-icons";
 type NavigationItem = {
   label: string;
