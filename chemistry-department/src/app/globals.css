@@ -872,11 +872,12 @@ min-height: calc(100vh - 217px);
 
 display: flex;
 align-items: center;
+justify-content: center;
 }
 
 .hero-text {
 width: min(510px, 100%);
-
+text-align: center;
 color: white;
 }
 
