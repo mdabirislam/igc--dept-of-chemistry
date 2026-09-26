@@ -6,11 +6,6 @@ export default function TopBar() {
           <span className="latest-notice">LATEST NOTICE</span>
           <span className="notice-text">ক্লাস রুটিন ***</span>
         </div>
-
-        <div className="topbar-right">
-          <a href="#">Login</a>
-          <a href="#">EMS Login</a>
-        </div>
       </div>
     </div>
   );

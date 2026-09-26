@@ -2,24 +2,31 @@ import {
   Quote,
   Sparkles,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function HeadMessage() {
   return (
+
+    // head message full section
     <section className="mx-auto max-w-[1500px] px-4 pb-5 lg:px-6">
       <div className="overflow-hidden border border-gray-100 bg-[var(--igc-green)] shadow-sm p-6 sm:p-8 lg:p-12">
-        <div className="grid lg:grid-cols-[30%_70%]">
+        <div className="grid lg:grid-cols-[32%_68%]">
+
           {/* Department Head Photo */}
-          <div className="relative min-h-[300px] bg-gray-100 sm:min-h-[360px] lg:min-h-[390px] p-6 sm:p-0 lg:pr-0">
-                  <img
+          <div className="relative min-h-[300px] bg-gray-100 sm:min-h-[360px] lg:min-h-[390px] p-6 pl-8 sm:p-0 lg:pr-0">
+                  <Image
                     src="/images/dept-head/dept-head.jpeg"
                     alt="Department Head"
-                    className="mx-auto h-full w-full object-cover"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 100vw" 
+                    // className="mx-auto h-full w-full object-cover"
                   />
           </div>
 
           {/* Message */}
           <div className="relative flex flex-col justify-center px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
-            <div className="absolute right-6 top-6 text-green-100 sm:right-8">
+            <div className="absolute right-6 top-6 text-green-100 sm:right-6">
               <Quote
                 size={52}
                 strokeWidth={1.2}

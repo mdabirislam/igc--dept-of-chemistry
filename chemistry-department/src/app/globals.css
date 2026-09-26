@@ -128,17 +128,16 @@ border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 width: min(100%, 1120px);
 height: 100%;
 
-margin: auto;
+/* margin: auto;
 
 display: flex;
 justify-content: space-between;
-align-items: center;
+align-items: center; */
 
 font-size: 12px;
 }
 
-.topbar-left,
-.topbar-right {
+.topbar-left {
 height: 100%;
 
 display: flex;
@@ -163,7 +162,7 @@ font-weight: 700;
 .notice-text {
 padding-left: 12px;
 }
-
+/* 
 .topbar-right {
 gap: 18px;
 }
@@ -176,7 +175,7 @@ transition: opacity 0.2s ease;
 
 .topbar-right a:hover {
 opacity: 1;
-}
+} */
 
 /* =========================================================
 COLLEGE HEADER
@@ -835,7 +834,7 @@ navbar height 48px
 Total height = 30 + 92 + 47 + 48 = 217px
 */
 
-min-height: calc(100vh - var(--topbar-height) - var(--college-header-height) - var(--department-bar-height) - var(--navbar-height));
+min-height: calc(100vh - var(--topbar-height) - var(--college-header-height) - var(--department-bar-height) - var(--navbar-height) );
 
 overflow: hidden;
 
@@ -1084,7 +1083,7 @@ width: 48px;
 
 .hero-banner,
 .hero-content {
-min-height: calc(100vh - 217px);
+min-height: 400px;
 }
 
 .hero-content {
