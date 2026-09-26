@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ChevronDown } from "react-bootstrap-icons";
+import { ChevronDown , HouseFill} from "react-bootstrap-icons";
 type NavigationItem = {
   label: string;
   href: string;
@@ -135,7 +135,7 @@ export default function Navbar() {
           className="home-button"
           aria-label="হোম"
         >
-          🏠
+          <HouseFill size={22} style={{ color: '#fff'}} />
         </Link>
 
         {/* Desktop navigation */}

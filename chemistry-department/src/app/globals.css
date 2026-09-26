@@ -315,7 +315,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 
-background: #fff;
+background: transparent;
 color: var(--igc-green);
 
 text-decoration: none;
@@ -324,7 +324,7 @@ transition: background-color 0.2s ease;
 }
 
 .home-button:hover {
-background: #f1f6f3;
+background: var(--igc-green-dark);
 }
 
 /* =========================================================
