@@ -10,13 +10,11 @@ export default function HeadMessage() {
         <div className="grid lg:grid-cols-[30%_70%]">
           {/* Department Head Photo */}
           <div className="relative min-h-[300px] bg-gray-100 sm:min-h-[360px] lg:min-h-[390px] p-6 sm:p-0 lg:pr-0">
-            {/* <div className="absolute inset-0 flex items-center justify-center"> */}
                   <img
                     src="/images/dept-head/dept-head.jpeg"
                     alt="Department Head"
                     className="mx-auto h-full w-full object-cover"
                   />
-            {/* </div> */}
           </div>
 
           {/* Message */}
