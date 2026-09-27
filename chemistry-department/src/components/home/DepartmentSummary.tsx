@@ -47,18 +47,12 @@ export default function DepartmentSummary() {
 
       <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
         {statistics.map((item) => {
-          // const Icon = item.icon;
 
           return (
             <div
               key={item.title}
-              className={`flex min-h-[76px] items-center gap-2.5 rounded-lg px-3 sm:min-h-[84px] sm:gap-3 sm:px-4 ${item.className}`}
+              className={`flex min-h-[76px] items-center justify-center gap-2.5 rounded-lg px-3 sm:min-h-[84px] sm:gap-3 sm:px-4 ${item.className}`}
             >
-              {/* <Icon
-                size={25}
-                strokeWidth={1.8}
-                className="shrink-0 sm:h-7 sm:w-7"
-              /> */}
 
               <div className="min-w-0">
                 <p className="text-[11px] text-gray-600 sm:text-xs">

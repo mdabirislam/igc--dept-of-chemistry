@@ -77,17 +77,13 @@ export default function NoticeSection() {
   }, []);
 
   return (
-    <section className="overflow-hidden rounded-xl border bg-white shadow-sm">
-      <div className="flex items-center justify-between border-b px-5 py-4">
+    <section className="overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50 text-[#1b5e20]">
-            <Bell size={18} />
-          </div>
-
           <div>
-            <h2 className="font-bold text-gray-800">
+            <h1 className="font-bold text-gray-800">
               নোটিশ বোর্ড
-            </h2>
+            </h1>
 
             <p className="text-xs text-gray-500">
               বিভাগের সর্বশেষ বিজ্ঞপ্তি
@@ -117,23 +113,23 @@ export default function NoticeSection() {
           বর্তমানে কোনো নোটিশ নেই।
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[650px] text-sm">
-            <thead className="bg-gray-50 text-left text-xs text-gray-500">
+        <div className="overflow-hidden w-full px-6 pb-6">
+          <table className="w-full text-sm border-collapse border">
+            <thead className="bg-gray-50 text-center text-xs text-gray-700 border-b">
               <tr>
-                <th className="px-5 py-3 font-semibold">
+                <th className="w-[10%] px-5 py-3 font-semibold font-medium border-r">
                   ক্রম
-                </th>
+                </th> 
 
-                <th className="px-5 py-3 font-semibold">
+                <th className="w-[10%] px-5 py-3 font-semibold font-medium border-r">
                   নোটিশ
                 </th>
 
-                <th className="px-5 py-3 font-semibold">
+                <th className="w-[50%] px-5 py-3 font-semibold font-medium border-r">
                   তারিখ
                 </th>
 
-                <th className="px-5 py-3 text-right font-semibold">
+                <th className="w-[10%] px-5 py-3 font-semibold font-medium">
                   PDF
                 </th>
               </tr>
@@ -146,11 +142,11 @@ export default function NoticeSection() {
                     key={notice.id}
                     className="transition hover:bg-gray-50"
                   >
-                    <td className="px-5 py-4 text-gray-500">
+                    <td className="px-5 py-4 text-gray-500 border-r">
                       {toBanglaNumber(index + 1)}
                     </td>
 
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-4 border-r">
                       <div>
                         <p className="font-medium text-gray-800">
                           {notice.title}
@@ -165,19 +161,19 @@ export default function NoticeSection() {
                       </div>
                     </td>
 
-                    <td className="whitespace-nowrap px-5 py-4 text-gray-500">
+                    <td className="whitespace-nowrap px-5 py-4 text-gray-500 border-r">
                       {formatDate(
                         notice.created_at
                       )}
                     </td>
 
-                    <td className="px-5 py-4 text-right">
+                    <td className="px-5 py-4 text-center">
                       {notice.pdf_url ? (
                         <a
                           href={notice.pdf_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-[#1b5e20] hover:text-[#1b5e20]"
+                          className="inline-flex items-center gap-1.5 rounded-lg  px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-[#1b5e20] hover:text-[#1b5e20]"
                         >
                           <Download size={14} />
                           PDF
@@ -195,13 +191,6 @@ export default function NoticeSection() {
           </table>
         </div>
       )}
-
-      <div className="border-t bg-gray-50 px-5 py-3">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
-          <FileText size={14} />
-          সর্বশেষ ৮টি নোটিশ দেখানো হচ্ছে
-        </div>
-      </div>
     </section>
   );
 }
