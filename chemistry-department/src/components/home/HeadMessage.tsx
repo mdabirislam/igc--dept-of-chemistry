@@ -8,7 +8,7 @@ export default function HeadMessage() {
   return (
 
     // head message full section
-    <section className="mx-auto max-w-[1500px] px-4 pb-5 lg:px-6">
+    <section className="mx-auto max-w-screen pb-6">
       <div className="overflow-hidden border border-gray-100 bg-[var(--igc-green)] shadow-sm p-6 sm:p-8 lg:p-12">
         <div className="grid lg:grid-cols-[32%_68%]">
 

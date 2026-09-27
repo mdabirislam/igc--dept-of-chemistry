@@ -14,7 +14,7 @@ export default function HomeContent() {
 
       {/* Notice + Events + Resources */}
       <section className="pb-4">
-        <div className="mx-auto max-w-[1500px] px-4 lg:px-6">
+        <div className="mx-auto max-w-screen">
           <div className="grid gap-4 lg:grid-cols-[2fr_1fr] lg:grid-rows-2">
             {/* Notice spans both rows on the left */}
             <div className="lg:row-span-2 lg:min-h-[580px]">
@@ -34,7 +34,7 @@ export default function HomeContent() {
 
       {/* Faculty - full width */}
       <section className="pb-5">
-        <div className="mx-auto max-w-[1500px] px-4 lg:px-6">
+        <div className="max-w-screen">
           <FacultyPreview />
         </div>
       </section>
@@ -44,7 +44,7 @@ export default function HomeContent() {
 
       {/* Department Summary */}
       <section className="pb-5">
-        <div className="mx-auto max-w-[1500px] px-4 lg:px-6">
+        <div className="mx-auto max-w-screen">
           <DepartmentSummary />
         </div>
       </section>

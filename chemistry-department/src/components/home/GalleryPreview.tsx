@@ -14,7 +14,7 @@ const galleryItems = [
 
 export default function GalleryPreview() {
   return (
-    <section className="mx-auto max-w-[1500px] px-4 pb-5 lg:px-6">
+    <section className="mx-auto max-w-screen">
       <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
         {/* Simple Centered Title */}
         <div className="border-b border-gray-100 px-5 py-4 text-center sm:px-6">
