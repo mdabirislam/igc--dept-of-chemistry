@@ -46,22 +46,13 @@ export default function ImportantResources() {
   }, []);
 
   return (
-    <section className="rounded-xl border bg-white p-5 shadow-sm">
+    <section className="bg-white p-5">
       <div className="mb-5">
-        <div className="flex items-center gap-2">
-          <BookOpen
-            size={20}
-            className="text-[#1b5e20]"
-          />
-
-          <h2 className="text-lg font-bold text-gray-800">
+        <div className="flex items-center border-b border-gray-100 pb-5">
+          <h2 className="w-full text-center text-xl font-bold text-gray-800">
             গুরুত্বপূর্ণ রিসোর্স
           </h2>
         </div>
-
-        <p className="mt-1 text-sm text-gray-500">
-          শিক্ষার্থীদের প্রয়োজনীয় শিক্ষা উপকরণ
-        </p>
       </div>
 
       {loading ? (
@@ -98,7 +89,7 @@ export default function ImportantResources() {
                     ? "noopener noreferrer"
                     : undefined
                 }
-                className="flex items-center gap-3 rounded-lg border p-3 transition hover:border-[#1b5e20] hover:bg-green-50/40"
+                className="flex items-center gap-3 p-3 transition hover:border-[#1b5e20] hover:bg-green-50/40"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-50 text-[#1b5e20]">
                   <Icon size={19} />
@@ -107,10 +98,6 @@ export default function ImportantResources() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-gray-800">
                     {resource.title}
-                  </p>
-
-                  <p className="mt-0.5 text-xs text-gray-500">
-                    শিক্ষা উপকরণ
                   </p>
                 </div>
 

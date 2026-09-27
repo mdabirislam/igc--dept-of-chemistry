@@ -57,32 +57,11 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="rounded-xl border bg-white p-5 shadow-sm">
-      <div className="mb-5 flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <CalendarDays
-              size={20}
-              className="text-[#1b5e20]"
-            />
-
-            <h2 className="text-lg font-bold text-gray-800">
-              আসন্ন ইভেন্ট
-            </h2>
-          </div>
-
-          <p className="mt-1 text-sm text-gray-500">
-            বিভাগের গুরুত্বপূর্ণ অনুষ্ঠান
-          </p>
-        </div>
-
-        <a
-          href="/events"
-          className="inline-flex items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
-        >
-          সব দেখুন
-          <ArrowRight size={15} />
-        </a>
+    <section className="bg-white p-5">
+      <div className="flex items-center">
+        <h2 className="w-full text-center text-xl font-bold text-gray-800">
+          ইভেন্ট
+        </h2>
       </div>
 
       {loading ? (
@@ -128,6 +107,14 @@ export default function EventsSection() {
               </div>
             </div>
           ))}
+            
+          <a
+            href="/events"
+            className="inline-flex items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
+          >
+            সব দেখুন
+            <ArrowRight size={15} />
+          </a>
         </div>
       )}
     </section>

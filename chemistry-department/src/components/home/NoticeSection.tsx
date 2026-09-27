@@ -81,7 +81,7 @@ export default function NoticeSection() {
       <div className="flex items-center justify-between px-5 py-4">
         <div className="flex items-center gap-3">
           <div>
-            <h1 className="font-bold text-gray-800">
+            <h1 className="font-bold text-xl text-gray-800">
               নোটিশ বোর্ড
             </h1>
 

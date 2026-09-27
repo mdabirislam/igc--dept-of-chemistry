@@ -48,33 +48,13 @@ export default function FacultyPreview() {
   }, []);
 
   return (
-    <section className="rounded-xl border bg-white p-5 shadow-sm">
-      <div className="mb-5 flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <GraduationCap
-              size={20}
-              className="text-[#1b5e20]"
-            />
-
-            <h2 className="text-lg font-bold text-gray-800">
+    <section className="bg-white p-5">
+          <div className="flex items-center">
+            <h2 className="relative w-full p-5 lg:p-5 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
+                 after:w-1/3 after:h-[2px] after:bg-gray-400">
               শিক্ষকবৃন্দ
             </h2>
           </div>
-
-          <p className="mt-1 text-sm text-gray-500">
-            রসায়ন বিভাগের শিক্ষক ও কর্মকর্তাবৃন্দ
-          </p>
-        </div>
-
-        <a
-          href="/faculty"
-          className="inline-flex items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
-        >
-          সব দেখুন
-          <ArrowRight size={15} />
-        </a>
-      </div>
 
       {loading ? (
         <div className="py-10 text-center text-sm text-gray-500">
@@ -89,13 +69,13 @@ export default function FacultyPreview() {
           বর্তমানে কোনো শিক্ষক তথ্য নেই।
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2 pt-5">
           {faculty.slice(0, 4).map((person) => (
             <div
               key={person.id}
-              className="flex items-center gap-4 rounded-xl border p-4 transition hover:shadow-sm"
+              className="flex items-center gap-4 p-4 transition hover:shadow-sm"
             >
-              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gray-100">
+              <div className="h-16 w-16 shrink-0 overflow-hidden bg-gray-100">
                 {person.image_url ? (
                   <Image
                     src={person.image_url}
@@ -129,6 +109,14 @@ export default function FacultyPreview() {
               </div>
             </div>
           ))}
+          
+        <a
+          href="/faculty"
+          className="inline-flex items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
+        >
+          সব দেখুন
+          <ArrowRight size={15} />
+        </a>
         </div>
       )}
     </section>
