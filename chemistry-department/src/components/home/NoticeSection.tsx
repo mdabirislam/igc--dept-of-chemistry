@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import {
-  Bell,
   ChevronRight,
   Download,
-  FileText,
 } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
@@ -77,23 +76,21 @@ export default function NoticeSection() {
   }, []);
 
   return (
-    <section className="overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-4">
-        <div className="flex items-center gap-3">
-          <div>
-            <h1 className="font-bold text-xl text-gray-800">
-              নোটিশ বোর্ড
-            </h1>
+    <section className="min-w-0 overflow-hidden">
+      <div className="flex min-w-0 items-center justify-between gap-4 px-4 py-4 sm:px-5">
+        <div className="min-w-0">
+          <h1 className="break-words text-xl font-bold text-gray-800 [overflow-wrap:anywhere]">
+            নোটিশ বোর্ড
+          </h1>
 
-            <p className="text-xs text-gray-500">
-              বিভাগের সর্বশেষ বিজ্ঞপ্তি
-            </p>
-          </div>
+          <p className="text-xs text-gray-500">
+            বিভাগের সর্বশেষ বিজ্ঞপ্তি
+          </p>
         </div>
 
         <a
           href="/notices"
-          className="flex items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
+          className="flex shrink-0 items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
         >
           সব দেখুন
           <ChevronRight size={16} />
@@ -113,23 +110,23 @@ export default function NoticeSection() {
           বর্তমানে কোনো নোটিশ নেই।
         </div>
       ) : (
-        <div className="overflow-hidden w-full px-6 pb-6">
-          <table className="w-full text-sm border-collapse border">
-            <thead className="bg-gray-50 text-center text-xs text-gray-700 border-b">
+        <div className="w-full min-w-0 px-3 pb-6 sm:px-6">
+          <table className="w-full table-fixed border-collapse border text-sm">
+            <thead className="border-b bg-gray-50 text-center text-xs text-gray-700">
               <tr>
-                <th className="w-[10%] px-5 py-3 font-semibold font-medium border-r">
+                <th className="w-[8%] border-r px-2 py-3 font-semibold sm:px-3">
                   ক্রম
-                </th> 
+                </th>
 
-                <th className="w-[10%] px-5 py-3 font-semibold font-medium border-r">
+                <th className="w-[57%] border-r px-2 py-3 text-left font-semibold sm:px-4">
                   নোটিশ
                 </th>
 
-                <th className="w-[50%] px-5 py-3 font-semibold font-medium border-r">
+                <th className="w-[23%] border-r px-2 py-3 font-semibold sm:px-3">
                   তারিখ
                 </th>
 
-                <th className="w-[10%] px-5 py-3 font-semibold font-medium">
+                <th className="w-[12%] px-1 py-3 font-semibold sm:px-2">
                   PDF
                 </th>
               </tr>
@@ -140,43 +137,47 @@ export default function NoticeSection() {
                 (notice, index) => (
                   <tr
                     key={notice.id}
-                    className="transition hover:bg-gray-50"
+                    className="text-center transition hover:bg-gray-50"
                   >
-                    <td className="px-5 py-4 text-gray-500 border-r">
+                    <td className="border-r px-1 py-4 text-gray-500 sm:px-3">
                       {toBanglaNumber(index + 1)}
                     </td>
 
-                    <td className="px-5 py-4 border-r">
-                      <div>
-                        <p className="font-medium text-gray-800">
+                    <td className="border-r px-2 py-4 text-left sm:px-4">
+                      <div className="min-w-0">
+                        <p className="break-words font-medium text-gray-800 [overflow-wrap:anywhere]">
                           {notice.title}
                         </p>
 
-                        <span className="mt-1 inline-flex rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-medium text-[#1b5e20]">
+                        <span className="mt-1 inline-flex max-w-full break-words rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-medium text-[#1b5e20]">
                           {categoryLabels[
                             notice.category
-                          ] ??
-                            notice.category}
+                          ] ?? notice.category}
                         </span>
                       </div>
                     </td>
 
-                    <td className="whitespace-nowrap px-5 py-4 text-gray-500 border-r">
-                      {formatDate(
-                        notice.created_at
-                      )}
+                    <td className="border-r px-1 py-4 text-xs text-gray-500 sm:px-3 sm:text-sm">
+                      <span className="break-words">
+                        {formatDate(
+                          notice.created_at
+                        )}
+                      </span>
                     </td>
 
-                    <td className="px-5 py-4 text-center">
+                    <td className="px-1 py-4 text-center sm:px-2">
                       {notice.pdf_url ? (
                         <a
                           href={notice.pdf_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-lg  px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-[#1b5e20] hover:text-[#1b5e20]"
+                          className="inline-flex max-w-full items-center justify-center gap-1 rounded-lg px-1.5 py-1.5 text-xs font-medium text-gray-600 transition hover:text-[#1b5e20] sm:gap-1.5 sm:px-3"
                         >
-                          <Download size={14} />
-                          PDF
+                          <Download
+                            size={14}
+                            className="shrink-0"
+                          />
+                          <span>PDF</span>
                         </a>
                       ) : (
                         <span className="text-xs text-gray-400">

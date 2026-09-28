@@ -57,64 +57,73 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="bg-white p-5">
-      <div className="flex items-center">
+    <section className="flex h-full min-w-0 flex-col bg-white p-5">
+      <div className="flex shrink-0 items-center">
         <h2 className="w-full text-center text-xl font-bold text-gray-800">
           ইভেন্ট
         </h2>
       </div>
 
       {loading ? (
-        <div className="py-10 text-center text-sm text-gray-500">
+        <div className="flex flex-1 items-center justify-center text-sm text-gray-500">
           ইভেন্ট লোড হচ্ছে...
         </div>
       ) : error ? (
-        <div className="py-10 text-center text-sm text-red-600">
+        <div className="flex flex-1 items-center justify-center text-sm text-red-600">
           ইভেন্ট লোড করা যায়নি।
         </div>
       ) : events.length === 0 ? (
-        <div className="py-10 text-center text-sm text-gray-500">
+        <div className="flex flex-1 items-center justify-center text-sm text-gray-500">
           বর্তমানে কোনো ইভেন্ট নেই।
         </div>
       ) : (
-        <div className="space-y-3">
-          {events.slice(0, 5).map((event) => (
-            <div
-              key={event.id}
-              className="rounded-xl border p-4 transition hover:shadow-sm"
-            >
-              <div className="flex gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-green-50 text-[#1b5e20]">
-                  <CalendarDays size={19} />
-                </div>
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <div className="mt-5 space-y-3 overflow-hidden">
+            {events.slice(0, 5).map((event) => (
+              <div
+                key={event.id}
+                className="min-w-0 rounded-xl border p-4 transition hover:shadow-sm"
+              >
+                <div className="flex min-w-0 gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-green-50 text-[#1b5e20]">
+                    <CalendarDays size={19} />
+                  </div>
 
-                <div className="min-w-0">
-                  <h3 className="font-semibold text-gray-800">
-                    {event.title}
-                  </h3>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="break-words font-semibold text-gray-800 [overflow-wrap:anywhere]">
+                      {event.title}
+                    </h3>
 
-                  <p className="mt-1 text-xs text-gray-500">
-                    {formatDate(event.date)}
-                  </p>
-
-                  {event.location && (
-                    <p className="mt-1 flex items-center gap-1 text-xs text-gray-500">
-                      <MapPin size={12} />
-                      {event.location}
+                    <p className="mt-1 text-xs text-gray-500">
+                      {formatDate(event.date)}
                     </p>
-                  )}
+
+                    {event.location && (
+                      <p className="mt-1 flex min-w-0 items-start gap-1 text-xs text-gray-500">
+                        <MapPin
+                          size={12}
+                          className="mt-0.5 shrink-0"
+                        />
+                        <span className="break-words [overflow-wrap:anywhere]">
+                          {event.location}
+                        </span>
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-            
-          <a
-            href="/events"
-            className="inline-flex items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
-          >
-            সব দেখুন
-            <ArrowRight size={15} />
-          </a>
+            ))}
+          </div>
+
+          <div className="mt-auto pt-4">
+            <a
+              href="/events"
+              className="inline-flex items-center gap-1 text-sm font-medium text-[#1b5e20] hover:underline"
+            >
+              সব দেখুন
+              <ArrowRight size={15} />
+            </a>
+          </div>
         </div>
       )}
     </section>

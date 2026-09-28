@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import {
   ArrowDownToLine,
-  BookOpen,
   FileText,
 } from "lucide-react";
 
@@ -46,10 +45,10 @@ export default function ImportantResources() {
   }, []);
 
   return (
-    <section className="bg-white p-5">
+    <section className="min-w-0 bg-white p-5">
       <div className="mb-5">
         <div className="flex items-center border-b border-gray-100 pb-5">
-          <h2 className="w-full text-center text-xl font-bold text-gray-800">
+          <h2 className="w-full break-words text-center text-xl font-bold text-gray-800 [overflow-wrap:anywhere]">
             গুরুত্বপূর্ণ রিসোর্স
           </h2>
         </div>
@@ -70,15 +69,10 @@ export default function ImportantResources() {
       ) : (
         <div className="space-y-3">
           {resources.slice(0, 6).map((resource) => {
-            const Icon = FileText;
-
             return (
               <a
                 key={resource.id}
-                href={
-                  resource.file_url ??
-                  "#"
-                }
+                href={resource.file_url ?? "#"}
                 target={
                   resource.file_url
                     ? "_blank"
@@ -89,14 +83,14 @@ export default function ImportantResources() {
                     ? "noopener noreferrer"
                     : undefined
                 }
-                className="flex items-center gap-3 p-3 transition hover:border-[#1b5e20] hover:bg-green-50/40"
+                className="flex min-w-0 items-start gap-3 p-3 transition hover:border-[#1b5e20] hover:bg-green-50/40"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-50 text-[#1b5e20]">
-                  <Icon size={19} />
+                  <FileText size={19} />
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-gray-800">
+                  <p className="break-words text-sm font-semibold text-gray-800 [overflow-wrap:anywhere]">
                     {resource.title}
                   </p>
                 </div>
@@ -104,7 +98,7 @@ export default function ImportantResources() {
                 {resource.file_url && (
                   <ArrowDownToLine
                     size={17}
-                    className="shrink-0 text-gray-400"
+                    className="mt-0.5 shrink-0 text-gray-400"
                   />
                 )}
               </a>

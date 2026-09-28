@@ -14,19 +14,27 @@ export default function HomeContent() {
 
       {/* Notice + Events + Resources */}
       <section className="pb-4">
-        <div className="mx-auto max-w-screen">
-          <div className="grid gap-4 lg:grid-cols-[2fr_1fr] lg:grid-rows-2">
-            {/* Notice spans both rows on the left */}
-            <div className="lg:row-span-2 lg:min-h-[580px]">
+        <div className="mx-auto w-full max-w-screen">
+          <div className="grid gap-4 lg:grid-cols-[2.2fr_0.8fr] lg:items-stretch">
+
+            {/* Notice */}
+            <div className="min-w-0 lg:min-h-[580px]">
               <NoticeSection />
             </div>
-              
-            <div className="lg:min-h-[280px]">
-              <EventsSection />
-            </div>
-              
-            <div className="lg:min-h-[280px]">
-              <ImportantResources />
+
+            {/* Events + Resources */}
+            <div className="flex min-w-0 flex-col gap-4 lg:min-h-[580px]">
+
+              {/* Events - takes remaining height */}
+              <div className="min-h-0 flex-1">
+                <EventsSection />
+              </div>
+
+              {/* Resources - only takes required height */}
+              <div className="shrink-0">
+                <ImportantResources />
+              </div>
+
             </div>
           </div>
         </div>
@@ -34,7 +42,7 @@ export default function HomeContent() {
 
       {/* Faculty - full width */}
       <section className="pb-5">
-        <div className="max-w-screen">
+        <div className="w-full max-w-screen">
           <FacultyPreview />
         </div>
       </section>
@@ -44,7 +52,7 @@ export default function HomeContent() {
 
       {/* Department Summary */}
       <section className="pb-5">
-        <div className="mx-auto max-w-screen">
+        <div className="mx-auto w-full max-w-screen">
           <DepartmentSummary />
         </div>
       </section>
