@@ -57,7 +57,7 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="flex h-full min-w-0 flex-col bg-[var(--igc-navy)] p-5">
+    <section className="flex h-full min-w-0 flex-col bg-white p-5">
       <div className="flex shrink-0 items-center">
         <h2 className="w-full text-center text-xl font-bold text-gray-800">
           ইভেন্ট

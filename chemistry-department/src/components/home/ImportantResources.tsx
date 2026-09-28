@@ -45,7 +45,7 @@ export default function ImportantResources() {
   }, []);
 
   return (
-    <section className="min-w-0 bg-[var(--igc-green)] p-5">
+    <section className="min-w-0 bg-white p-5">
       <div className="mb-5">
         <div className="flex items-center border-b border-gray-100 pb-5">
           <h2 className="w-full break-words text-center text-xl font-bold text-gray-800 [overflow-wrap:anywhere]">
