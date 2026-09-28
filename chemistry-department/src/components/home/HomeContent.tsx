@@ -13,17 +13,17 @@ export default function HomeContent() {
       <HeadMessage />
 
       {/* Notice + Events + Resources */}
-      <section className="pb-4">
+      <section className="pb-4 lg:h-[650px] overflow-hidden">
         <div className="mx-auto w-full max-w-screen">
-          <div className="grid gap-4 lg:grid-cols-[2.2fr_0.8fr] lg:items-stretch">
+          <div className="grid gap-4 lg:grid-cols-[2.2fr_0.8fr]">
 
             {/* Notice */}
-            <div className="min-w-0 lg:min-h-[580px]">
+            <div className="min-w-0">
               <NoticeSection />
             </div>
 
             {/* Events + Resources */}
-            <div className="flex min-w-0 flex-col gap-4 lg:min-h-[580px]">
+            <div className="grid min-w-0 h-full grid-cols-1 gap-4 lg:grid-rows-[1fr_1fr]">
 
               {/* Events - takes remaining height */}
               <div className="min-h-0 flex-1">

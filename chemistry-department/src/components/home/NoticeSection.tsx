@@ -76,7 +76,7 @@ export default function NoticeSection() {
   }, []);
 
   return (
-    <section className="min-w-0 overflow-hidden">
+    <section className="flex min-h-0 h-full min-w-0 flex-col overflow-hidden bg-white">
       <div className="flex min-w-0 items-center justify-between gap-4 px-4 py-4 sm:px-5">
         <div className="min-w-0">
           <h1 className="break-words text-xl font-bold text-gray-800 [overflow-wrap:anywhere]">
@@ -110,8 +110,8 @@ export default function NoticeSection() {
           বর্তমানে কোনো নোটিশ নেই।
         </div>
       ) : (
-        <div className="w-full min-w-0 px-3 pb-6 sm:px-6">
-          <table className="w-full table-fixed border-collapse border text-sm">
+        <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-6 sm:px-6">
+          <table className="w-full min-w-0 table-fixed border-collapse border text-sm">
             <thead className="border-b bg-gray-50 text-center text-xs text-gray-700">
               <tr>
                 <th className="w-[8%] border-r px-2 py-3 font-semibold sm:px-3">
@@ -132,8 +132,8 @@ export default function NoticeSection() {
               </tr>
             </thead>
 
-            <tbody className="divide-y">
-              {notices.slice(0, 8).map(
+            <tbody className="divide-y overflow-y-auto overflow-x-hidden">
+              {notices.slice(0, 10).map(
                 (notice, index) => (
                   <tr
                     key={notice.id}

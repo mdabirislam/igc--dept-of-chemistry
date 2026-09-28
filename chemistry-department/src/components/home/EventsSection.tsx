@@ -57,8 +57,7 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="flex h-full min-w-0 flex-col bg-white p-5">
-      <div className="flex shrink-0 items-center">
+    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-white p-5">      <div className="flex shrink-0 items-center">
         <h2 className="w-full text-center text-xl font-bold text-gray-800">
           ইভেন্ট
         </h2>
@@ -78,7 +77,7 @@ export default function EventsSection() {
         </div>
       ) : (
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-          <div className="mt-5 space-y-3 overflow-hidden">
+          <div className="mt-5 min-h-0 min-w-0 flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
             {events.slice(0, 5).map((event) => (
               <div
                 key={event.id}
