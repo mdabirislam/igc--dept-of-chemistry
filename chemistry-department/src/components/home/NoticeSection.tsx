@@ -76,8 +76,8 @@ export default function NoticeSection() {
   }, []);
 
   return (
-    <section className="flex min-h-0 h-full min-w-0 flex-col overflow-hidden bg-white">
-      <div className="flex min-w-0 items-center justify-between gap-4 px-4 py-4 sm:px-5">
+    <section className="flex min-h-0 h-full min-w-0 flex-col lg:col-span-2  overflow-hidden bg-white">
+      <div className="flex min-w-0 items-center justify-between gap-4 px-4 py-4 sm:px-5 overflow-y-auto">
         <div className="min-w-0">
           <h1 className="break-words text-xl font-bold text-gray-800 [overflow-wrap:anywhere]">
             নোটিশ বোর্ড

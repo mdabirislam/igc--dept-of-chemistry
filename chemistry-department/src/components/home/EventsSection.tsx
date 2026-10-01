@@ -76,7 +76,7 @@ export default function EventsSection() {
           বর্তমানে কোনো ইভেন্ট নেই।
         </div>
       ) : (
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col  overflow-y-auto  overflow-x-hidden">
           <div className="mt-5 min-h-0 min-w-0 flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
             {events.slice(0, 5).map((event) => (
               <div

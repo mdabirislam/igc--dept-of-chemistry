@@ -45,7 +45,7 @@ export default function ImportantResources() {
   }, []);
 
   return (
-    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-white p-5">      
+    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-y-auto bg-white p-5">      
       <div className="mb-5">
         <div className="flex items-center border-b border-gray-100 pb-5">
           <h2 className="w-full break-words text-center text-xl font-bold text-gray-800 [overflow-wrap:anywhere]">

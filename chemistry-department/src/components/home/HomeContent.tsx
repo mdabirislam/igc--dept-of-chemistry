@@ -14,30 +14,21 @@ export default function HomeContent() {
 
       {/* Notice + Events + Resources */}
       <section className="pb-4 lg:h-[650px] overflow-hidden">
-        <div className="mx-auto w-full max-w-screen">
-          <div className="grid gap-4 lg:grid-cols-[2.2fr_0.8fr]">
-
+        <div className="overflow-hidden mx-auto w-full max-w-screen grid gap-4 lg:grid-cols-3 h-full">
             {/* Notice */}
-            <div className="min-w-0">
               <NoticeSection />
-            </div>
 
             {/* Events + Resources */}
-            <div className="grid min-w-0 h-full grid-cols-1 gap-4 lg:grid-rows-[1fr_1fr]">
+            <div className="overflow-hidden grid min-w-0 h-full grid-cols-1 gap-4 lg:grid-rows-[6fr_4fr]">
 
               {/* Events - takes remaining height */}
-              <div className="min-h-0 flex-1">
                 <EventsSection />
-              </div>
 
               {/* Resources - only takes required height */}
-              <div className="shrink-0">
                 <ImportantResources />
-              </div>
-
             </div>
           </div>
-        </div>
+
       </section>
 
       {/* Faculty - full width */}
