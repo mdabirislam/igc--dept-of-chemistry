@@ -57,8 +57,10 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-white p-5">      <div className="flex shrink-0 items-center">
-        <h2 className="w-full text-center text-xl font-bold text-gray-800">
+    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-transparent p-5">      
+      <div className="flex shrink-0 items-center">
+        <h2 className="relative w-full p-5 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
+                 after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
           ইভেন্ট
         </h2>
       </div>
@@ -81,7 +83,7 @@ export default function EventsSection() {
             {events.slice(0, 5).map((event) => (
               <div
                 key={event.id}
-                className="min-w-0 rounded-xl border p-4 transition hover:shadow-sm"
+                className="min-w-0 p-4 transition hover:shadow-sm"
               >
                 <div className="flex min-w-0 gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-green-50 text-[#1b5e20]">

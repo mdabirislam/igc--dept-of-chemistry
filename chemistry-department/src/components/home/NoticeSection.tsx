@@ -76,16 +76,12 @@ export default function NoticeSection() {
   }, []);
 
   return (
-    <section className="flex min-h-0 h-full min-w-0 flex-col lg:col-span-2  overflow-hidden bg-white">
-      <div className="flex min-w-0 items-center justify-between gap-4 px-4 py-4 sm:px-5 overflow-y-auto">
+    <section className="flex min-h-0 h-full min-w-0 flex-col lg:col-span-2  overflow-hidden bg-transparent shadow-sm">
+      <div className="flex min-w-0 items-center justify-between gap-4 px-4 py-4 sm:px-5">
         <div className="min-w-0">
-          <h1 className="break-words text-xl font-bold text-gray-800 [overflow-wrap:anywhere]">
+          <h1 className="break-words text-2xl font-bold text-gray-800 [overflow-wrap:anywhere] lg:pl">
             নোটিশ বোর্ড
           </h1>
-
-          <p className="text-xs text-gray-500">
-            বিভাগের সর্বশেষ বিজ্ঞপ্তি
-          </p>
         </div>
 
         <a
@@ -112,7 +108,7 @@ export default function NoticeSection() {
       ) : (
         <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-6 sm:px-6">
           <table className="w-full min-w-0 table-fixed border-collapse border text-sm">
-            <thead className="border-b bg-gray-50 text-center text-xs text-gray-700">
+            <thead className="border-b text-center text-xs text-gray-700">
               <tr>
                 <th className="w-[8%] border-r px-2 py-3 font-semibold sm:px-3">
                   ক্রম

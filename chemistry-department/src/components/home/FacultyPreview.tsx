@@ -48,10 +48,10 @@ export default function FacultyPreview() {
   }, []);
 
   return (
-    <section className="bg-white p-5">
+    <section className="bg-transparent p-5">
           <div className="flex items-center">
             <h2 className="relative w-full p-5 lg:p-5 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
-                 after:w-1/3 after:h-[2px] after:bg-gray-400">
+                 after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
               শিক্ষকবৃন্দ
             </h2>
           </div>
@@ -75,7 +75,7 @@ export default function FacultyPreview() {
               key={person.id}
               className="flex items-center gap-4 p-4 transition hover:shadow-sm"
             >
-              <div className="h-16 w-16 shrink-0 overflow-hidden bg-gray-100">
+              <div className="h-16 w-16 shrink-0 overflow-hidden bg-transparent">
                 {person.image_url ? (
                   <Image
                     src={person.image_url}

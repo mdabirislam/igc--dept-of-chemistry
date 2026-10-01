@@ -8,7 +8,7 @@ import GalleryPreview from "@/components/home/GalleryPreview";
 
 export default function HomeContent() {
   return (
-    <main className="bg-[#f7f9fb]">
+    <main className="bg-[url('/images/background/bg-2.jpg')] bg-cover bg-center bg-no-repeat">
       {/* Message from Department Head */}
       <HeadMessage />
 
@@ -19,7 +19,7 @@ export default function HomeContent() {
               <NoticeSection />
 
             {/* Events + Resources */}
-            <div className="overflow-hidden grid min-w-0 h-full grid-cols-1 gap-4 lg:grid-rows-[6fr_4fr]">
+            <div className="overflow-hidden grid min-w-0 h-full grid-cols-1 gap-4 lg:grid-rows-[5fr_3fr]">
 
               {/* Events - takes remaining height */}
                 <EventsSection />
