@@ -42,7 +42,7 @@ export default function HomeContent() {
       <GalleryPreview />
 
       {/* Department Summary */}
-      <section className="pb-5">
+      <section>
         <div className="mx-auto w-full max-w-screen">
           <DepartmentSummary />
         </div>
