@@ -183,7 +183,7 @@ export default function Navbar() {
           }`}
           aria-label="হোম"
         >
-          {/* <HouseFill size={22} style={{ color: '#fff'}} /> */}
+          <HouseFill size={22} style={{ color: '#fff'}} />
         </Link>
 
         {/* Desktop navigation */}
