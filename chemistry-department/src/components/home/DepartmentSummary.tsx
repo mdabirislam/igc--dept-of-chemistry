@@ -1,68 +1,39 @@
-const statistics = [
-  {
-    title: "শিক্ষকবৃন্দ",
-    value: "১৫",
-    suffix: " জন",
-    // icon: Users,
-    className: "bg-transparent text-gray-900",
-  },
-  {
-    title: "পাঠক্রম",
-    value: "০৮",
-    suffix: " টি",
-    // icon: GraduationCap,
-    className: "bg-transparent text-gray-900",
-  },
-  {
-    title: "ল্যাবরেটরি",
-    value: "০৩",
-    suffix: " টি",
-    // icon: BookOpen,
-    className: "bg-transparent text-gray-900",
-  },
-  {
-    title: "কোর্স",
-    value: "৮০+",
-    suffix: " টি",
-    // icon: FlaskConical,
-    className: "bg-transparent text-gray-900",
-  },
-];
+"use client";
+
+import React from 'react';
+import CountUp from '../common/CountUp';
 
 export default function DepartmentSummary() {
+  const stats = [
+    { id: 1, end: 45, label: "অনুষদ সদস্য", delay: "100" },
+    { id: 2, end: 1200, label: "নিয়মিত শিক্ষার্থী", delay: "200" },
+    { id: 3, end: 85, label: "গবেষণা প্রবন্ধ", delay: "300" },
+    { id: 4, end: 12, label: "গবেষণাগার", delay: "400" },
+  ];
+
   return (
-    <section className="rounded-lg border border-gray-100 bg-transparent p-3 shadow-sm sm:p-4">
-      <div className="mb-3 border-b border-gray-100 pb-2 text-center">
-        <h2 className="relative w-full p-5 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
-                 বিভাগের সারসংক্ষেপ
-        </h2>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
-        {statistics.map((item) => {
-
-          return (
+    <section className="bg-slate-950 text-white py-10 relative overflow-hidden">
+      <div className="container mx-auto px-5 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+          {stats.map((stat) => (
             <div
-              key={item.title}
-              className={`flex min-h-[76px] items-center justify-center gap-2.5 rounded-lg px-3 sm:min-h-[84px] sm:gap-3 sm:px-4 ${item.className}`}
+              key={stat.id}
+              data-aos="fade-up"
+              data-aos-delay={stat.delay}
+              className="relative p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md shadow-xl hover:border-teal-500/50 hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] hover:-translate-y-2 transition-all duration-500 group overflow-hidden"
             >
-
-              <div className="min-w-0">
-                <p className="text-[11px] text-gray-600 sm:text-xs">
-                  {item.title}
-                </p>
-
-                <p className="mt-0.5 text-xl font-bold leading-none text-gray-900 sm:text-2xl">
-                  {item.value}
-
-                  <span className="ml-1 text-[10px] font-medium text-gray-600 sm:text-xs">
-                    {item.suffix}
-                  </span>
-                </p>
+              {/* মডার্ন ব্যাকগ্রাউন্ড হোভার লাইট */}
+              <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shimmer" />
+              
+              <div className="text-4xl md:text-5xl font-extrabold text-teal-400 mb-3 tracking-tight">
+                <CountUp to={stat.end} duration={2.5} />+
               </div>
+              <p className="text-slate-400 font-medium text-sm md:text-base group-hover:text-white transition-colors">
+                {stat.label}
+              </p>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
     </section>
   );
