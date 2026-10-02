@@ -9,21 +9,19 @@ export default function HeadMessage() {
 
     // head message full section
     <section className="mx-auto max-w-screen pb-6">
-      <div className="overflow-hidden bg-[var(--igc-green)] shadow-sm p-6 sm:p-8 lg:p-12">
+      <div className="overflow-hidden bg-[var(--igc-green)] shadow-sm p-6 sm:p-8 lg:p-10">
         <div className="grid lg:grid-cols-[32%_68%]">
-
           {/* Department Head Photo */}
-          <div className="relative min-h-[300px] bg-gray-100 sm:min-h-[360px] lg:min-h-[390px] p-6 pl-8 sm:p-0 lg:pr-0">
-                  <Image
-                    src="/images/dept-head/dept-head.jpeg"
-                    alt="Department Head"
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 100vw" 
-                    // className="mx-auto h-full w-full object-cover"
-                  />
+          <div className="relative min-h-[300px] sm:min-h-[360px] lg:min-h-[390px]">
+              <Image
+                  src="/images/dept-head/dept-head.jpeg"
+                  alt="Department Head"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw" 
+                  className="object-contain object-center"
+              />
           </div>
-
           {/* Message */}
           <div className="relative flex flex-col justify-center px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
             <div className="absolute right-6 top-6 text-green-100 sm:right-6">
@@ -43,7 +41,7 @@ export default function HeadMessage() {
                 রসায়ন বিভাগে আপনাকে স্বাগতম
               </h2>
 
-              <blockquote className="mt-5 border-l-4 border-[#1b5e20] pl-4 text-base font-medium leading-8 text-white sm:text-lg">
+              <blockquote className="mt-5 lg:border-l-4 lg:border-[#1b5e20] lg:pl-4 lg:text-base font-medium lg:leading-8 text-white sm:text-lg">
                 “জ্ঞান, অনুসন্ধান ও ব্যবহারিক শিক্ষার সমন্বয়ে
                 আমরা এমন একটি শিক্ষার পরিবেশ গড়ে তুলতে চাই,
                 যেখানে শিক্ষার্থীরা নিজেদের সম্ভাবনাকে আবিষ্কার
@@ -59,16 +57,14 @@ export default function HeadMessage() {
               </p>
 
               <div className="mt-6 border-t border-gray-100 pt-4">
+                <p className="text-lg font-semibold text-white">
+                  ড. ওহিদুর রহমান
+                </p>
                 <p className="font-semibold text-white">
                   বিভাগীয় প্রধান
                 </p>
-
                 <p className="mt-1 text-sm text-white">
-                  রসায়ন বিভাগ
-                </p>
-
-                <p className="mt-1 text-xs text-white">
-                  ঈশ্বরদী সরকারি কলেজ
+                  রসায়ন বিভাগ , ঈশ্বরদী সরকারি কলেজ
                 </p>
               </div>
             </div>
