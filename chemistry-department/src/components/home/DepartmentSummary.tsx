@@ -40,8 +40,8 @@ export default function DepartmentSummary() {
   return (
     <section className="rounded-lg border border-gray-100 bg-transparent p-3 shadow-sm sm:p-4">
       <div className="mb-3 border-b border-gray-100 pb-2 text-center">
-        <h2 className="text-base font-bold text-gray-800 sm:text-lg lg:text-xl">
-          বিভাগের সারসংক্ষেপ
+        <h2 className="relative w-full p-5 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
+                 বিভাগের সারসংক্ষেপ
         </h2>
       </div>
 
