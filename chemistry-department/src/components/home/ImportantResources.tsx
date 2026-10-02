@@ -45,7 +45,7 @@ export default function ImportantResources() {
   }, []);
 
   return (
-    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-transparent">      
+    <section className="flex h-full max-h-[350px] min-h-0 min-w-0 flex-col overflow-hidden bg-transparent">      
         <div className="flex items-center border-b border-gray-100 pb-5">
           <h2 className="relative w-full p-5 sm:p-1 sm:text-2xl text-xl lg:text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
                  after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
