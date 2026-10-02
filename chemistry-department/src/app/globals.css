@@ -31,6 +31,10 @@ Global Design System
 --department-bar-height: 47px;
 --navbar-height: 48px;
 --desktop-nav-font-size: 15px;
+
+/* Navbar active / hover line */
+--nav-accent: #008cff;
+--nav-link-padding: 13px;
 }
 
 * {
@@ -299,7 +303,9 @@ color: #fff;
 transition: top 0.3s ease;
 }
 
-/* Scroll down করলে navbar উপরে লুকিয়ে যাবে */
+/* Smart sticky navbar: scroll down করলে navbar উপরে লুকিয়ে যাবে.
+   transform নয়, top ব্যবহার করা হয়েছে — নাহলে ভেতরের
+   position: fixed মোবাইল মেনু ভেঙে যায়। */
 .main-navbar-hidden {
 top: calc(-1 * var(--navbar-height));
 }
@@ -342,6 +348,12 @@ transition: background-color 0.2s ease;
 background: var(--igc-green-dark);
 }
 
+/* Home button active */
+.home-button-active {
+background: var(--igc-green-dark);
+box-shadow: inset 0 -3px 0 var(--nav-accent);
+}
+
 /* =========================================================
 Desktop navigation
 ========================================================= */
@@ -361,11 +373,13 @@ align-items: stretch;
 }
 
 .nav-link {
+  position: relative;
+
   display: flex;
   align-items: center;
   gap: 5px;
 
-  padding: 0 13px;
+  padding: 0 var(--nav-link-padding);
 
   color: #fff;
   text-decoration: none;
@@ -386,11 +400,37 @@ align-items: stretch;
     color 0.2s ease;
 }
 
-.nav-link:hover
-,
-.nav-item:focus-within > .nav-link
- {
+/* focus-within এর বদলে :has(:focus-visible):
+   মাউস ক্লিকের পর submenu আটকে থাকবে না, কিন্তু কীবোর্ড Tab কাজ করবে */
+.nav-link:hover,
+.nav-item:has(:focus-visible) > .nav-link {
   background: var(--igc-green-dark);
+}
+
+/* ---------- Hover line + Active indicator ---------- */
+
+.nav-link::after {
+  content: "";
+
+  position: absolute;
+  left: var(--nav-link-padding);
+  right: var(--nav-link-padding);
+  bottom: 0;
+
+  height: 3px;
+
+  background: var(--nav-accent);
+
+  transform: scaleX(0);
+  transform-origin: left;
+
+  transition: transform 0.25s ease;
+}
+
+.nav-link:hover::after,
+.nav-item:has(:focus-visible) > .nav-link::after,
+.nav-item-active > .nav-link::after {
+  transform: scaleX(1);
 }
 
 .nav-parent-button {
@@ -411,10 +451,8 @@ align-items: stretch;
   cursor: default;
 }
 
-.nav-parent-button:hover
-/* ,
-.nav-item:focus-within > .nav-parent-button */
- {
+.nav-parent-button:hover,
+.nav-item:has(:focus-visible) > .nav-parent-button {
 background: var(--igc-green-dark);
 }
 
@@ -426,10 +464,8 @@ transform 0.2s ease,
 opacity 0.2s ease;
 }
 
-.nav-item:hover > .nav-link .nav-chevron
-/* ,
-.nav-item:focus-within > .nav-link .nav-chevron  */
-{
+.nav-item:hover > .nav-link .nav-chevron,
+.nav-item:has(:focus-visible) > .nav-link .nav-chevron {
 transform: rotate(180deg);
 }
 
@@ -467,10 +503,8 @@ transform 0.18s ease,
 visibility 0.18s ease;
 }
 
-.nav-item:hover .desktop-submenu
-/* ,
-.nav-item:focus-within .desktop-submenu  */
-{
+.nav-item:hover .desktop-submenu,
+.nav-item:has(:focus-visible) .desktop-submenu {
 opacity: 1;
 visibility: visible;
 pointer-events: auto;
@@ -508,6 +542,13 @@ padding-left: 17px;
 
 background: #edf7f1;
 color: var(--igc-green);
+}
+
+/* Desktop submenu active */
+.submenu-link-active {
+background: #edf7f1;
+color: var(--igc-green);
+font-weight: 600;
 }
 
 /* =========================================================
@@ -842,6 +883,14 @@ background: #edf7f1;
 color: var(--igc-green);
 }
 
+/* Mobile active (home, links, parents, submenu links) */
+.mobile-nav-link-active {
+background: #f2f7f4;
+color: var(--igc-green);
+font-weight: 600;
+box-shadow: inset 3px 0 0 var(--igc-green);
+}
+
 /* =========================================================
 HERO
 ========================================================= */
@@ -1026,10 +1075,11 @@ RESPONSIVE
 /* ---------- Navbar tablet ---------- */
 
 @media (max-width: 1100px) {
-  .nav-link {
-    padding-left: 10px;
-    padding-right: 10px;
+  :root {
+    --nav-link-padding: 10px;
+  }
 
+  .nav-link {
     font-size: 14px;
   }
 }

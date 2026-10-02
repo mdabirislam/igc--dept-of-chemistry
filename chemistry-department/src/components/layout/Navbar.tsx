@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronDown , HouseFill} from "react-bootstrap-icons";
 type NavigationItem = {
@@ -71,7 +72,7 @@ const navigationItems: NavigationItem[] = [
     children: [
       { label: "ফটো", href: "/gallery/photo" },
       { label: "ভিডিও", href: "/gallery/video" },
-      { label: "ওয়াল ম্যাগাজিন", href: "/gallery/wall-magazine" },
+      { label: "ওয়াল ম্যাগাজিন", href: "/gallery/wall-magazine" },
     ],
   },
   {
@@ -80,7 +81,21 @@ const navigationItems: NavigationItem[] = [
   },
 ];
 
+/* ---------- Active link helpers ---------- */
+
+const isPathActive = (pathname: string, href: string) =>
+  href === "/"
+    ? pathname === "/"
+    : pathname === href || pathname.startsWith(href + "/");
+
+const isItemActive = (pathname: string, item: NavigationItem) =>
+  isPathActive(pathname, item.href) ||
+  (item.children?.some((child) => isPathActive(pathname, child.href)) ??
+    false);
+
 export default function Navbar() {
+  const pathname = usePathname();
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [hidden, setHidden] = useState(false);
@@ -163,10 +178,12 @@ export default function Navbar() {
 
         <Link
           href="/"
-          className="home-button"
+          className={`home-button ${
+            pathname === "/" ? "home-button-active" : ""
+          }`}
           aria-label="হোম"
         >
-          <HouseFill size={22} style={{ color: '#fff'}} />
+          {/* <HouseFill size={22} style={{ color: '#fff'}} /> */}
         </Link>
 
         {/* Desktop navigation */}
@@ -176,7 +193,7 @@ export default function Navbar() {
               key={item.label}
               className={`nav-item ${
                 item.children ? "has-submenu" : ""
-              }`}
+              } ${isItemActive(pathname, item) ? "nav-item-active" : ""}`}
             >
               {item.children ? (
                 <button
@@ -196,6 +213,9 @@ export default function Navbar() {
                 <Link
                   href={item.href || "#"}
                   className="nav-link"
+                  aria-current={
+                    isItemActive(pathname, item) ? "page" : undefined
+                  }
                 >
                   <span>{item.label}</span>
                 </Link>
@@ -207,7 +227,11 @@ export default function Navbar() {
                     <Link
                       key={child.label}
                       href={child.href}
-                      className="submenu-link"
+                      className={`submenu-link ${
+                        isPathActive(pathname, child.href)
+                          ? "submenu-link-active"
+                          : ""
+                      }`}
                     >
                       {child.label}
                     </Link>
@@ -269,7 +293,9 @@ export default function Navbar() {
         <div className="mobile-navigation-content">
           <Link
             href="/"
-            className="mobile-home-link"
+            className={`mobile-home-link ${
+              pathname === "/" ? "mobile-nav-link-active" : ""
+            }`}
             onClick={closeMobileMenu}
           >
             🏠
@@ -279,13 +305,16 @@ export default function Navbar() {
           {navigationItems.map((item) => {
             const hasChildren = Boolean(item.children?.length);
             const isOpen = openSubmenu === item.label;
+            const active = isItemActive(pathname, item);
 
             if (!hasChildren) {
               return (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="mobile-nav-link"
+                  className={`mobile-nav-link ${
+                    active ? "mobile-nav-link-active" : ""
+                  }`}
                   onClick={closeMobileMenu}
                 >
                   {item.label}
@@ -306,7 +335,11 @@ export default function Navbar() {
                   onClick={() => toggleSubmenu(item.label)}
                   aria-expanded={isOpen}
                 >
-                  <span className="mobile-nav-parent-link">
+                  <span
+                    className={`mobile-nav-parent-link ${
+                      active ? "mobile-nav-link-active" : ""
+                    }`}
+                  >
                     {item.label}
                   </span>
                               
@@ -323,7 +356,11 @@ export default function Navbar() {
                     <Link
                       key={child.label}
                       href={child.href}
-                      className="mobile-submenu-link"
+                      className={`mobile-submenu-link ${
+                        isPathActive(pathname, child.href)
+                          ? "mobile-nav-link-active"
+                          : ""
+                      }`}
                       onClick={closeMobileMenu}
                     >
                       {child.label}
