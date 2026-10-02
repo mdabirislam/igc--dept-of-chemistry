@@ -51,7 +51,7 @@ const navigationItems: NavigationItem[] = [
     label: "গবেষণা ও প্রকাশনা",
     href: "/research",
     children: [
-      { label: "Not available", href: "/research" },
+      { label: "Not available", href: "#" },
     ],
   },
   {
@@ -78,6 +78,13 @@ const navigationItems: NavigationItem[] = [
   {
     label: "যোগাযোগ",
     href: "/contact",
+  },
+    {
+    label: "অন্যান্য",
+    href: "/other",
+    children: [
+      { label: "Not available", href: "#" },
+    ],
   },
 ];
 
