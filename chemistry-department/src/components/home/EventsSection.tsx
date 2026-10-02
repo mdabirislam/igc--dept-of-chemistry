@@ -57,9 +57,9 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-transparent p-5">      
+    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-transparent">      
       <div className="flex shrink-0 items-center">
-        <h2 className="relative w-full p-5 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
+        <h2 className="relative w-full sm:p-1 sm:text-2xl text-xl lg:text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
                  after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
           ইভেন্ট
         </h2>

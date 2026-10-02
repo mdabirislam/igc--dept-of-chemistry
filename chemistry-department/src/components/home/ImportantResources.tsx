@@ -45,15 +45,13 @@ export default function ImportantResources() {
   }, []);
 
   return (
-    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-transparent p-5">      
-      <div className="mb-5">
+    <section className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-transparent">      
         <div className="flex items-center border-b border-gray-100 pb-5">
           <h2 className="relative w-full p-5 sm:p-1 sm:text-2xl text-xl lg:text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
                  after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
             গুরুত্বপূর্ণ রিসোর্স
           </h2>
         </div>
-      </div>
 
       {loading ? (
         <div className="py-10 text-center text-sm text-gray-500">
