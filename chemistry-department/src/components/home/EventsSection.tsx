@@ -46,7 +46,7 @@ export default function EventsSection() {
         setError(
           error instanceof Error
             ? error.message
-            : "ইভেন্ট লোড করা যায়নি।"
+            : "ইভেন্ট লোড করা যায়নি।"
         );
       } finally {
         setLoading(false);
@@ -57,7 +57,7 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="flex h-full max-h-[400px] min-h-0 min-w-0 flex-col overflow-hidden bg-transparent">      
+    <section className="flex min-w-0 flex-col bg-transparent lg:h-full lg:max-h-[400px] lg:min-h-0 lg:overflow-hidden">
       <div className="flex shrink-0 items-center">
         <h2 className="relative w-full sm:p-1 sm:text-2xl text-xl lg:text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
                  after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
@@ -71,15 +71,15 @@ export default function EventsSection() {
         </div>
       ) : error ? (
         <div className="flex flex-1 items-center justify-center text-sm text-red-600">
-          ইভেন্ট লোড করা যায়নি।
+          ইভেন্ট লোড করা যায়নি।
         </div>
       ) : events.length === 0 ? (
         <div className="flex flex-1 items-center justify-center text-sm text-gray-500">
           বর্তমানে কোনো ইভেন্ট নেই।
         </div>
       ) : (
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col  overflow-y-auto  overflow-x-hidden">
-          <div className="mt-5 min-h-0 min-w-0 flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
+        <div className="flex min-w-0 flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overflow-x-hidden">
+          <div className="mt-5 min-w-0 space-y-3 pr-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overflow-x-hidden">
             {events.slice(0, 5).map((event) => (
               <div
                 key={event.id}
