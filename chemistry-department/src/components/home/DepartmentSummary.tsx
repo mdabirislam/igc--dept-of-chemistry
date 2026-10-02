@@ -1,10 +1,3 @@
-import {
-  Users,
-  GraduationCap,
-  BookOpen,
-  FlaskConical,
-} from "lucide-react";
-
 const statistics = [
   {
     title: "শিক্ষকবৃন্দ",

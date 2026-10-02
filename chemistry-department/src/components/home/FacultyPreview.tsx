@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import {
   ArrowRight,
-  GraduationCap,
   UserRound,
 } from "lucide-react";
 
