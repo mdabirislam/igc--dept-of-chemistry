@@ -1,3 +1,4 @@
+import AosProvider from "@/components/common/AosProvider";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="bn">
       <body>
-        {children}
+        <AosProvider>
+          {children}
+        </AosProvider>
       </body>
     </html>
   );
