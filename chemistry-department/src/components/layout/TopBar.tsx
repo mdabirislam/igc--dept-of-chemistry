@@ -4,7 +4,7 @@ export default function TopBar() {
       <div className="igc-topbar-inner">
         <div className="topbar-left">
           <span className="latest-notice">LATEST NOTICE</span>
-          <span className="notice-text">ক্লাস রুটিন ***</span>
+          <span className="notice-text"> ***comming soon</span>
         </div>
       </div>
     </div>

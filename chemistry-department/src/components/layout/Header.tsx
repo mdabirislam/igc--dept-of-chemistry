@@ -15,7 +15,7 @@ export default function Header() {
         </div>
 
         <div className="college-identity">
-          <h1>Ishwardi Government College</h1>
+          <h1>Department of Chemistry</h1>
           <h2>ঈশ্বরদী সরকারি কলেজ</h2>
 
           <p>
