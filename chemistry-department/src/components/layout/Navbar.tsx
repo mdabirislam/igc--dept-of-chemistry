@@ -83,6 +83,7 @@ const navigationItems: NavigationItem[] = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     if (!mobileOpen) {
@@ -107,6 +108,40 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  // Smart sticky navbar: hide on scroll down, show on scroll up
+  useEffect(() => {
+    const SHOW_ALWAYS_BELOW = 120; // px from top: navbar always visible
+    const THRESHOLD = 8; // ignore tiny scroll movements
+
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const update = () => {
+      const currentY = window.scrollY;
+      const diff = currentY - lastY;
+
+      if (currentY <= SHOW_ALWAYS_BELOW) {
+        setHidden(false);
+        lastY = currentY;
+      } else if (Math.abs(diff) >= THRESHOLD) {
+        setHidden(diff > 0); // down => hide, up => show
+        lastY = currentY;
+      }
+
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const closeMobileMenu = () => {
     setMobileOpen(false);
     setOpenSubmenu(null);
@@ -119,7 +154,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="main-navbar">
+    <nav
+      className={`main-navbar ${
+        hidden && !mobileOpen ? "main-navbar-hidden" : ""
+      }`}
+    >
       <div className="navbar-inner">
 
         <Link

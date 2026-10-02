@@ -287,13 +287,27 @@ Merged from navbar.css
 ========================================================= */
 
 .main-navbar {
-position: relative;
+position: sticky;
+top: 0;
 z-index: 100;
 
 width: 100%;
 
 background: var(--igc-green);
 color: #fff;
+
+transition: top 0.3s ease;
+}
+
+/* Scroll down করলে navbar উপরে লুকিয়ে যাবে */
+.main-navbar-hidden {
+top: calc(-1 * var(--navbar-height));
+}
+
+@media (prefers-reduced-motion: reduce) {
+.main-navbar {
+transition: none;
+}
 }
 
 .navbar-inner {
@@ -372,8 +386,10 @@ align-items: stretch;
     color 0.2s ease;
 }
 
-.nav-link:hover,
-.nav-item:focus-within > .nav-link {
+.nav-link:hover
+,
+.nav-item:focus-within > .nav-link
+ {
   background: var(--igc-green-dark);
 }
 
@@ -395,8 +411,10 @@ align-items: stretch;
   cursor: default;
 }
 
-.nav-parent-button:hover,
-.nav-item:focus-within > .nav-parent-button {
+.nav-parent-button:hover
+/* ,
+.nav-item:focus-within > .nav-parent-button */
+ {
 background: var(--igc-green-dark);
 }
 
@@ -408,8 +426,10 @@ transform 0.2s ease,
 opacity 0.2s ease;
 }
 
-.nav-item:hover > .nav-link .nav-chevron,
-.nav-item:focus-within > .nav-link .nav-chevron {
+.nav-item:hover > .nav-link .nav-chevron
+/* ,
+.nav-item:focus-within > .nav-link .nav-chevron  */
+{
 transform: rotate(180deg);
 }
 
@@ -447,8 +467,10 @@ transform 0.18s ease,
 visibility 0.18s ease;
 }
 
-.nav-item:hover .desktop-submenu,
-.nav-item:focus-within .desktop-submenu {
+.nav-item:hover .desktop-submenu
+/* ,
+.nav-item:focus-within .desktop-submenu  */
+{
 opacity: 1;
 visibility: visible;
 pointer-events: auto;
