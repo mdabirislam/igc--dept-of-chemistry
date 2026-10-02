@@ -56,13 +56,13 @@ export default function HeadMessage() {
               </p>
 
               <div className="mt-6 border-t border-gray-100 pt-4">
-                <p className="text-lg font-semibold text-white">
+                <p className="text-lg font-bold text-white tracking-wide">
                   ড. ওহিদুর রহমান
                 </p>
-                <p className="font-semibold text-white">
+                <p className="font-semibold text-emerald-300 text-sm md:text-base">
                   বিভাগীয় প্রধান
                 </p>
-                <p className="mt-1 text-sm text-white">
+                <p className="mt-1 text-xs md:text-sm text-emerald-100/70">
                   রসায়ন বিভাগ , ঈশ্বরদী সরকারি কলেজ
                 </p>
               </div>
