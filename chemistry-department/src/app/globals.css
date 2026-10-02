@@ -30,6 +30,7 @@ Global Design System
 --college-header-height: 92px;
 --department-bar-height: 47px;
 --navbar-height: 48px;
+--desktop-nav-font-size: 15px;
 }
 
 * {
@@ -359,7 +360,7 @@ align-items: stretch;
     "Noto Serif Bengali",
     serif;
 
-  font-size: 15px;
+  font-size: var(--desktop-nav-font-size);
   font-weight: 400;
 
   line-height: 1;
@@ -387,7 +388,7 @@ align-items: stretch;
     "Noto Serif Bengali",
     serif;
 
-  font-size: 14px;
+  font-size: var(--desktop-nav-font-size);
   font-weight: 400;
   line-height: 1;
 
@@ -646,7 +647,7 @@ font-family:
 "Noto Sans Bengali",
 sans-serif;
 
-font-size: 15px;
+font-size: var(--desktop-nav-font-size);
 
 transition:
 background-color 0.16s ease,

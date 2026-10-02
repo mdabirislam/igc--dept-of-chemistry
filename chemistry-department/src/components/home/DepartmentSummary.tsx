@@ -11,28 +11,28 @@ const statistics = [
     value: "১৫",
     suffix: " জন",
     // icon: Users,
-    className: "bg-green-50 text-green-700",
+    className: "bg-transparent text-gray-900",
   },
   {
     title: "পাঠক্রম",
     value: "০৮",
     suffix: " টি",
     // icon: GraduationCap,
-    className: "bg-blue-50 text-blue-700",
+    className: "bg-transparent text-gray-900",
   },
   {
     title: "ল্যাবরেটরি",
     value: "০৩",
     suffix: " টি",
     // icon: BookOpen,
-    className: "bg-green-50 text-green-700",
+    className: "bg-transparent text-gray-900",
   },
   {
     title: "কোর্স",
     value: "৮০+",
     suffix: " টি",
     // icon: FlaskConical,
-    className: "bg-red-50 text-red-700",
+    className: "bg-transparent text-gray-900",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function DepartmentSummary() {
   return (
     <section className="rounded-lg border border-gray-100 bg-transparent p-3 shadow-sm sm:p-4">
       <div className="mb-3 border-b border-gray-100 pb-2 text-center">
-        <h2 className="text-base font-bold text-gray-800 sm:text-lg">
+        <h2 className="text-base font-bold text-gray-800 sm:text-lg lg:text-xl">
           বিভাগের সারসংক্ষেপ
         </h2>
       </div>

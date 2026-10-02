@@ -46,27 +46,19 @@ const navigationItems: NavigationItem[] = [
     label: "কার্যক্রম",
     href: "/activities",
   },
-  // {
-  //   label: "গবেষণা ও প্রকাশনা",
-  //   href: "/research",
-  //   children: [
-  //     { label: "গবেষণা", href: "/research" },
-  //     { label: "Under Construction", href: "/research" },
-  //   ],
-  // },
-  // {
-  //   label: "ল্যাবরেটরি",
-  //   href: "/laboratory",
-  //   children: [
-  //     { label: "Under Construction", href: "/laboratory" },
-  //   ],
-  // },
+  {
+    label: "গবেষণা ও প্রকাশনা",
+    href: "/research",
+    children: [
+      { label: "Not available", href: "/research" },
+    ],
+  },
   {
     label: "রিসোর্স",
     href: "/resources",
     children: [
-       { label: "ল্যাবরেটরি", href: "/laboratory" },
-       { label: "লাইব্রেরি", href: "/library" },
+       { label: "ল্যাবরেটরি", href: "/resources/laboratory" },
+       { label: "লাইব্রেরি", href: "/resources/library" },
     ],
   },
   {

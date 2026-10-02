@@ -13,7 +13,7 @@ export default function HomeContent() {
       <HeadMessage />
 
       {/* Notice + Events + Resources */}
-      <section className="pb-4 lg:h-[650px] overflow-hidden">
+      <section className="pb-4 lg:h-[750px] overflow-hidden">
         <div className="overflow-hidden mx-auto w-full max-w-screen grid gap-4 lg:grid-cols-3 h-full">
             {/* Notice */}
               <NoticeSection />
