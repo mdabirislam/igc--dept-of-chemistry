@@ -1,34 +1,69 @@
-import {
-  Quote,
-} from "lucide-react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Quote } from "lucide-react";
 import Image from "next/image";
 
 export default function HeadMessage() {
-  return (
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-    // head message full section
-    <section className="mx-auto max-w-screen pb-6">
-      <div className="overflow-hidden bg-[var(--igc-green)] shadow-sm p-4 sm:p-8 lg:p-10">
-        <div className="grid lg:grid-cols-[32%_68%]">
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // Animation ekbar hoye gele observer bondho hobe (Performance boost)
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="mx-auto max-w-screen pb-6 overflow-hidden">
+      <div className="bg-[var(--igc-green)] shadow-sm p-4 sm:p-8 lg:p-10">
+        <div className="grid lg:grid-cols-[32%_68%] items-center gap-6 lg:gap-0">
+          
           {/* Department Head Photo */}
-          <div className="relative min-h-[300px] sm:min-h-[360px] lg:min-h-[390px]">
-              <Image
-                  src="/images/dept-head/dept-head.jpeg"
-                  alt="Department Head"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw" 
-                  className="object-contain object-center"
-              />
+          <div
+            className={`relative h-full min-h-[300px] sm:min-h-[360px] lg:min-h-[390px] transform-gpu transition-all duration-900 ease-out ${
+              isVisible 
+                ? "opacity-100 translate-x-0 translate-y-0" 
+                : "opacity-0 -translate-x-8 translate-y-4"
+            }`}
+            style={{ willChange: "transform, opacity" }}
+          >
+            <Image
+              src="/images/dept-head/dept-head.jpeg"
+              alt="Department Head"
+              fill
+              priority
+              sizes="(max-width: 768px) 30vw, 32vw"
+              className="object-contain object-center"
+            />
           </div>
-          {/* Message */}
-          <div className="relative flex flex-col justify-center px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
-            <div className="absolute right-6 top-6 text-green-100 sm:right-6">
-              <Quote
-                size={52}
-                strokeWidth={1.2}
-                color="white"
-              />
+
+          {/* Message Content */}
+          <div
+            className={`relative flex flex-col justify-center px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 transform-gpu transition-all duration-700 delay-150 ease-out ${
+              isVisible 
+                ? "opacity-100 translate-x-0 translate-y-0" 
+                : "opacity-0 translate-x-8 translate-y-4"
+            }`}
+            style={{ willChange: "transform, opacity" }}
+          >
+            {/* Quote Icon */}
+            <div
+              className={`absolute right-6 top-6 text-green-100 sm:right-6 transform-gpu transition-all duration-500 delay-300 ${
+                isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"
+              }`}
+            >
+              <Quote size={52} strokeWidth={1.2} color="white" />
             </div>
 
             <div className="relative max-w-3xl">
@@ -68,6 +103,7 @@ export default function HeadMessage() {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
