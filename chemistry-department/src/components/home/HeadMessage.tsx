@@ -9,7 +9,7 @@ export default function HeadMessage() {
 
     // head message full section
     <section className="mx-auto max-w-screen pb-6">
-      <div className="overflow-hidden bg-[var(--igc-green)] shadow-sm p-6 sm:p-8 lg:p-10">
+      <div className="overflow-hidden bg-[var(--igc-green)] shadow-sm p-4 sm:p-8 lg:p-10">
         <div className="grid lg:grid-cols-[32%_68%]">
           {/* Department Head Photo */}
           <div className="relative min-h-[300px] sm:min-h-[360px] lg:min-h-[390px]">
