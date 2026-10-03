@@ -92,7 +92,7 @@ export default function Footer() {
 
             <div className="mt-5 flex items-center gap-2">
               <a
-                href="https://www.facebook.com/"
+                href="https://www.facebook.com/IGC.Chemistry"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -169,7 +169,7 @@ export default function Footer() {
                 <p className="leading-6">
                   ঈশ্বরদী সরকারি কলেজ
                   <br />
-                  ঈশ্বরদী, পাবনা, বাংলাদেশ
+                  মশুরিয়া পাড়া, ঈশ্বরদী-৬৬২০, পাবনা
                 </p>
               </div>
 
@@ -180,7 +180,7 @@ export default function Footer() {
                 />
 
                 <span>
-                  কলেজ অফিসের যোগাযোগ নম্বর
+                  +880 01711-XXXXXX
                 </span>
               </div>
 
@@ -191,7 +191,7 @@ export default function Footer() {
                 />
 
                 <span className="break-all">
-                  বিভাগীয় ই-মেইল
+                  xxx@yyy.zzz
                 </span>
               </div>
 
