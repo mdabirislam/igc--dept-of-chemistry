@@ -9,8 +9,11 @@ from .auth_views import (
 from .views import (
     EventViewSet,
     FacultyViewSet,
+    GalleryItemViewSet,
+    HeroBannerViewSet,
     NoticeViewSet,
     ResourceViewSet,
+    SiteSettingsView,
 )
 
 
@@ -40,8 +43,26 @@ router.register(
     basename="event",
 )
 
+router.register(
+    r"banners",
+    HeroBannerViewSet,
+    basename="banner",
+)
+
+router.register(
+    r"gallery",
+    GalleryItemViewSet,
+    basename="gallery",
+)
+
 
 urlpatterns = [
+    path(
+        "site-settings/",
+        SiteSettingsView.as_view(),
+        name="site-settings",
+    ),
+
     path(
         "auth/login/",
         LoginView.as_view(),
