@@ -38,10 +38,10 @@ export default function FacultyPreview() {
   }, []);
 
   return (
-    <section className="bg-transparent p-5">
+    <section className="bg-transparent lg:p-5 mt-5 lg:mt-0">
       {/* Header section preserved exactly as requested */}
-      <div className="flex items-center">
-        <h2 className="relative w-full p-5 lg:p-5 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
+      <div className="mb-2 flex items-center">
+        <h2 className="relative w-full p-3 lg:pb-4 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
              after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
           শিক্ষকবৃন্দ
         </h2>
@@ -105,7 +105,7 @@ export default function FacultyPreview() {
           </div>
 
           {/* Clean 'See All' button action block centered below the array grid */}
-          <div className="flex justify-center pt-2">
+          <div className="flex justify-center">
             <a
               href="/faculty"
               className="inline-flex items-center gap-1.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200/60 hover:border-emerald-500/20 text-slate-700 hover:text-emerald-800 font-bold px-8 py-2.5 rounded-xl text-xs md:text-sm shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-95"

@@ -17,8 +17,8 @@ export default function GalleryPreview() {
     <section className="mx-auto max-w-screen">
       <div className="overflow-hidden rounded-xl border border-gray-100 bg-transparent shadow-sm">
         {/* Simple Centered Title */}
-        <div className="border-b border-gray-100 px-5 py-4 text-center sm:px-6">
-          <h2 className="relative w-full p-5 lg:p-5 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
+        <div className="border-b mb-2 border-gray-100 px-5 py-4 text-center sm:px-6">
+          <h2 className="relative w-full p-3 lg:pb-4 sm:p-1 sm:text-2xl text-xl text-center font-bold text-gray-800 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 
                  after:w-1/3 after:h-[2px] after:bg-[#1b5e20]">
             গ্যালারি
           </h2>
