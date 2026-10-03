@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 
-import UnderConstruction from "@/components/common/UnderConstruction";
+import GalleryPage from "@/components/gallery/GalleryPage";
 
 export const metadata: Metadata = {
   title: "ছবিঘর | রসায়ন বিভাগ",
 };
 
 export default function Page() {
-  return <UnderConstruction title="ছবিঘর" />;
+  return (
+    <GalleryPage
+      category="photo"
+      title="ছবিঘর"
+      subtitle="রসায়ন বিভাগের বিভিন্ন অনুষ্ঠান ও মুহূর্তের ছবি"
+      emptyText="এখনো কোনো ছবি যোগ করা হয়নি।"
+    />
+  );
 }

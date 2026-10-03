@@ -85,9 +85,19 @@ export default function EventsPage() {
                 className="rounded-xl border bg-white p-5 shadow-sm transition hover:shadow-md"
               >
                 <div className="flex gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-50 text-[#1b5e20]">
-                    <CalendarDays size={21} />
-                  </div>
+                  {event.image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={event.image_url}
+                      alt={event.title}
+                      loading="lazy"
+                      className="h-20 w-20 shrink-0 rounded-xl border object-cover sm:h-28 sm:w-28"
+                    />
+                  ) : (
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-50 text-[#1b5e20]">
+                      <CalendarDays size={21} />
+                    </div>
+                  )}
 
                   <div className="min-w-0">
                     <h2 className="text-lg font-bold text-gray-800">

@@ -3,10 +3,130 @@
 import PublicSiteLayout from "@/components/layout/PublicSiteLayout";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, GraduationCap, UserRound } from "lucide-react";
+import {
+  ChevronLeft,
+  GraduationCap,
+  Mail,
+  Phone,
+  UserRound,
+} from "lucide-react";
 import Image from "next/image";
 import { apiFetch } from "@/lib/api";
 import type { Faculty } from "@/types/api";
+
+function FacultyCard({ person }: { person: Faculty }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const hasPhd = Boolean(person.phd_subject || person.phd_title);
+  const longDescription = person.description.length > 160;
+
+  return (
+    <article className="flex flex-col rounded-xl border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+      <div className="flex items-start gap-4">
+        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full bg-gray-100">
+          {person.image_url ? (
+            <Image
+              src={person.image_url}
+              alt={person.name}
+              width={80}
+              height={80}
+              unoptimized
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-gray-400">
+              <UserRound size={30} />
+            </div>
+          )}
+        </div>
+
+        <div className="min-w-0">
+          <h2 className="font-bold text-gray-800">{person.name}</h2>
+          <p className="mt-1 text-sm font-medium text-[#1b5e20]">
+            {person.designation}
+          </p>
+        </div>
+      </div>
+
+      {person.qualification && (
+        <div className="mt-5 border-t pt-4">
+          <p className="text-xs font-semibold text-gray-400">
+            শিক্ষাগত যোগ্যতা
+          </p>
+          <p className="mt-1 text-sm leading-6 text-gray-600">
+            {person.qualification}
+          </p>
+        </div>
+      )}
+
+      {hasPhd && (
+        <div className="mt-4 border-t pt-4">
+          <p className="text-xs font-semibold text-gray-400">
+            PhD / গবেষণা
+          </p>
+
+          {person.phd_subject && (
+            <p className="mt-1 text-sm font-medium leading-6 text-gray-700">
+              {person.phd_subject}
+            </p>
+          )}
+
+          {person.phd_title && (
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+              {person.phd_title}
+            </p>
+          )}
+        </div>
+      )}
+
+      {person.description && (
+        <div className="mt-4 border-t pt-4">
+          <p
+            className={`whitespace-pre-line text-sm leading-6 text-gray-600 ${
+              expanded ? "" : "line-clamp-3"
+            }`}
+          >
+            {person.description}
+          </p>
+
+          {longDescription && (
+            <button
+              type="button"
+              onClick={() => setExpanded((value) => !value)}
+              className="mt-1 text-xs font-semibold text-[#1b5e20] hover:underline"
+            >
+              {expanded ? "সংক্ষিপ্ত করুন" : "বিস্তারিত পড়ুন"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {(person.phone || person.email) && (
+        <div className="mt-4 space-y-2 border-t pt-4 text-sm text-gray-600">
+          {person.phone && (
+            <a
+              href={`tel:${person.phone.replace(/[^\d+]/g, "")}`}
+              className="flex items-center gap-2 hover:text-[#1b5e20]"
+            >
+              <Phone size={15} className="shrink-0 text-[#1b5e20]" />
+              {person.phone}
+            </a>
+          )}
+
+          {person.email && (
+            <a
+              href={`mailto:${person.email}`}
+              className="flex items-center gap-2 break-all hover:text-[#1b5e20]"
+            >
+              <Mail size={15} className="shrink-0 text-[#1b5e20]" />
+              {person.email}
+            </a>
+          )}
+        </div>
+      )}
+    </article>
+  );
+}
 
 export default function FacultyPage() {
   const [faculty, setFaculty] = useState<Faculty[]>([]);
@@ -74,47 +194,7 @@ export default function FacultyPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {faculty.map((person) => (
-              <article
-                key={person.id}
-                className="rounded-xl border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full bg-gray-100">
-                    {person.image_url ? (
-                      <Image
-                        src={person.image_url}
-                        alt={person.name}
-                        width={80}
-                        height={80}
-                        unoptimized
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-gray-400">
-                        <UserRound size={30} />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="min-w-0">
-                    <h2 className="font-bold text-gray-800">{person.name}</h2>
-                    <p className="mt-1 text-sm font-medium text-[#1b5e20]">
-                      {person.designation}
-                    </p>
-                  </div>
-                </div>
-
-                {person.qualification && (
-                  <div className="mt-5 border-t pt-4">
-                    <p className="text-xs font-semibold text-gray-400">
-                      শিক্ষাগত যোগ্যতা
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-gray-600">
-                      {person.qualification}
-                    </p>
-                  </div>
-                )}
-              </article>
+              <FacultyCard key={person.id} person={person} />
             ))}
           </div>
         )}

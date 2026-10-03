@@ -1,11 +1,19 @@
+"use client";
+
 import {
   MapPin,
   Phone,
   Mail,
   ExternalLink,
+  Users,
 } from "lucide-react";
 
 import Image from "next/image";
+
+import {
+  phoneHref,
+  useSiteSettings,
+} from "@/hooks/useSiteSettings";
 
 const importantLinks = [
   {
@@ -53,7 +61,22 @@ const quickLinks = [
   },
 ];
 
+const DEFAULT_FACEBOOK_PAGE =
+  "https://www.facebook.com/IGC.Chemistry";
+
+const DEFAULT_ADDRESS =
+  "ঈশ্বরদী সরকারি কলেজ, মশুরিয়া পাড়া, ঈশ্বরদী-৬৬২০, পাবনা";
+
 export default function Footer() {
+  const { settings } = useSiteSettings();
+
+  const pageUrl =
+    settings?.facebook_page_url || DEFAULT_FACEBOOK_PAGE;
+  const groupUrl = settings?.facebook_group_url || "";
+  const address = settings?.address || DEFAULT_ADDRESS;
+  const phone = settings?.phone || "";
+  const email = settings?.email || "";
+
   return (
     <footer className="bg-[#1a3a5c] text-white">
 
@@ -92,16 +115,30 @@ export default function Footer() {
 
             <div className="mt-5 flex items-center gap-2">
               <a
-                href="https://www.facebook.com/IGC.Chemistry"
+                href={pageUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Facebook"
+                aria-label="Facebook Page"
+                title="Facebook Page"
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
               >
                 <span className="text-base font-bold" aria-hidden="true">
                   f
                 </span>
               </a>
+
+              {groupUrl && (
+                <a
+                  href={groupUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook Group"
+                  title="Facebook Group"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+                >
+                  <Users size={17} aria-hidden="true" />
+                </a>
+              )}
             </div>
           </div>
 
@@ -166,34 +203,40 @@ export default function Footer() {
                   className="mt-0.5 shrink-0 text-[#81c784]"
                 />
 
-                <p className="leading-6">
-                  ঈশ্বরদী সরকারি কলেজ
-                  <br />
-                  মশুরিয়া পাড়া, ঈশ্বরদী-৬৬২০, পাবনা
-                </p>
+                <p className="leading-6">{address}</p>
               </div>
 
-              <div className="flex items-center gap-3">
-                <Phone
-                  size={17}
-                  className="shrink-0 text-[#81c784]"
-                />
+              {phone && (
+                <div className="flex items-center gap-3">
+                  <Phone
+                    size={17}
+                    className="shrink-0 text-[#81c784]"
+                  />
 
-                <span>
-                  +880 01711-XXXXXX
-                </span>
-              </div>
+                  <a
+                    href={phoneHref(phone)}
+                    className="hover:text-white"
+                  >
+                    {phone}
+                  </a>
+                </div>
+              )}
 
-              <div className="flex items-center gap-3">
-                <Mail
-                  size={17}
-                  className="shrink-0 text-[#81c784]"
-                />
+              {email && (
+                <div className="flex items-center gap-3">
+                  <Mail
+                    size={17}
+                    className="shrink-0 text-[#81c784]"
+                  />
 
-                <span className="break-all">
-                  xxx@yyy.zzz
-                </span>
-              </div>
+                  <a
+                    href={`mailto:${email}`}
+                    className="break-all hover:text-white"
+                  >
+                    {email}
+                  </a>
+                </div>
+              )}
 
             </div>
           </div>

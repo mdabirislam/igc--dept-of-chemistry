@@ -2,38 +2,83 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { apiFetch } from "@/lib/api";
+import type { HeroBanner as HeroBannerData } from "@/types/api";
 
-const bannerImages = [
+interface Slide {
+  src: string;
+  alt: string;
+  remote: boolean;
+}
+
+// Shown until banners are added from the admin panel (or if the
+// server cannot be reached).
+const fallbackSlides: Slide[] = [
   "/images/banners/batch-21-22.jpeg",
   "/images/banners/teachers.jpeg",
   "/images/banners/campus-01.jpg",
-];
+].map((src) => ({
+  src,
+  alt: "Chemistry Department Banner",
+  remote: false,
+}));
 
 export default function HeroBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slides, setSlides] = useState<Slide[]>(fallbackSlides);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % bannerImages.length);
-    }, 5000);
-    return () => clearInterval(timer);
+    async function loadBanners() {
+      try {
+        const data = await apiFetch<HeroBannerData[]>("/banners/");
+
+        const remoteSlides = data
+          .filter((banner) => banner.image_url)
+          .map((banner) => ({
+            src: banner.image_url as string,
+            alt: banner.alt_text || "Chemistry Department Banner",
+            remote: true,
+          }));
+
+        if (remoteSlides.length > 0) {
+          setSlides(remoteSlides);
+          setCurrentSlide(0);
+        }
+      } catch {
+        // keep fallback slides
+      }
+    }
+
+    void loadBanners();
   }, []);
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   return (
     <section className="relative h-[550px] w-full overflow-hidden bg-slate-900">
       {/* মডার্ন সিনেমাটিক ব্যাকগ্রাউন্ড স্লাইডার */}
-      {bannerImages.map((src, index) => (
+      {slides.map((slide, index) => (
         <div
-          key={src}
+          key={slide.src}
           className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${
             index === currentSlide ? "opacity-40 scale-100" : "opacity-0 scale-110"
           }`}
         >
           <Image
-            src={src}
-            alt="Chemistry Department Banner"
+            src={slide.src}
+            alt={slide.alt}
             fill
             priority={index === 0}
+            unoptimized={slide.remote}
+            sizes="100vw"
             className="object-cover"
           />
         </div>

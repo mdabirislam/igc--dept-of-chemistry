@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
-import UnderConstruction from "@/components/common/UnderConstruction";
+import ContactContent from "@/components/contact/ContactContent";
 
 export const metadata: Metadata = {
   title: "যোগাযোগ | রসায়ন বিভাগ",
 };
 
 export default function Page() {
-  return <UnderConstruction title="যোগাযোগ" />;
+  return <ContactContent />;
 }
