@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronRight, FileDown, ArrowRight } from "lucide-react";
+import { FileDown, ArrowRight } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import type { Notice } from "@/types/api";
 
