@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, Trash2 } from "lucide-react";
 
 interface ImagePickerProps {
   file: File | null;
@@ -9,6 +9,10 @@ interface ImagePickerProps {
   maxMB?: number;
   onChange: (file: File | null) => void;
   onError: (message: string) => void;
+  /** When given, a "remove image" button is shown. */
+  onRemove?: () => void;
+  /** The saved image was marked for removal. */
+  removed?: boolean;
   className?: string;
 }
 
@@ -18,6 +22,8 @@ export default function ImagePicker({
   maxMB = 5,
   onChange,
   onError,
+  onRemove,
+  removed = false,
   className = "h-40",
 }: ImagePickerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -61,7 +67,7 @@ export default function ImagePicker({
     onChange(picked);
   }
 
-  const shown = previewUrl ?? existingUrl ?? null;
+  const shown = previewUrl ?? (removed ? null : existingUrl) ?? null;
 
   return (
     <label
@@ -89,6 +95,29 @@ export default function ImagePicker({
       {shown && (
         <span className="absolute bottom-2 right-2 rounded-md bg-black/60 px-2 py-1 text-[11px] text-white">
           পরিবর্তন করতে click করুন
+        </span>
+      )}
+
+      {shown && onRemove && (
+        <button
+          type="button"
+          onClick={(event) => {
+            // The picker is a <label>; do not open the file dialog.
+            event.preventDefault();
+            event.stopPropagation();
+            onChange(null);
+            onRemove();
+          }}
+          className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-md bg-red-600 px-2 py-1 text-[11px] font-medium text-white shadow hover:bg-red-700"
+        >
+          <Trash2 size={12} />
+          ছবি মুছুন
+        </button>
+      )}
+
+      {removed && !shown && (
+        <span className="mt-2 text-xs text-red-500">
+          সংরক্ষণ করলে ছবিটি মুছে যাবে
         </span>
       )}
 

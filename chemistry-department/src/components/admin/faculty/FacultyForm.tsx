@@ -82,6 +82,7 @@ export default function FacultyForm({
     String(editingFaculty?.order ?? 0)
   );
   const [image, setImage] = useState<File | null>(null);
+  const [removeImage, setRemoveImage] = useState(false);
 
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -97,6 +98,7 @@ export default function FacultyForm({
     setPhone("");
     setOrder("0");
     setImage(null);
+    setRemoveImage(false);
     setError("");
     setSaving(false);
   }
@@ -153,6 +155,9 @@ export default function FacultyForm({
 
       if (image) {
         formData.append("image", image);
+      } else if (removeImage && editingFaculty?.imageUrl) {
+        // An empty value clears the saved image.
+        formData.append("image", "");
       }
 
       const saved = editingFaculty
@@ -340,7 +345,16 @@ export default function FacultyForm({
           <ImagePicker
             file={image}
             existingUrl={editingFaculty?.imageUrl}
-            onChange={setImage}
+            removed={removeImage}
+            onChange={(file) => {
+              setImage(file);
+              if (file) setRemoveImage(false);
+            }}
+            onRemove={
+              editingFaculty?.imageUrl || image
+                ? () => setRemoveImage(true)
+                : undefined
+            }
             onError={setError}
           />
         </Field>

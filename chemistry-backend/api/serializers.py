@@ -122,12 +122,8 @@ class FacultySerializer(serializers.ModelSerializer):
         ]
 
     def validate_image(self, value):
-        if value.size > MAX_IMAGE_SIZE:
-            raise serializers.ValidationError(
-                "Image file size cannot exceed 5 MB."
-            )
-
-        return value
+        # value is None when the admin removes the image.
+        return check_image_size(value)
 
     def get_image_url(self, obj):
         if not obj.image:

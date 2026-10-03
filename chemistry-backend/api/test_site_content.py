@@ -333,3 +333,97 @@ class NewFieldsTests(SiteContentBase):
 
         self.assertEqual(response.status_code, 201)
         self.assertIsNone(response.data["image_url"])
+
+
+class RemoveImageTests(SiteContentBase):
+    """Sending an empty `image` value clears the stored image."""
+
+    def test_event_image_can_be_removed(self):
+        self.as_staff()
+
+        created = self.client.post(
+            "/api/events/",
+            {
+                "title": "Fest",
+                "date": "2026-10-10",
+                "image": make_image(),
+            },
+            format="multipart",
+        )
+        self.assertTrue(created.data["image_url"])
+
+        response = self.client.put(
+            f"/api/events/{created.data['id']}/",
+            {"title": "Fest", "date": "2026-10-10", "image": ""},
+            format="multipart",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.data["image_url"])
+
+    def test_event_image_kept_when_field_not_sent(self):
+        self.as_staff()
+
+        created = self.client.post(
+            "/api/events/",
+            {
+                "title": "Fest",
+                "date": "2026-10-10",
+                "image": make_image(),
+            },
+            format="multipart",
+        )
+
+        response = self.client.put(
+            f"/api/events/{created.data['id']}/",
+            {"title": "Fest 2", "date": "2026-10-10"},
+            format="multipart",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data["image_url"])
+
+    def test_faculty_image_can_be_removed(self):
+        self.as_staff()
+
+        created = self.client.post(
+            "/api/faculty/",
+            {
+                "name": "Dr. A",
+                "designation": "Professor",
+                "image": make_image(),
+            },
+            format="multipart",
+        )
+        self.assertTrue(created.data["image_url"])
+
+        response = self.client.put(
+            f"/api/faculty/{created.data['id']}/",
+            {
+                "name": "Dr. A",
+                "designation": "Professor",
+                "image": "",
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.data["image_url"])
+
+    def test_head_image_can_be_removed(self):
+        self.as_staff()
+
+        self.client.patch(
+            "/api/site-settings/",
+            {"head_image": make_image()},
+            format="multipart",
+        )
+
+        response = self.client.patch(
+            "/api/site-settings/",
+            {"head_image": ""},
+            format="multipart",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.data["head_image_url"])

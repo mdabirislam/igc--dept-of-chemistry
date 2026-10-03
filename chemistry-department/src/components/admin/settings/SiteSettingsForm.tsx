@@ -59,6 +59,7 @@ export default function SiteSettingsForm() {
   const [values, setValues] = useState<FormValues>(emptyValues);
   const [headImageUrl, setHeadImageUrl] = useState<string | null>(null);
   const [headImage, setHeadImage] = useState<File | null>(null);
+  const [removeHeadImage, setRemoveHeadImage] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
@@ -133,6 +134,9 @@ export default function SiteSettingsForm() {
 
       if (headImage) {
         formData.append("head_image", headImage);
+      } else if (removeHeadImage && headImageUrl) {
+        // An empty value clears the saved image.
+        formData.append("head_image", "");
       }
 
       const data = await apiPatch<SiteSettings>(
@@ -143,6 +147,7 @@ export default function SiteSettingsForm() {
       setValues(toValues(data));
       setHeadImageUrl(data.head_image_url);
       setHeadImage(null);
+      setRemoveHeadImage(false);
       setSaved(true);
     } catch (error) {
       setError(
@@ -187,10 +192,20 @@ export default function SiteSettingsForm() {
             <ImagePicker
               file={headImage}
               existingUrl={headImageUrl}
+              removed={removeHeadImage}
               onChange={(file) => {
                 setHeadImage(file);
+                if (file) setRemoveHeadImage(false);
                 setSaved(false);
               }}
+              onRemove={
+                headImageUrl || headImage
+                  ? () => {
+                      setRemoveHeadImage(true);
+                      setSaved(false);
+                    }
+                  : undefined
+              }
               onError={setError}
               className="h-72"
             />

@@ -52,6 +52,7 @@ export default function EventForm({
     editingEvent?.description ?? ""
   );
   const [image, setImage] = useState<File | null>(null);
+  const [removeImage, setRemoveImage] = useState(false);
 
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -62,6 +63,7 @@ export default function EventForm({
     setLocation("");
     setDescription("");
     setImage(null);
+    setRemoveImage(false);
     setError("");
     setSaving(false);
   }
@@ -98,6 +100,9 @@ export default function EventForm({
 
       if (image) {
         formData.append("image", image);
+      } else if (removeImage && editingEvent?.imageUrl) {
+        // An empty value clears the saved image.
+        formData.append("image", "");
       }
 
       const saved = editingEvent
@@ -206,7 +211,16 @@ export default function EventForm({
             <ImagePicker
               file={image}
               existingUrl={editingEvent?.imageUrl}
-              onChange={setImage}
+              removed={removeImage}
+              onChange={(file) => {
+                setImage(file);
+                if (file) setRemoveImage(false);
+              }}
+              onRemove={
+                editingEvent?.imageUrl || image
+                  ? () => setRemoveImage(true)
+                  : undefined
+              }
               onError={setError}
             />
           </Field>
