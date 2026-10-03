@@ -78,9 +78,10 @@ export default function EventsSection() {
                   {/* ছোট ইমেজ থাম্বনেইল */}
                   <div className="relative h-16 w-16 md:h-20 md:w-20 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-inner">
                     <Image
-                      src={(event as any).image || "/images/background/bg-1.jpg"}
+                      src={event.image_url || "/images/background/bg-1.jpg"}
                       alt={event.title}
                       fill
+                      unoptimized={Boolean(event.image_url)}
                       className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
@@ -93,7 +94,7 @@ export default function EventsSection() {
 
                     {/* ডেসক্রিপশন ফিল্ড থাকলে দেখাবে, না থাকলে ডিফল্ট সাবটাইটেল */}
                     <p className="mt-1 text-xs text-slate-500 line-clamp-1 break-words">
-                      {(event as any).description || "ঈশ্বরদী সরকারি কলেজের রসায়ন বিভাগের একটি বিশেষ আয়োজন।"}
+                      {event.details || "ঈশ্বরদী সরকারি কলেজের রসায়ন বিভাগের একটি বিশেষ আয়োজন।"}
                     </p>
 
                     <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">

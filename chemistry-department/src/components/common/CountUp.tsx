@@ -39,16 +39,18 @@ export default function CountUp({
   useEffect(() => {
     if (!inView) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setCurrent(to);
-      return;
-    }
+    // With reduced motion the first frame jumps straight to the final number.
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
     let frame = 0;
     const start = performance.now();
 
     const tick = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1);
+      const progress = reduceMotion
+        ? 1
+        : Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3); // ease-out
       setCurrent(Math.round(to * eased));
 

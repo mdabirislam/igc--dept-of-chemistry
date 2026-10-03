@@ -120,7 +120,7 @@ export default function ImportantResources() {
 
                   {/* রিসোর্সের বিবরণ বা ডিফল্ট তথ্য */}
                   <p className="mt-1 text-xs text-slate-500 line-clamp-1 break-words">
-                    {(resource as any).description || "শিক্ষার্থীদের একাডেমিক সহায়তার জন্য রসায়ন বিভাগের একটি গুরুত্বপূর্ণ ফাইল।"}
+                    {"শিক্ষার্থীদের একাডেমিক সহায়তার জন্য রসায়ন বিভাগের একটি গুরুত্বপূর্ণ ফাইল।"}
                   </p>
 
                   {/* ডায়নামিক ব্যাজ ও ডাউনলোড ইনফো */}
