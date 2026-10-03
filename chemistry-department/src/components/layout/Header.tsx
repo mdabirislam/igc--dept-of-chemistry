@@ -7,7 +7,7 @@ export default function Header() {
 
         <div className="college-logo">
           <Image
-            src="/images/branding/bd-govt-logo.jpg"
+            src="/images/branding/bd-govt-logo.png"
             alt="Bangladesh government Logo"
             width={64}
             height={64}
@@ -25,7 +25,7 @@ export default function Header() {
 
         <div className="nu-logo">
           <Image
-            src="/images/branding/igc-logo.jpg"
+            src="/images/branding/igc-logo.png"
             alt="Ishwardi Government College Logo"
             width={64}
             height={64}
