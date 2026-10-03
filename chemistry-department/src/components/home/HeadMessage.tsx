@@ -92,7 +92,7 @@ export default function HeadMessage() {
 
               <div className="mt-6 border-t border-gray-100 pt-4">
                 <p className="text-lg font-bold text-white tracking-wide">
-                  ড. ওহিদুর রহমান
+                  ড. অহিদুর রহমান
                 </p>
                 <p className="font-semibold text-emerald-300 text-sm md:text-base">
                   বিভাগীয় প্রধান
