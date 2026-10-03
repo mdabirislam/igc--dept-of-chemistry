@@ -74,7 +74,7 @@ export default function NoticeSection() {
   }, []);
 
   return (
-    <section className="flex min-w-0 lg:max-h-[80vh] h-full min-w-0 flex-col lg:col-span-2 overflow-hidden bg-transparent">
+    <section className="flex min-w-0 lg:max-h-[80vh] h-full min-w-0 flex-col lg:col-span-2 overflow-hidden bg-transparent lg:px-5">
       {/* ১. আপনার পছন্দের সেই বেস্ট এবং সিম্পল হেডার স্টাইলটি ফিরিয়ে আনা হলো */}
       <div className="flex min-w-0 items-center justify-between gap-4 mb-5">
         <div className="min-w-0">
@@ -114,7 +114,7 @@ export default function NoticeSection() {
             return (
               <div
                 key={notice.id}
-                className="flex items-center gap-4 p-3 lg:px-5 rounded-2xl border border-slate-100/70 bg-white shadow-[0_4px_15px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_35px_rgba(0,0,0,0.04)] hover:border-emerald-500/20 transition-all duration-300 group"
+                className="flex items-center gap-4 p-3 lg:px-5 rounded-lg border border-slate-100/70 bg-white shadow-[0_4px_15px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_35px_rgba(0,0,0,0.04)] hover:border-emerald-500/20 transition-all duration-300 group"
               >
                 {/* ২. হাই-ফোকাস রিয়েল ক্যালেন্ডার শিট ডিজাইন (ফোকাস সমস্যার সমাধান) */}
                 <div className="flex flex-col items-center justify-center w-14 h-14 md:w-16 md:h-16 shrink-0 bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:border-emerald-600/30">

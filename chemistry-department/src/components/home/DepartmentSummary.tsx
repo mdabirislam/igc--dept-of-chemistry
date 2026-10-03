@@ -14,7 +14,7 @@ export default function DepartmentSummary() {
   return (
     <section className="bg-slate-950 text-white py-10 relative overflow-hidden">
       <div className="container mx-auto px-5 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-12 sm:gap-6">
           {stats.map((stat) => (
             <div
               key={stat.id}

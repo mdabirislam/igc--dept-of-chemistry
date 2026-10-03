@@ -19,7 +19,7 @@ export default function HomeContent() {
               <NoticeSection />
 
             {/* Events + Resources */}
-            <div className="grid min-w-0 grid-cols-1 gap-4 p-5 lg:h-full lg:overflow-hidden lg:grid-rows-[5fr_3fr] lg:px-2 lg:py-5">
+            <div className="grid min-w-0 grid-cols-1 gap-4 lg:h-full lg:overflow-hidden lg:grid-rows-[5fr_3fr] lg:px-2">
 
               {/* Events - takes remaining height */}
                 <EventsSection />

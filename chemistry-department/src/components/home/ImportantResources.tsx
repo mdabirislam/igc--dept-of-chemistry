@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowDownToLine, FileText, FileDown, FileImage, FileVideo } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import type { Resource } from "@/types/api";
+import {ArrowRight} from "lucide-react";
 
 // ফাইল এক্সটেনশন চেক করে নির্দিষ্ট মেটাডাটা ও আইকন রিটার্ন করার ফাংশন
 function getResourceMeta(url: string | null) {
@@ -70,10 +71,10 @@ export default function ImportantResources() {
   }, []);
 
   return (
-    <section className="flex min-w-0 flex-col bg-transparent lg:h-full lg:max-h-[420px] lg:min-h-0 lg:overflow-hidden p-1">
+    <section className="flex min-w-0 flex-col bg-transparent lg:h-full lg:max-h-[420px] lg:min-h-0 lg:overflow-hidden">
       {/* হেডার টাইটেল - থিমের সাথে সম্পূর্ণ সামঞ্জস্যপূর্ণ */}
       <div className="flex shrink-0 items-center mb-4">
-        <h2 className="w-full text-lg md:text-xl font-extrabold text-slate-800 bg-gradient-to-r from-emerald-50 via-slate-100 to-emerald-50 py-2.5 px-4 rounded-xl border border-slate-200/60 shadow-sm text-center tracking-wide">
+        <h2 className="w-full text-lg md:text-xl font-extrabold text-slate-800 bg-gradient-to-r from-emerald-50 via-slate-100 to-emerald-50 py-2.5 px-4 rounded-sm border border-slate-200/60 shadow-sm text-center tracking-wide">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-950 via-slate-800 to-emerald-900">
             গুরুত্বপূর্ণ রিসোর্স ও ডাউনলোড
           </span>
@@ -145,6 +146,15 @@ export default function ImportantResources() {
               </a>
             );
           })}
+          <div className="flex items-center justify-center p-1 lg:p-1 mt-auto pl-4 bg-gradient-to-t from-transparent via-white to-white">
+            <a
+              href="/events"
+              className="inline-flex items-center gap-1.5 text-xs md:text-sm font-bold text-[#1b5e20] hover:text-emerald-700 group transition-colors"
+            >
+              <span>সব দেখুন</span>
+              <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
+            </a>
+          </div>
         </div>
       )}
     </section>

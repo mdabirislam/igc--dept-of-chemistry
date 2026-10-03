@@ -42,10 +42,10 @@ export default function EventsSection() {
   }, []);
 
   return (
-    <section className="flex min-w-0 flex-col bg-transparent lg:h-full lg:max-h-[420px] lg:min-h-0 lg:overflow-hidden p-1">
+    <section className="flex min-w-0 flex-col bg-transparent lg:h-full lg:max-h-[420px] lg:min-h-0 lg:overflow-hidden">
       {/* ইভেন্ট সেকশন হেডার - মডার্ন প্রিমিয়াম লুক */}
       <div className="flex shrink-0 items-center mb-4">
-        <h2 className="w-full text-lg md:text-xl font-extrabold text-slate-800 bg-gradient-to-r from-emerald-50 via-slate-100 to-emerald-50 py-2.5 px-4 rounded-xl border border-slate-200/60 shadow-sm text-center tracking-wide">
+        <h2 className="w-full text-lg md:text-xl font-extrabold text-slate-800 bg-gradient-to-r from-emerald-50 via-slate-100 to-emerald-50 py-2.5 px-4 rounded-sm border border-slate-200/60 shadow-sm text-center tracking-wide">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-950 via-slate-800 to-emerald-900">
             সর্বশেষ ঘটনাবলী ও ইভেন্ট
           </span>
@@ -114,17 +114,16 @@ export default function EventsSection() {
                 </div>
               </div>
             ))}
-          </div>
-
           {/* নিচের অ্যাকশন বাটন */}
-          <div className="mt-auto pt-4 bg-gradient-to-t from-white via-white to-transparent">
+          <div className="flex items-center justify-center p-1 lg:p-1 mt-auto pl-4 bg-gradient-to-t from-transparent via-white to-white">
             <a
               href="/events"
               className="inline-flex items-center gap-1.5 text-xs md:text-sm font-bold text-[#1b5e20] hover:text-emerald-700 group transition-colors"
             >
-              সকল ইভেন্ট দেখুন
+              <span>সব দেখুন</span>
               <ArrowRight size={14} className="transition-transform duration-200 group-hover:translate-x-1" />
             </a>
+          </div>
           </div>
         </div>
       )}
