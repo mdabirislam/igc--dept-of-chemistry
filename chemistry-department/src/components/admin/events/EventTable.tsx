@@ -81,8 +81,19 @@ export default function EventTable({
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="rounded-lg bg-green-50 p-2 text-[#1b5e20]">
-                      <CalendarDays size={17} />
+                    <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg border bg-green-50">
+                      {event.imageUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={event.imageUrl}
+                          alt={event.title}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-[#1b5e20]">
+                          <CalendarDays size={17} />
+                        </div>
+                      )}
                     </div>
 
                     <div>

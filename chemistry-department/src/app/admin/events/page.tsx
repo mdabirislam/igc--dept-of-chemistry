@@ -114,14 +114,17 @@ export default function AdminEventsPage() {
             বিভাগীয় অনুষ্ঠান ও গুরুত্বপূর্ণ ইভেন্ট পরিচালনা করুন।
           </p>
         </div>
-
-        {!editingEvent && (
-          <EventForm onSave={handleSave} />
-        )}
       </div>
+
+      {!editingEvent && (
+        <div>
+          <EventForm onSave={handleSave} />
+        </div>
+      )}
 
       {editingEvent && (
         <EventForm
+          key={editingEvent.id}
           editingEvent={editingEvent}
           onSave={handleSave}
           onCancelEdit={() => setEditingEvent(null)}

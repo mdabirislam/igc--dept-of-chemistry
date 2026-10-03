@@ -146,6 +146,16 @@ export function apiPut<T>(
   });
 }
 
+export function apiPatch<T>(
+  endpoint: string,
+  body: BodyInit
+) {
+  return apiFetch<T>(endpoint, {
+    method: "PATCH",
+    body,
+  });
+}
+
 export function apiDelete<T = void>(
   endpoint: string
 ) {

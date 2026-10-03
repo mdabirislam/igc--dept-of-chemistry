@@ -112,14 +112,17 @@ export default function AdminNoticesPage() {
             বিভাগীয় নোটিশ প্রকাশ, সম্পাদনা ও পরিচালনা করুন।
           </p>
         </div>
-
-        {!editingNotice && (
-          <NoticeForm onSave={handleSave} />
-        )}
       </div>
+
+      {!editingNotice && (
+        <div>
+          <NoticeForm onSave={handleSave} />
+        </div>
+      )}
 
       {editingNotice && (
         <NoticeForm
+          key={editingNotice.id}
           editingNotice={editingNotice}
           onSave={handleSave}
           onCancelEdit={() => setEditingNotice(null)}

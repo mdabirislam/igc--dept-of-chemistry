@@ -42,7 +42,7 @@ export default function AdminHeader() {
   );
 
   return (
-    <header className="flex items-center justify-between border-b bg-white px-5 py-4">
+    <header className="sticky top-0 z-30 flex h-[73px] items-center justify-between border-b bg-white px-5">
       <div>
         <h1 className="font-semibold text-gray-800">
           Administration

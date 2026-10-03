@@ -1,25 +1,25 @@
 "use client";
 
-import {
-  FormEvent,
-  useRef,
-  useState,
-} from "react";
+import { FormEvent, useState } from "react";
+import { Plus, X } from "lucide-react";
 
-import { ImagePlus, Plus, X } from "lucide-react";
-
-import {
-  apiPost,
-  apiPut,
-} from "@/lib/api";
-
+import { apiPost, apiPut } from "@/lib/api";
 import type { Faculty } from "@/types/api";
+
+import Field, { inputClass } from "@/components/admin/ui/Field";
+import ImagePicker from "@/components/admin/ui/ImagePicker";
 
 export interface FacultyData {
   id: number;
   name: string;
   designation: string;
   qualification: string;
+  phdSubject: string;
+  phdTitle: string;
+  description: string;
+  email: string;
+  phone: string;
+  order: number;
   imageName?: string;
   imageUrl?: string;
 }
@@ -38,6 +38,12 @@ export function mapFacultyToFacultyData(
     name: faculty.name,
     designation: faculty.designation,
     qualification: faculty.qualification,
+    phdSubject: faculty.phd_subject ?? "",
+    phdTitle: faculty.phd_title ?? "",
+    description: faculty.description ?? "",
+    email: faculty.email ?? "",
+    phone: faculty.phone ?? "",
+    order: faculty.order ?? 0,
     imageName: faculty.image
       ? faculty.image.split("/").pop()
       : undefined,
@@ -45,69 +51,54 @@ export function mapFacultyToFacultyData(
   };
 }
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function FacultyForm({
   editingFaculty,
   onSave,
   onCancelEdit,
 }: FacultyFormProps) {
-  const [open, setOpen] = useState(
-    Boolean(editingFaculty)
-  );
+  const [open, setOpen] = useState(Boolean(editingFaculty));
 
-  const [name, setName] = useState(
-    editingFaculty?.name ?? ""
-  );
-
+  const [name, setName] = useState(editingFaculty?.name ?? "");
   const [designation, setDesignation] = useState(
     editingFaculty?.designation ?? ""
   );
-
-  const [qualification, setQualification] =
-    useState(
-      editingFaculty?.qualification ?? ""
-    );
-
-  const [image, setImage] =
-    useState<File | null>(null);
+  const [qualification, setQualification] = useState(
+    editingFaculty?.qualification ?? ""
+  );
+  const [phdSubject, setPhdSubject] = useState(
+    editingFaculty?.phdSubject ?? ""
+  );
+  const [phdTitle, setPhdTitle] = useState(
+    editingFaculty?.phdTitle ?? ""
+  );
+  const [description, setDescription] = useState(
+    editingFaculty?.description ?? ""
+  );
+  const [email, setEmail] = useState(editingFaculty?.email ?? "");
+  const [phone, setPhone] = useState(editingFaculty?.phone ?? "");
+  const [order, setOrder] = useState(
+    String(editingFaculty?.order ?? 0)
+  );
+  const [image, setImage] = useState<File | null>(null);
 
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-
-  const fileRef =
-    useRef<HTMLInputElement>(null);
-
-  function handleImageChange(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const file = event.target.files?.[0];
-
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      setError("শুধুমাত্র image file নির্বাচন করুন।");
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setError("ছবির size সর্বোচ্চ 5 MB হতে হবে।");
-      return;
-    }
-
-    setError("");
-    setImage(file);
-  }
 
   function resetForm() {
     setName("");
     setDesignation("");
     setQualification("");
+    setPhdSubject("");
+    setPhdTitle("");
+    setDescription("");
+    setEmail("");
+    setPhone("");
+    setOrder("0");
     setImage(null);
     setError("");
     setSaving(false);
-
-    if (fileRef.current) {
-      fileRef.current.value = "";
-    }
   }
 
   function closeForm() {
@@ -116,9 +107,7 @@ export default function FacultyForm({
     onCancelEdit?.();
   }
 
-  async function submit(
-    event: FormEvent<HTMLFormElement>
-  ) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!name.trim()) {
@@ -131,6 +120,21 @@ export default function FacultyForm({
       return;
     }
 
+    if (email.trim() && !EMAIL_PATTERN.test(email.trim())) {
+      setError("সঠিক email address লিখুন।");
+      return;
+    }
+
+    const orderNumber = Number(order);
+
+    if (
+      !Number.isInteger(orderNumber) ||
+      orderNumber < 0
+    ) {
+      setError("ক্রম (order) একটি ০ বা তার বেশি পূর্ণ সংখ্যা হতে হবে।");
+      return;
+    }
+
     setSaving(true);
     setError("");
 
@@ -138,32 +142,25 @@ export default function FacultyForm({
       const formData = new FormData();
 
       formData.append("name", name.trim());
-      formData.append(
-        "designation",
-        designation.trim()
-      );
-      formData.append(
-        "qualification",
-        qualification.trim()
-      );
+      formData.append("designation", designation.trim());
+      formData.append("qualification", qualification.trim());
+      formData.append("phd_subject", phdSubject.trim());
+      formData.append("phd_title", phdTitle.trim());
+      formData.append("description", description.trim());
+      formData.append("email", email.trim());
+      formData.append("phone", phone.trim());
+      formData.append("order", String(orderNumber));
 
       if (image) {
         formData.append("image", image);
       }
 
-      let saved: Faculty;
-
-      if (editingFaculty) {
-        saved = await apiPut<Faculty>(
-          `/faculty/${editingFaculty.id}/`,
-          formData
-        );
-      } else {
-        saved = await apiPost<Faculty>(
-          "/faculty/",
-          formData
-        );
-      }
+      const saved = editingFaculty
+        ? await apiPut<Faculty>(
+            `/faculty/${editingFaculty.id}/`,
+            formData
+          )
+        : await apiPost<Faculty>("/faculty/", formData);
 
       onSave?.(mapFacultyToFacultyData(saved));
 
@@ -173,7 +170,7 @@ export default function FacultyForm({
       setError(
         error instanceof Error
           ? error.message
-          : "শিক্ষকের তথ্য সংরক্ষণ করা যায়নি।"
+          : "শিক্ষকের তথ্য সংরক্ষণ করা যায়নি।"
       );
     } finally {
       setSaving(false);
@@ -217,83 +214,136 @@ export default function FacultyForm({
         </button>
       </div>
 
-      <form
-        onSubmit={submit}
-        className="max-w-3xl space-y-5"
-      >
+      <form onSubmit={submit} className="space-y-6">
+        {/* Basic */}
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            নাম
-          </label>
+          <h3 className="mb-3 text-sm font-semibold text-[#1b5e20]">
+            মৌলিক তথ্য
+          </h3>
 
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="শিক্ষকের নাম"
-            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20]"
+          <div className="grid gap-5 md:grid-cols-2">
+            <Field label="নাম">
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="শিক্ষকের নাম"
+                className={inputClass}
+              />
+            </Field>
+
+            <Field label="পদবি">
+              <input
+                value={designation}
+                onChange={(e) => setDesignation(e.target.value)}
+                placeholder="যেমন: সহকারী অধ্যাপক"
+                className={inputClass}
+              />
+            </Field>
+
+            <Field
+              label="শিক্ষাগত যোগ্যতা"
+              className="md:col-span-2"
+            >
+              <input
+                value={qualification}
+                onChange={(e) => setQualification(e.target.value)}
+                placeholder="যেমন: M.Sc. in Chemistry"
+                className={inputClass}
+              />
+            </Field>
+
+            <Field
+              label="ক্রম (order)"
+              hint="ছোট সংখ্যা আগে দেখাবে। যেমন বিভাগীয় প্রধান = 0, তারপর 1, 2..."
+            >
+              <input
+                type="number"
+                min={0}
+                value={order}
+                onChange={(e) => setOrder(e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+        </div>
+
+        {/* PhD */}
+        <div>
+          <h3 className="mb-3 text-sm font-semibold text-[#1b5e20]">
+            PhD / গবেষণা (ঐচ্ছিক)
+          </h3>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <Field label="PhD-র বিষয়">
+              <input
+                value={phdSubject}
+                onChange={(e) => setPhdSubject(e.target.value)}
+                placeholder="যেমন: Organic Chemistry"
+                className={inputClass}
+              />
+            </Field>
+
+            <Field label="গবেষণার শিরোনাম">
+              <input
+                value={phdTitle}
+                onChange={(e) => setPhdTitle(e.target.value)}
+                placeholder="থিসিস / গবেষণার শিরোনাম"
+                className={inputClass}
+              />
+            </Field>
+
+            <Field
+              label="বিস্তারিত পরিচিতি"
+              className="md:col-span-2"
+            >
+              <textarea
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="শিক্ষক সম্পর্কে বিস্তারিত..."
+                className={`${inputClass} resize-y`}
+              />
+            </Field>
+          </div>
+        </div>
+
+        {/* Contact */}
+        <div>
+          <h3 className="mb-3 text-sm font-semibold text-[#1b5e20]">
+            যোগাযোগ (ঐচ্ছিক)
+          </h3>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <Field label="Email">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                className={inputClass}
+              />
+            </Field>
+
+            <Field label="মোবাইল নম্বর">
+              <input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="01XXXXXXXXX"
+                className={inputClass}
+              />
+            </Field>
+          </div>
+        </div>
+
+        {/* Photo */}
+        <Field label="ছবি">
+          <ImagePicker
+            file={image}
+            existingUrl={editingFaculty?.imageUrl}
+            onChange={setImage}
+            onError={setError}
           />
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            পদবি
-          </label>
-
-          <input
-            value={designation}
-            onChange={(e) =>
-              setDesignation(e.target.value)
-            }
-            placeholder="যেমন: সহকারী অধ্যাপক"
-            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20]"
-          />
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            শিক্ষাগত যোগ্যতা
-          </label>
-
-          <input
-            value={qualification}
-            onChange={(e) =>
-              setQualification(e.target.value)
-            }
-            placeholder="যেমন: M.Sc. in Chemistry"
-            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20]"
-          />
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            ছবি
-          </label>
-
-          <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 px-5 py-8 text-center hover:border-[#1b5e20] hover:bg-gray-50">
-            <ImagePlus
-              size={28}
-              className="mb-2 text-gray-400"
-            />
-
-            <span className="text-sm font-medium text-gray-700">
-              {image?.name ??
-                editingFaculty?.imageName ??
-                "ছবি নির্বাচন করুন"}
-            </span>
-
-            <span className="mt-1 text-xs text-gray-400">
-              সর্বোচ্চ 5 MB
-            </span>
-
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-          </label>
-        </div>
+        </Field>
 
         {error && (
           <div className="rounded-lg border border-red-100 bg-red-50 px-3 py-2.5 text-sm text-red-600">

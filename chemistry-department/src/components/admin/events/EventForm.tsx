@@ -1,22 +1,13 @@
 "use client";
 
-import {
-  FormEvent,
-  useState,
-} from "react";
+import { FormEvent, useState } from "react";
+import { Plus, X } from "lucide-react";
 
-import {
-  CalendarPlus,
-  Plus,
-  X,
-} from "lucide-react";
-
-import {
-  apiPost,
-  apiPut,
-} from "@/lib/api";
-
+import { apiPost, apiPut } from "@/lib/api";
 import type { Event } from "@/types/api";
+
+import Field, { inputClass } from "@/components/admin/ui/Field";
+import ImagePicker from "@/components/admin/ui/ImagePicker";
 
 export interface EventData {
   id: number;
@@ -25,6 +16,7 @@ export interface EventData {
   time: string;
   location: string;
   description: string;
+  imageUrl?: string;
 }
 
 interface EventFormProps {
@@ -33,9 +25,7 @@ interface EventFormProps {
   onCancelEdit?: () => void;
 }
 
-export function mapEventToEventData(
-  event: Event
-): EventData {
+export function mapEventToEventData(event: Event): EventData {
   return {
     id: event.id,
     title: event.title,
@@ -43,6 +33,7 @@ export function mapEventToEventData(
     time: "",
     location: event.location,
     description: event.details,
+    imageUrl: event.image_url ?? undefined,
   };
 }
 
@@ -51,26 +42,16 @@ export default function EventForm({
   onSave,
   onCancelEdit,
 }: EventFormProps) {
-  const [open, setOpen] = useState(
-    Boolean(editingEvent)
-  );
-
-  const [title, setTitle] = useState(
-    editingEvent?.title ?? ""
-  );
-
-  const [date, setDate] = useState(
-    editingEvent?.date ?? ""
-  );
-
+  const [open, setOpen] = useState(Boolean(editingEvent));
+  const [title, setTitle] = useState(editingEvent?.title ?? "");
+  const [date, setDate] = useState(editingEvent?.date ?? "");
   const [location, setLocation] = useState(
     editingEvent?.location ?? ""
   );
-
-  const [description, setDescription] =
-    useState(
-      editingEvent?.description ?? ""
-    );
+  const [description, setDescription] = useState(
+    editingEvent?.description ?? ""
+  );
+  const [image, setImage] = useState<File | null>(null);
 
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -80,6 +61,7 @@ export default function EventForm({
     setDate("");
     setLocation("");
     setDescription("");
+    setImage(null);
     setError("");
     setSaving(false);
   }
@@ -90,9 +72,7 @@ export default function EventForm({
     onCancelEdit?.();
   }
 
-  async function submit(
-    event: FormEvent<HTMLFormElement>
-  ) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!title.trim()) {
@@ -109,26 +89,23 @@ export default function EventForm({
     setError("");
 
     try {
-      const body = {
-        title: title.trim(),
-        date,
-        location: location.trim(),
-        details: description.trim(),
-      };
+      const formData = new FormData();
 
-      let saved: Event;
+      formData.append("title", title.trim());
+      formData.append("date", date);
+      formData.append("location", location.trim());
+      formData.append("details", description.trim());
 
-      if (editingEvent) {
-        saved = await apiPut<Event>(
-          `/events/${editingEvent.id}/`,
-          JSON.stringify(body)
-        );
-      } else {
-        saved = await apiPost<Event>(
-          "/events/",
-          JSON.stringify(body)
-        );
+      if (image) {
+        formData.append("image", image);
       }
+
+      const saved = editingEvent
+        ? await apiPut<Event>(
+            `/events/${editingEvent.id}/`,
+            formData
+          )
+        : await apiPost<Event>("/events/", formData);
 
       onSave?.(mapEventToEventData(saved));
 
@@ -138,7 +115,7 @@ export default function EventForm({
       setError(
         error instanceof Error
           ? error.message
-          : "ইভেন্ট সংরক্ষণ করা যায়নি।"
+          : "ইভেন্ট সংরক্ষণ করা যায়নি।"
       );
     } finally {
       setSaving(false);
@@ -169,7 +146,7 @@ export default function EventForm({
           </h2>
 
           <p className="mt-1 text-xs text-gray-500">
-            বিভাগীয় অনুষ্ঠান ও গুরুত্বপূর্ণ event-এর তথ্য দিন
+            বিভাগীয় অনুষ্ঠান ও গুরুত্বপূর্ণ event-এর তথ্য দিন
           </p>
         </div>
 
@@ -182,65 +159,57 @@ export default function EventForm({
         </button>
       </div>
 
-      <form
-        onSubmit={submit}
-        className="max-w-3xl space-y-5"
-      >
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            ইভেন্টের নাম
-          </label>
+      <form onSubmit={submit} className="space-y-5">
+        <div className="grid gap-5 md:grid-cols-2">
+          <Field label="ইভেন্টের নাম" className="md:col-span-2">
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="ইভেন্টের নাম"
+              className={inputClass}
+            />
+          </Field>
 
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="ইভেন্টের নাম"
-            className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20]"
-          />
-        </div>
+          <Field label="তারিখ">
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className={inputClass}
+            />
+          </Field>
 
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            তারিখ
-          </label>
+          <Field label="স্থান">
+            <input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="ইভেন্টের স্থান"
+              className={inputClass}
+            />
+          </Field>
 
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full rounded-lg border px-3 py-2.5 text-sm"
-          />
-        </div>
+          <Field label="বিস্তারিত" className="md:col-span-2">
+            <textarea
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="ইভেন্টের বিস্তারিত..."
+              className={`${inputClass} resize-y`}
+            />
+          </Field>
 
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            স্থান
-          </label>
-
-          <input
-            value={location}
-            onChange={(e) =>
-              setLocation(e.target.value)
-            }
-            placeholder="ইভেন্টের স্থান"
-            className="w-full rounded-lg border px-3 py-2.5 text-sm"
-          />
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            বিস্তারিত
-          </label>
-
-          <textarea
-            rows={4}
-            value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
-            placeholder="ইভেন্টের বিস্তারিত..."
-            className="w-full resize-y rounded-lg border px-3 py-2.5 text-sm"
-          />
+          <Field
+            label="ইভেন্টের ছবি"
+            hint="হোম পেজে ছোট থাম্বনেইল হিসেবে দেখানো হবে। ছবি না দিলে default ছবি দেখাবে।"
+            className="md:col-span-2"
+          >
+            <ImagePicker
+              file={image}
+              existingUrl={editingEvent?.imageUrl}
+              onChange={setImage}
+              onError={setError}
+            />
+          </Field>
         </div>
 
         {error && (
@@ -262,15 +231,13 @@ export default function EventForm({
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#1b5e20] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-lg bg-[#1b5e20] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#145218] disabled:opacity-60"
           >
-            <CalendarPlus size={16} />
-
             {saving
               ? "সংরক্ষণ হচ্ছে..."
               : editingEvent
                 ? "পরিবর্তন সংরক্ষণ করুন"
-                : "ইভেন্ট প্রকাশ করুন"}
+                : "ইভেন্ট সংরক্ষণ করুন"}
           </button>
         </div>
       </form>

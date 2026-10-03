@@ -138,14 +138,17 @@ export default function AdminResourcesPage() {
             প্রকাশ করুন।
           </p>
         </div>
-
-        {!editingResource && (
-          <ResourceForm onSave={handleSave} />
-        )}
       </div>
+
+      {!editingResource && (
+        <div>
+          <ResourceForm onSave={handleSave} />
+        </div>
+      )}
 
       {editingResource && (
         <ResourceForm
+          key={editingResource.id}
           editingResource={editingResource}
           onSave={handleSave}
           onCancelEdit={() => setEditingResource(null)}

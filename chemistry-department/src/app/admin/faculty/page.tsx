@@ -112,14 +112,17 @@ export default function AdminFacultyPage() {
             শিক্ষক ও কর্মকর্তাদের তথ্য পরিচালনা করুন।
           </p>
         </div>
-
-        {!editingFaculty && (
-          <FacultyForm onSave={handleSave} />
-        )}
       </div>
+
+      {!editingFaculty && (
+        <div>
+          <FacultyForm onSave={handleSave} />
+        </div>
+      )}
 
       {editingFaculty && (
         <FacultyForm
+          key={editingFaculty.id}
           editingFaculty={editingFaculty}
           onSave={handleSave}
           onCancelEdit={() => setEditingFaculty(null)}

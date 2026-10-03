@@ -59,6 +59,7 @@ export default function FacultyTable({
               <th className="px-5 py-3 font-semibold">
                 শিক্ষাগত যোগ্যতা
               </th>
+              <th className="px-5 py-3 font-semibold">ক্রম</th>
               <th className="px-5 py-3 text-right font-semibold">
                 Action
               </th>
@@ -98,8 +99,10 @@ export default function FacultyTable({
                         {person.name}
                       </p>
 
-                      <p className="mt-1 text-xs text-gray-400">
-                        Chemistry Department
+                      <p className="mt-1 truncate text-xs text-gray-400">
+                        {[person.phone, person.email]
+                          .filter(Boolean)
+                          .join(" · ") || "যোগাযোগের তথ্য নেই"}
                       </p>
                     </div>
                   </div>
@@ -112,7 +115,17 @@ export default function FacultyTable({
                 </td>
 
                 <td className="px-5 py-4 text-gray-600">
-                  {person.qualification}
+                  <p>{person.qualification || "—"}</p>
+
+                  {person.phdSubject && (
+                    <p className="mt-1 text-xs text-gray-400">
+                      PhD: {person.phdSubject}
+                    </p>
+                  )}
+                </td>
+
+                <td className="px-5 py-4 text-gray-600">
+                  {person.order}
                 </td>
 
                 <td className="px-5 py-4">

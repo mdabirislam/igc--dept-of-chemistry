@@ -91,7 +91,9 @@ export default function AdminAuthGuard({
         <AdminSidebar />
 
         <main className="min-w-0 flex-1">
-          {children}
+          <div className="mx-auto w-full max-w-6xl">
+            {children}
+          </div>
         </main>
       </div>
     </div>
