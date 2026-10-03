@@ -75,7 +75,7 @@ export default function HeadMessage() {
                 রসায়ন বিভাগে আপনাকে স্বাগতম
               </h2>
 
-              <blockquote className="mt-5 lg:border-l-4 lg:border-[#1b5e20] lg:pl-4 lg:text-base font-medium lg:leading-8 text-white sm:text-lg">
+              <blockquote className="mt-5 lg:border-l-4 lg:border-[#1b5e20] lg:pl-4 lg:text-lg font-medium lg:leading-8 text-white sm:text-lg">
                 “জ্ঞান, অনুসন্ধান ও ব্যবহারিক শিক্ষার সমন্বয়ে
                 আমরা এমন একটি শিক্ষার পরিবেশ গড়ে তুলতে চাই,
                 যেখানে শিক্ষার্থীরা নিজেদের সম্ভাবনাকে আবিষ্কার
@@ -91,13 +91,13 @@ export default function HeadMessage() {
               </p>
 
               <div className="mt-6 border-t border-gray-100 pt-4">
-                <p className="text-lg font-bold text-white tracking-wide">
+                <p className="text-lg text-white tracking-wide">
                   ড. অহিদুর রহমান
                 </p>
-                <p className="font-semibold text-emerald-300 text-sm md:text-base">
+                <p className="font-semibold text-emerald-400 text-sm md:text-base">
                   বিভাগীয় প্রধান
                 </p>
-                <p className="mt-1 text-xs md:text-sm text-emerald-100/70">
+                <p className="mt-1 text-xs md:text-sm text-emerald-50/70">
                   রসায়ন বিভাগ , ঈশ্বরদী সরকারি কলেজ
                 </p>
               </div>
