@@ -98,30 +98,11 @@ export default function SiteLoader() {
       aria-live="polite"
       aria-label="Loading"
     >
-      <div className="site-loader__bubbles" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
+      <div className="site-loader__content">
+        <p className="site-loader__title">
+          Department of Chemistry
+        </p>
 
-      <div className="site-loader__logo">
-        <span className="site-loader__ring" aria-hidden="true" />
-
-        {/* Plain <img>: it must appear in the very first HTML. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/branding/igc-logo.jpg"
-          alt=""
-          width={82}
-          height={82}
-        />
-      </div>
-
-      <div className="site-loader__text">
-        <p className="site-loader__title">Department of Chemistry</p>
         <p className="site-loader__subtitle">
           Ishwardi Government College
         </p>
@@ -131,10 +112,6 @@ export default function SiteLoader() {
           <span>.</span>
           <span>.</span>
         </p>
-      </div>
-
-      <div className="site-loader__bar" aria-hidden="true">
-        <span />
       </div>
     </div>
   );
