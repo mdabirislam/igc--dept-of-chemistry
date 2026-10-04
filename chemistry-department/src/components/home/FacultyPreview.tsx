@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import FadeImage from "@/components/common/FadeImage";
 import DefaultAvatar from "@/components/common/DefaultAvatar";
@@ -96,12 +97,6 @@ export default function FacultyPreview() {
                   <p className="mt-0.5 text-sm text-[#1b5e20] font-medium truncate">
                     {person.designation}
                   </p>
-
-                  {person.qualification && (
-                    <p className="mt-1 truncate text-xs text-gray-500">
-                      {person.qualification}
-                    </p>
-                  )}
                 </div>
               </div>
             ))}
@@ -109,13 +104,13 @@ export default function FacultyPreview() {
 
           {/* Clean 'See All' button action block centered below the array grid */}
           <div className="flex justify-center">
-            <a
+            <Link
               href="/faculty"
               className="inline-flex items-center gap-1.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200/60 hover:border-emerald-500/20 text-slate-700 hover:text-emerald-800 font-bold px-8 py-2.5 rounded-xl text-xs md:text-sm shadow-sm transition-all duration-300 hover:-translate-y-0.5 active:scale-95"
             >
               সব দেখুন
               <ArrowRight size={15} className="text-slate-400" />
-            </a>
+            </Link>
           </div>
         </div>
       )}

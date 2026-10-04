@@ -22,6 +22,22 @@ export function FacultyCardSkeleton() {
   );
 }
 
+export function FacultyListCardSkeleton() {
+  return (
+    <div className="flex gap-4 rounded-2xl border bg-white p-3 shadow-sm sm:gap-5 sm:p-4">
+      <div className="aspect-[3/4] w-[38%] min-w-[104px] max-w-[210px] shrink-0 animate-pulse rounded-xl bg-slate-200/80" />
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className={`h-5 w-3/4 ${block}`} />
+        <div className={`mt-2 h-4 w-1/2 ${block}`} />
+        <div className={`mt-5 h-3.5 w-2/3 ${block}`} />
+        <div className={`mt-2.5 h-3.5 w-4/5 ${block}`} />
+        <div className={`mt-auto h-9 w-32 rounded-full pt-4 ${block}`} />
+      </div>
+    </div>
+  );
+}
+
 export function FacultyRowSkeleton() {
   return (
     <div className="flex items-center gap-4 p-4">

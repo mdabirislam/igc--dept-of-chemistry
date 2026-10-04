@@ -1,0 +1,31 @@
+/* Hero banner: slide progress + gentle zoom for the visible photo */
+
+@keyframes hero-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes hero-zoom {
+  from { transform: scale(1.045); }
+  to { transform: scale(1); }
+}
+
+.hero-progress-fill {
+  transform-origin: left center;
+  animation: hero-progress 5s linear forwards;
+}
+
+.hero-slide-active .hero-zoom {
+  animation: hero-zoom 6s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-progress-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+
+  .hero-slide-active .hero-zoom {
+    animation: none;
+  }
+}

@@ -1,17 +1,19 @@
- "use client";
+"use client";
 
-import PublicSiteLayout from "@/components/layout/PublicSiteLayout";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  ArrowRight,
   ChevronLeft,
   GraduationCap,
   Mail,
   Phone,
 } from "lucide-react";
+
+import PublicSiteLayout from "@/components/layout/PublicSiteLayout";
 import FadeImage from "@/components/common/FadeImage";
 import DefaultAvatar from "@/components/common/DefaultAvatar";
-import { FacultyCardSkeleton } from "@/components/common/Skeletons";
+import { FacultyListCardSkeleton } from "@/components/common/Skeletons";
 import { apiFetch } from "@/lib/api";
 import type { Faculty } from "@/types/api";
 
@@ -22,116 +24,99 @@ function FacultyCard({
   person: Faculty;
   index: number;
 }) {
-  const [expanded, setExpanded] = useState(false);
-
-  const hasPhd = Boolean(person.phd_subject || person.phd_title);
-  const longDescription = person.description.length > 160;
+  const hasContact = Boolean(person.phone || person.email);
 
   return (
     <article
+      // Each card slides in as it scrolls into view. Cards in the same
+      // row get a tiny stagger; nothing waits for the whole list.
       data-aos="fade-up"
-      data-aos-delay={Math.min(index, 8) * 70}
-      className="flex flex-col rounded-xl border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      data-aos-delay={(index % 2) * 120}
+      className="group flex gap-4 rounded-2xl border bg-white p-3 shadow-sm transition-shadow duration-300 hover:shadow-lg sm:gap-5 sm:p-4"
     >
-      <div className="flex items-start gap-4">
-        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full bg-gray-100">
-          {person.image_url ? (
-            <FadeImage
-              src={person.image_url}
-              alt={person.name}
-              className="h-full w-full"
-              imgClassName="object-cover"
-              fallback={<DefaultAvatar size={30} />}
-            />
-          ) : (
-            <DefaultAvatar size={30} />
-          )}
-        </div>
-
-        <div className="min-w-0">
-          <h2 className="font-bold text-gray-800">{person.name}</h2>
-          <p className="mt-1 text-sm font-medium text-[#1b5e20]">
-            {person.designation}
-          </p>
-        </div>
+      {/* photo, left */}
+      <div
+        data-aos="zoom-in"
+        data-aos-delay={(index % 2) * 120 + 150}
+        className="relative aspect-[3/4] w-[38%] min-w-[104px] max-w-[210px] shrink-0 overflow-hidden rounded-xl bg-slate-100 ring-1 ring-black/5"
+      >
+        {person.image_url ? (
+          <FadeImage
+            src={person.image_url}
+            alt={person.name}
+            className="h-full w-full"
+            imgClassName="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            fallback={<DefaultAvatar size={48} />}
+          />
+        ) : (
+          <DefaultAvatar size={48} />
+        )}
       </div>
 
-      {person.qualification && (
-        <div className="mt-5 border-t pt-4">
-          <p className="text-xs font-semibold text-gray-400">
-            শিক্ষাগত যোগ্যতা
-          </p>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
-            {person.qualification}
-          </p>
-        </div>
-      )}
+      {/* basic details, right */}
+      <div className="flex min-w-0 flex-1 flex-col py-1">
+        <h2 className="text-base font-bold leading-snug text-gray-800 sm:text-lg">
+          {person.name}
+        </h2>
 
-      {hasPhd && (
-        <div className="mt-4 border-t pt-4">
-          <p className="text-xs font-semibold text-gray-400">
-            PhD / গবেষণা
-          </p>
+        <p className="mt-1 text-sm font-semibold text-[#1b5e20]">
+          {person.designation}
+        </p>
 
-          {person.phd_subject && (
-            <p className="mt-1 text-sm font-medium leading-6 text-gray-700">
-              {person.phd_subject}
-            </p>
-          )}
+        <span
+          aria-hidden="true"
+          className="mt-3 block h-0.5 w-10 rounded-full bg-gradient-to-r from-[#1b5e20] to-teal-500"
+        />
 
-          {person.phd_title && (
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              {person.phd_title}
-            </p>
-          )}
-        </div>
-      )}
-
-      {person.description && (
-        <div className="mt-4 border-t pt-4">
-          <p
-            className={`whitespace-pre-line text-sm leading-6 text-gray-600 ${
-              expanded ? "" : "line-clamp-3"
-            }`}
-          >
-            {person.description}
-          </p>
-
-          {longDescription && (
-            <button
-              type="button"
-              onClick={() => setExpanded((value) => !value)}
-              className="mt-1 text-xs font-semibold text-[#1b5e20] hover:underline"
-            >
-              {expanded ? "সংক্ষিপ্ত করুন" : "বিস্তারিত পড়ুন"}
-            </button>
-          )}
-        </div>
-      )}
-
-      {(person.phone || person.email) && (
-        <div className="mt-4 space-y-2 border-t pt-4 text-sm text-gray-600">
+        <div className="mt-3 space-y-2 text-sm text-gray-600">
           {person.phone && (
             <a
               href={`tel:${person.phone.replace(/[^\d+]/g, "")}`}
               className="flex items-center gap-2 hover:text-[#1b5e20]"
             >
               <Phone size={15} className="shrink-0 text-[#1b5e20]" />
-              {person.phone}
+              <span className="min-w-0 break-words">
+                {person.phone}
+              </span>
             </a>
           )}
 
           {person.email && (
             <a
               href={`mailto:${person.email}`}
-              className="flex items-center gap-2 break-all hover:text-[#1b5e20]"
+              className="flex items-start gap-2 hover:text-[#1b5e20]"
             >
-              <Mail size={15} className="shrink-0 text-[#1b5e20]" />
-              {person.email}
+              <Mail
+                size={15}
+                className="mt-0.5 shrink-0 text-[#1b5e20]"
+              />
+              <span className="min-w-0 break-all">
+                {person.email}
+              </span>
             </a>
           )}
+
+          {!hasContact && (
+            <p className="text-xs text-gray-400">
+              যোগাযোগের তথ্য এখনো যোগ করা হয়নি
+            </p>
+          )}
         </div>
-      )}
+
+        {/* more info: bottom of the details column */}
+        <div className="mt-auto pt-4">
+          <Link
+            href={`/faculty/${person.id}`}
+            className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/60 px-4 py-2 text-xs font-bold text-[#1b5e20] transition duration-300 hover:border-[#1b5e20] hover:bg-[#1b5e20] hover:text-white sm:text-sm"
+          >
+            আরও তথ্য
+            <ArrowRight
+              size={15}
+              className="transition-transform group-hover:translate-x-0.5"
+            />
+          </Link>
+        </div>
+      </div>
     </article>
   );
 }
@@ -157,62 +142,64 @@ export default function FacultyPage() {
       }
     }
 
-    loadFaculty();
+    void loadFaculty();
   }, []);
 
   return (
     <PublicSiteLayout>
       <main className="min-h-screen bg-[#f7f9fb]">
-      <section className="bg-[#1a3a5c] text-white">
-        <div className="mx-auto max-w-[1500px] px-4 py-10 lg:px-6">
-          <Link
-            href="/"
-            className="mb-5 inline-flex items-center gap-1 text-sm text-white/75 hover:text-white"
-          >
-            <ChevronLeft size={16} />
-            হোমে ফিরে যান
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
-              <GraduationCap size={24} />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">শিক্ষকবৃন্দ</h1>
-              <p className="mt-1 text-sm text-white/75">
-                রসায়ন বিভাগের শিক্ষক ও কর্মকর্তাবৃন্দ
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        <section className="bg-[#1a3a5c] text-white">
+          <div className="mx-auto max-w-[1500px] px-4 py-10 lg:px-6">
+            <Link
+              href="/"
+              className="mb-5 inline-flex items-center gap-1 text-sm text-white/75 hover:text-white"
+            >
+              <ChevronLeft size={16} />
+              হোমে ফিরে যান
+            </Link>
 
-      <section className="mx-auto max-w-[1200px] px-4 py-7 lg:px-6">
-        {loading ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <FacultyCardSkeleton key={index} />
-            ))}
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
+                <GraduationCap size={24} />
+              </div>
+
+              <div>
+                <h1 className="text-3xl font-bold">শিক্ষকবৃন্দ</h1>
+                <p className="mt-1 text-sm text-white/75">
+                  রসায়ন বিভাগের শিক্ষক ও কর্মকর্তাবৃন্দ
+                </p>
+              </div>
+            </div>
           </div>
-        ) : error ? (
-          <div className="rounded-xl border border-red-100 bg-red-50 px-5 py-12 text-center text-sm text-red-600">
-            {error}
-          </div>
-        ) : faculty.length === 0 ? (
-          <div className="rounded-xl border bg-white px-5 py-16 text-center text-sm text-gray-500">
-            বর্তমানে কোনো শিক্ষক তথ্য নেই।
-          </div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {faculty.map((person, index) => (
-              <FacultyCard
-                key={person.id}
-                person={person}
-                index={index}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+        </section>
+
+        <section className="mx-auto max-w-[1200px] px-4 py-7 lg:px-6">
+          {loading ? (
+            <div className="grid gap-5 lg:grid-cols-2">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <FacultyListCardSkeleton key={index} />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="rounded-xl border border-red-100 bg-red-50 px-5 py-12 text-center text-sm text-red-600">
+              {error}
+            </div>
+          ) : faculty.length === 0 ? (
+            <div className="rounded-xl border bg-white px-5 py-16 text-center text-sm text-gray-500">
+              বর্তমানে কোনো শিক্ষক তথ্য নেই।
+            </div>
+          ) : (
+            <div className="grid gap-5 lg:grid-cols-2">
+              {faculty.map((person, index) => (
+                <FacultyCard
+                  key={person.id}
+                  person={person}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
+        </section>
       </main>
     </PublicSiteLayout>
   );

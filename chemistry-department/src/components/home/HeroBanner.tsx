@@ -82,7 +82,7 @@ export default function HeroBanner() {
         <div
           key={slide.src}
           className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${
-            index === currentSlide ? "opacity-40 scale-100" : "opacity-0 scale-110"
+            index === currentSlide ? "opacity-70 scale-100" : "opacity-0 scale-110"
           }`}
         >
           <Image
@@ -101,7 +101,7 @@ export default function HeroBanner() {
       </div>
 
       {/* গ্রেডিয়েন্ট ওভারলে */}
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
 
       {/* ব্যানার টেক্সট কনটেন্ট */}
       <div className="container mx-auto h-full px-6 flex flex-col justify-center items-center text-center relative z-10 text-white">

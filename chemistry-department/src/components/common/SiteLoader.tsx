@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { SITE_READY_EVENT, pendingCount } from "@/lib/loadingGate";
@@ -24,12 +24,12 @@ export default function SiteLoader() {
   const pathname = usePathname();
 
   // Decided once: if the visit starts in the admin panel there is no splash.
-  const skip = useRef(pathname.startsWith("/admin"));
+  const [skip] = useState(() => pathname.startsWith("/admin"));
 
   const [phase, setPhase] = useState<Phase>("show");
 
   useEffect(() => {
-    if (skip.current) {
+    if (skip) {
       // Let AOS start straight away (after it has attached its listener).
       const timer = setTimeout(() => {
         document.dispatchEvent(new Event(SITE_READY_EVENT));
@@ -73,20 +73,20 @@ export default function SiteLoader() {
       clearTimeout(maxTimer);
       if (hideTimer) clearTimeout(hideTimer);
     };
-  }, []);
+  }, [skip]);
 
   // Keep the page from scrolling underneath the splash screen.
   useEffect(() => {
-    if (skip.current || phase === "gone") return;
+    if (skip || phase === "gone") return;
 
     document.body.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, [phase]);
+  }, [phase, skip]);
 
-  if (skip.current || phase === "gone") return null;
+  if (skip || phase === "gone") return null;
 
   return (
     <div
