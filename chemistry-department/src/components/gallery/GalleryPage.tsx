@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 
 import PublicSiteLayout from "@/components/layout/PublicSiteLayout";
+import FadeImage from "@/components/common/FadeImage";
+import { GalleryCardSkeleton } from "@/components/common/Skeletons";
 import { apiFetch } from "@/lib/api";
 import type { GalleryCategory, GalleryItem } from "@/types/api";
 
@@ -118,6 +120,12 @@ export default function GalleryPage({
 
   const current = selected !== null ? items[selected] : null;
 
+  const gridClass = `grid gap-4 ${
+    isWall
+      ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      : "sm:grid-cols-2 lg:grid-cols-3"
+  }`;
+
   return (
     <PublicSiteLayout>
       <main className="min-h-screen bg-[#f7f9fb]">
@@ -148,8 +156,12 @@ export default function GalleryPage({
 
         <section className="mx-auto max-w-[1200px] px-4 py-7 lg:px-6">
           {loading ? (
-            <div className="rounded-xl border bg-white px-5 py-16 text-center text-sm text-gray-500">
-              লোড হচ্ছে...
+            <div className={gridClass}>
+              {Array.from({ length: isWall ? 8 : 6 }).map(
+                (_, index) => (
+                  <GalleryCardSkeleton key={index} tall={isWall} />
+                )
+              )}
             </div>
           ) : error ? (
             <div className="rounded-xl border border-red-100 bg-red-50 px-5 py-12 text-center text-sm text-red-600">
@@ -160,13 +172,7 @@ export default function GalleryPage({
               {emptyText}
             </div>
           ) : (
-            <div
-              className={`grid gap-4 ${
-                isWall
-                  ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-                  : "sm:grid-cols-2 lg:grid-cols-3"
-              }`}
-            >
+            <div className={gridClass}>
               {items.map((item, index) => {
                 const thumb = isVideo
                   ? youtubeThumbnail(item.video_url)
@@ -180,12 +186,16 @@ export default function GalleryPage({
                       }`}
                     >
                       {thumb ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <FadeImage
                           src={thumb}
                           alt={item.title}
-                          loading="lazy"
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="absolute inset-0"
+                          imgClassName="object-cover transition-transform duration-500 group-hover:scale-105"
+                          fallback={
+                            <div className="flex h-full w-full items-center justify-center bg-slate-100 text-gray-300">
+                              <Play size={40} />
+                            </div>
+                          }
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-gray-300">
@@ -235,6 +245,8 @@ export default function GalleryPage({
                 return isVideo ? (
                   <a
                     key={item.id}
+                    data-aos="fade-up"
+                    data-aos-delay={Math.min(index, 8) * 60}
                     href={item.video_url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -245,6 +257,8 @@ export default function GalleryPage({
                 ) : (
                   <button
                     key={item.id}
+                    data-aos="fade-up"
+                    data-aos-delay={Math.min(index, 8) * 60}
                     type="button"
                     onClick={() => setSelected(index)}
                     className={cardClass}

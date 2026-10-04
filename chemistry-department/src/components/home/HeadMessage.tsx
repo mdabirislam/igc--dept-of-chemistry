@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Quote } from "lucide-react";
 import Image from "next/image";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { useAssetGate } from "@/hooks/useAssetGate";
 
 // Used until the details are filled in from the admin panel.
 const DEFAULTS = {
@@ -20,10 +21,12 @@ function HeadPhoto({
   src,
   alt,
   remote,
+  onSettled,
 }: {
   src: string;
   alt: string;
   remote: boolean;
+  onSettled: () => void;
 }) {
   const [loaded, setLoaded] = useState(false);
 
@@ -40,7 +43,11 @@ function HeadPhoto({
         priority
         unoptimized={remote}
         sizes="(max-width: 768px) 30vw, 32vw"
-        onLoad={() => setLoaded(true)}
+        onLoad={() => {
+          setLoaded(true);
+          onSettled();
+        }}
+        onError={onSettled}
         className={`object-contain object-center transition-opacity duration-500 ${
           loaded ? "opacity-100" : "opacity-0"
         }`}
@@ -51,6 +58,9 @@ function HeadPhoto({
 
 export default function HeadMessage() {
   const { settings, loading } = useSiteSettings();
+
+  // The splash screen waits for the department-head photo.
+  const photoDone = useAssetGate("head-photo");
 
   // Wait for the server answer so the built-in sample text and photo
   // never flash before the real ones appear.
@@ -103,6 +113,7 @@ export default function HeadMessage() {
                 src={imageSrc}
                 alt={name}
                 remote={Boolean(remoteImage)}
+                onSettled={photoDone}
               />
             ) : (
               <div className="absolute inset-0 animate-pulse rounded-lg bg-white/10" />

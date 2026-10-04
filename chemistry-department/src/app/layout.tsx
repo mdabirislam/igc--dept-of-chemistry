@@ -1,4 +1,5 @@
 import AosProvider from "@/components/common/AosProvider";
+import SiteLoader from "@/components/common/SiteLoader";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -16,6 +17,17 @@ export default function RootLayout({
   return (
     <html lang="bn">
       <body>
+        {/* Without JavaScript the splash screen would never close. */}
+        <noscript>
+          <style
+            dangerouslySetInnerHTML={{
+              __html: "#site-loader{display:none!important}",
+            }}
+          />
+        </noscript>
+
+        <SiteLoader />
+
         <AosProvider>
           {children}
         </AosProvider>

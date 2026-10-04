@@ -1,4 +1,4 @@
-import Image from "next/image";
+import TrackedImage from "@/components/layout/TrackedImage";
 
 export default function Header() {
   return (
@@ -6,11 +6,13 @@ export default function Header() {
       <div className="college-header-inner">
 
         <div className="college-logo">
-          <Image
-            src="/images/branding/bd-govt-logo.png"
+          <TrackedImage
+            assetId="header-logo-bd"
+            src="/images/branding/bd-govt-logo.jpg"
             alt="Bangladesh government Logo"
             width={64}
             height={64}
+            priority
           />
         </div>
 
@@ -24,11 +26,13 @@ export default function Header() {
         </div>
 
         <div className="nu-logo">
-          <Image
-            src="/images/branding/igc-logo.png"
+          <TrackedImage
+            assetId="header-logo-igc"
+            src="/images/branding/igc-logo.jpg"
             alt="Ishwardi Government College Logo"
             width={64}
             height={64}
+            priority
           />
         </div>
 

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { apiFetch } from "@/lib/api";
+import { useAssetGate } from "@/hooks/useAssetGate";
 import type { HeroBanner as HeroBannerData } from "@/types/api";
 
 interface Slide {
@@ -24,6 +25,9 @@ const fallbackSlides: Slide[] = [
 }));
 
 export default function HeroBanner() {
+  // The splash screen waits for the first banner image.
+  const bannerDone = useAssetGate("hero-banner");
+
   const [currentSlide, setCurrentSlide] = useState(0);
   // null until the server has answered, so the default banners do not
   // flash before the real ones are shown.
@@ -88,6 +92,8 @@ export default function HeroBanner() {
             priority={index === 0}
             unoptimized={slide.remote}
             sizes="100vw"
+            onLoad={index === 0 ? bannerDone : undefined}
+            onError={index === 0 ? bannerDone : undefined}
             className="object-cover"
           />
         </div>

@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Images, Video } from "lucide-react";
 
+import FadeImage from "@/components/common/FadeImage";
 import { apiFetch } from "@/lib/api";
 import type { GalleryItem } from "@/types/api";
 
-const PREVIEW_COUNT = 4; 
+const PREVIEW_COUNT = 6;
 
 const links = [
   {
@@ -67,8 +68,7 @@ export default function GalleryPreview() {
 
         {/* Latest photos */}
         {loading ? (
-          // 🛠️ পরিবর্তন ২: এখানে lg:grid-cols-4 করা হয়েছে
-          <div className="grid grid-cols-2 gap-3 p-4 sm:p-5 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 p-4 sm:p-5 md:grid-cols-3 lg:grid-cols-6">
             {Array.from({ length: PREVIEW_COUNT }).map(
               (_, index) => (
                 <div
@@ -80,20 +80,20 @@ export default function GalleryPreview() {
           </div>
         ) : (
           photos.length > 0 && (
-            // 🛠️ পরিবর্তন ৩: এখানেও lg:grid-cols-4 করা হয়েছে
-            <div className="grid grid-cols-2 gap-3 p-4 sm:p-5 md:grid-cols-3 lg:grid-cols-4">
-              {photos.map((photo) => (
+            <div className="grid grid-cols-2 gap-3 p-4 sm:p-5 md:grid-cols-3 lg:grid-cols-6">
+              {photos.map((photo, index) => (
                 <Link
                   key={photo.id}
+                  data-aos="fade-up"
+                  data-aos-delay={Math.min(index, 8) * 70}
                   href="/gallery/photo"
                   className="group relative block aspect-[4/3] overflow-hidden rounded-lg bg-gray-100 shadow-sm"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <FadeImage
                     src={photo.image_url as string}
                     alt={photo.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="absolute inset-0"
+                    imgClassName="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
 
                   <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-3 pb-2 pt-6 text-xs font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">

@@ -8,35 +8,43 @@ import {
   GraduationCap,
   Mail,
   Phone,
-  UserRound,
 } from "lucide-react";
-import Image from "next/image";
+import FadeImage from "@/components/common/FadeImage";
+import DefaultAvatar from "@/components/common/DefaultAvatar";
+import { FacultyCardSkeleton } from "@/components/common/Skeletons";
 import { apiFetch } from "@/lib/api";
 import type { Faculty } from "@/types/api";
 
-function FacultyCard({ person }: { person: Faculty }) {
+function FacultyCard({
+  person,
+  index,
+}: {
+  person: Faculty;
+  index: number;
+}) {
   const [expanded, setExpanded] = useState(false);
 
   const hasPhd = Boolean(person.phd_subject || person.phd_title);
   const longDescription = person.description.length > 160;
 
   return (
-    <article className="flex flex-col rounded-xl border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+    <article
+      data-aos="fade-up"
+      data-aos-delay={Math.min(index, 8) * 70}
+      className="flex flex-col rounded-xl border bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+    >
       <div className="flex items-start gap-4">
         <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full bg-gray-100">
           {person.image_url ? (
-            <Image
+            <FadeImage
               src={person.image_url}
               alt={person.name}
-              width={80}
-              height={80}
-              unoptimized
-              className="h-full w-full object-cover"
+              className="h-full w-full"
+              imgClassName="object-cover"
+              fallback={<DefaultAvatar size={30} />}
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-gray-400">
-              <UserRound size={30} />
-            </div>
+            <DefaultAvatar size={30} />
           )}
         </div>
 
@@ -180,8 +188,10 @@ export default function FacultyPage() {
 
       <section className="mx-auto max-w-[1200px] px-4 py-7 lg:px-6">
         {loading ? (
-          <div className="rounded-xl border bg-white px-5 py-16 text-center text-sm text-gray-500">
-            শিক্ষক তালিকা লোড হচ্ছে...
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <FacultyCardSkeleton key={index} />
+            ))}
           </div>
         ) : error ? (
           <div className="rounded-xl border border-red-100 bg-red-50 px-5 py-12 text-center text-sm text-red-600">
@@ -193,8 +203,12 @@ export default function FacultyPage() {
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {faculty.map((person) => (
-              <FacultyCard key={person.id} person={person} />
+            {faculty.map((person, index) => (
+              <FacultyCard
+                key={person.id}
+                person={person}
+                index={index}
+              />
             ))}
           </div>
         )}

@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowRight, UserRound } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import FadeImage from "@/components/common/FadeImage";
+import DefaultAvatar from "@/components/common/DefaultAvatar";
+import { FacultyRowSkeleton } from "@/components/common/Skeletons";
 import { apiFetch } from "@/lib/api";
 import type { Faculty } from "@/types/api";
 
@@ -48,8 +50,10 @@ export default function FacultyPreview() {
       </div>
 
       {loading ? (
-        <div className="py-10 text-center text-sm text-gray-500">
-          শিক্ষক তালিকা লোড হচ্ছে...
+        <div className="grid gap-4 pt-5 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <FacultyRowSkeleton key={index} />
+          ))}
         </div>
       ) : error ? (
         <div className="py-10 text-center text-sm text-red-600">
@@ -63,25 +67,24 @@ export default function FacultyPreview() {
         <div className="flex flex-col gap-8 pt-5 animate-fade-in-up">
           {/* Dynamic layout calculation applied through getGridColumnsClass */}
           <div className={`grid gap-4 sm:grid-cols-2 ${getGridColumnsClass(faculty.slice(0, 8).length)}`}>
-            {faculty.slice(0, 8).map((person) => (
+            {faculty.slice(0, 8).map((person, index) => (
               <div
                 key={person.id}
+                data-aos="fade-up"
+                data-aos-delay={Math.min(index, 8) * 70}
                 className="flex items-center gap-4 p-4 rounded-xl transition border border-transparent hover:border-slate-100 hover:bg-slate-50/50 hover:shadow-sm"
               >
                 <div className="h-16 w-16 shrink-0 overflow-hidden bg-transparent rounded-sm border border-slate-100 shadow-sm flex items-center justify-center relative">
                   {person.image_url ? (
-                    <Image
+                    <FadeImage
                       src={person.image_url}
                       alt={person.name}
-                      width={64}
-                      height={64}
-                      unoptimized
-                      className="h-full w-full object-cover"
+                      className="h-full w-full"
+                      imgClassName="object-cover"
+                      fallback={<DefaultAvatar size={25} />}
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-gray-400 bg-gray-50">
-                      <UserRound size={25} />
-                    </div>
+                    <DefaultAvatar size={25} />
                   )}
                 </div>
 
