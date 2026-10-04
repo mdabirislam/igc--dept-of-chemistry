@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import { ImagePlus, Trash2 } from "lucide-react";
 
+import { shrinkImage } from "@/lib/image";
+
 interface ImagePickerProps {
   file: File | null;
   existingUrl?: string | null;
@@ -46,7 +48,7 @@ export default function ImagePicker({
     }
   }, [file]);
 
-  function handleChange(
+  async function handleChange(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
     const picked = event.target.files?.[0];
@@ -58,13 +60,16 @@ export default function ImagePicker({
       return;
     }
 
-    if (picked.size > maxMB * 1024 * 1024) {
+    // Large photos are shrunk first so the site stays fast.
+    const prepared = await shrinkImage(picked);
+
+    if (prepared.size > maxMB * 1024 * 1024) {
       onError(`ছবির size সর্বোচ্চ ${maxMB} MB হতে হবে।`);
       return;
     }
 
     onError("");
-    onChange(picked);
+    onChange(prepared);
   }
 
   const shown = previewUrl ?? (removed ? null : existingUrl) ?? null;
@@ -87,7 +92,7 @@ export default function ImagePicker({
             ছবি নির্বাচন করুন
           </span>
           <span className="mt-1 text-xs text-gray-400">
-            সর্বোচ্চ {maxMB} MB
+            বড় ছবি স্বয়ংক্রিয়ভাবে ছোট করা হবে
           </span>
         </>
       )}

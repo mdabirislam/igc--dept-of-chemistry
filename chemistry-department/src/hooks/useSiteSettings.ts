@@ -36,6 +36,12 @@ export function useSiteSettings() {
   useEffect(() => {
     let active = true;
 
+    // If the server is very slow, stop showing placeholders and let the
+    // components use their built-in defaults.
+    const timer = setTimeout(() => {
+      if (active) setLoading(false);
+    }, 5000);
+
     loadSiteSettings()
       .then((data) => {
         if (active) setSettings(data);
@@ -49,6 +55,7 @@ export function useSiteSettings() {
 
     return () => {
       active = false;
+      clearTimeout(timer);
     };
   }, []);
 

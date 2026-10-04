@@ -16,8 +16,45 @@ const DEFAULTS = {
   image: "/images/dept-head/dept-head.jpeg",
 };
 
+function HeadPhoto({
+  src,
+  alt,
+  remote,
+}: {
+  src: string;
+  alt: string;
+  remote: boolean;
+}) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <>
+      {!loaded && (
+        <div className="absolute inset-0 animate-pulse rounded-lg bg-white/10" />
+      )}
+
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        priority
+        unoptimized={remote}
+        sizes="(max-width: 768px) 30vw, 32vw"
+        onLoad={() => setLoaded(true)}
+        className={`object-contain object-center transition-opacity duration-500 ${
+          loaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </>
+  );
+}
+
 export default function HeadMessage() {
-  const { settings } = useSiteSettings();
+  const { settings, loading } = useSiteSettings();
+
+  // Wait for the server answer so the built-in sample text and photo
+  // never flash before the real ones appear.
+  const ready = !loading;
 
   const name = settings?.head_name || DEFAULTS.name;
   const designation =
@@ -60,15 +97,16 @@ export default function HeadMessage() {
             }`}
             style={{ willChange: "transform, opacity" }}
           >
-            <Image
-              src={imageSrc}
-              alt={name}
-              fill
-              priority
-              unoptimized={Boolean(remoteImage)}
-              sizes="(max-width: 768px) 30vw, 32vw"
-              className="object-contain object-center"
-            />
+            {ready ? (
+              <HeadPhoto
+                key={imageSrc}
+                src={imageSrc}
+                alt={name}
+                remote={Boolean(remoteImage)}
+              />
+            ) : (
+              <div className="absolute inset-0 animate-pulse rounded-lg bg-white/10" />
+            )}
           </div>
 
           {/* Message Content */}
@@ -89,6 +127,17 @@ export default function HeadMessage() {
               <Quote size={52} strokeWidth={1.2} color="white" />
             </div>
 
+            {!ready && (
+              <div className="relative max-w-3xl animate-pulse space-y-4">
+                <div className="h-4 w-40 rounded bg-white/20" />
+                <div className="h-8 w-3/4 rounded bg-white/20" />
+                <div className="h-20 w-full rounded bg-white/10" />
+                <div className="h-24 w-full rounded bg-white/10" />
+                <div className="h-5 w-48 rounded bg-white/20" />
+              </div>
+            )}
+
+            {ready && (
             <div className="relative max-w-3xl">
               <p className="mb-2 text-sm font-semibold uppercase tracking-[0.12em] text-white sm:text-[15px]">
                 Message from the Head
@@ -118,6 +167,7 @@ export default function HeadMessage() {
                 </p>
               </div>
             </div>
+            )}
           </div>
 
         </div>

@@ -25,7 +25,12 @@ const fallbackSlides: Slide[] = [
 
 export default function HeroBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [slides, setSlides] = useState<Slide[]>(fallbackSlides);
+  // null until the server has answered, so the default banners do not
+  // flash before the real ones are shown.
+  const [loadedSlides, setLoadedSlides] = useState<Slide[] | null>(
+    null
+  );
+  const slides = loadedSlides ?? [];
 
   useEffect(() => {
     async function loadBanners() {
@@ -40,12 +45,11 @@ export default function HeroBanner() {
             remote: true,
           }));
 
-        if (remoteSlides.length > 0) {
-          setSlides(remoteSlides);
-          setCurrentSlide(0);
-        }
+        setLoadedSlides(
+          remoteSlides.length > 0 ? remoteSlides : fallbackSlides
+        );
       } catch {
-        // keep fallback slides
+        setLoadedSlides(fallbackSlides);
       }
     }
 
@@ -65,6 +69,11 @@ export default function HeroBanner() {
   return (
     <section className="relative h-[550px] w-full overflow-hidden bg-slate-900">
       {/* মডার্ন সিনেমাটিক ব্যাকগ্রাউন্ড স্লাইডার */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-1000 ${
+          loadedSlides ? "opacity-100" : "opacity-0"
+        }`}
+      >
       {slides.map((slide, index) => (
         <div
           key={slide.src}
@@ -83,6 +92,7 @@ export default function HeroBanner() {
           />
         </div>
       ))}
+      </div>
 
       {/* গ্রেডিয়েন্ট ওভারলে */}
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
