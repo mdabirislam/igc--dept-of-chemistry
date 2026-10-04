@@ -168,7 +168,7 @@ async function verifyReadEndpoints() {
 async function verifyAnonymousWritesBlocked() {
   console.log("Anonymous writes are rejected");
 
-  for (const path of ["/faculty/", "/events/", "/banners/", "/gallery/"]) {
+  for (const path of ["/notices/", "/resources/", "/faculty/", "/events/", "/banners/", "/gallery/"]) {
     const { status } = await request(path, {
       method: "POST",
       body: {},
@@ -305,6 +305,39 @@ async function verifyAuthenticatedWrites() {
     photoWithoutImage.status === 400,
     "Gallery photo without an image is rejected",
     `HTTP ${photoWithoutImage.status}`
+  );
+
+  const invalidResource = new FormData();
+  invalidResource.append("title", "API verify");
+  invalidResource.append(
+    "file",
+    new Blob([Buffer.from("not an allowed document")], {
+      type: "application/x-msdownload",
+    }),
+    "verify.exe"
+  );
+
+  const invalidResourceResponse = await request("/resources/", {
+    method: "POST",
+    token,
+    body: invalidResource,
+  });
+
+  check(
+    invalidResourceResponse.status === 400,
+    "Resource rejects disallowed file types",
+    `HTTP ${invalidResourceResponse.status}`
+  );
+
+  const logout = await request("/auth/logout/", {
+    method: "POST",
+    token,
+  });
+
+  check(
+    logout.status === 200,
+    "Admin logout succeeds",
+    `HTTP ${logout.status}`
   );
 }
 

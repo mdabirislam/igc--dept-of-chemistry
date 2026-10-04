@@ -1198,6 +1198,38 @@ class SerializerValidationTests(APITestCase):
             status.HTTP_201_CREATED,
         )
 
+    def test_resource_rejects_disallowed_file_type(self):
+        user = User.objects.create_user(
+            username="badresource",
+            password="testpass123",
+            is_staff=True,
+        )
+        token = Token.objects.create(user=user)
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Token {token.key}"
+        )
+
+        executable = SimpleUploadedFile(
+            "script.exe",
+            b"MZ" + b"x" * 100,
+            content_type="application/x-msdownload",
+        )
+
+        response = self.client.post(
+            "/api/resources/",
+            {
+                "title": "Disallowed Resource",
+                "file": executable,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
     def test_notice_rejects_fake_pdf_content(self):
         user = User.objects.create_user(
             username="fakepdf",

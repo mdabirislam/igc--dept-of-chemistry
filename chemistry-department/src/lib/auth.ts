@@ -14,7 +14,9 @@ interface LoginResponse {
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_DJANGO_API_URL ||
-  "http://127.0.0.1:8000/api";
+  (process.env.NODE_ENV === "development"
+    ? "http://127.0.0.1:8000/api"
+    : "");
 
 const TOKEN_KEY = "chemistry_admin_token";
 const USER_KEY = "chemistry_admin_user";

@@ -157,10 +157,26 @@ class ResourceSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+    ALLOWED_FILE_TYPES = {
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    }
+
     def validate_file(self, value):
         if value.size > MAX_DOCUMENT_SIZE:
             raise serializers.ValidationError(
                 "File size cannot exceed 10 MB."
+            )
+
+        content_type = getattr(value, "content_type", "").lower()
+        if content_type not in self.ALLOWED_FILE_TYPES:
+            raise serializers.ValidationError(
+                "Only PDF, Word, Excel, and PowerPoint files are allowed."
             )
 
         return value

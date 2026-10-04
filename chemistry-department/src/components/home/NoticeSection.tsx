@@ -114,7 +114,7 @@ export default function NoticeSection() {
             return (
               <div
                 key={notice.id}
-                className="flex items-center gap-4 p-3 lg:pl-6 rounded-lg border border-slate-100/70 bg-white shadow-[0_4px_15px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_35px_rgba(0,0,0,0.04)] hover:border-emerald-500/20 transition-all duration-300 group"
+                className="flex min-w-0 items-center gap-3 sm:gap-4 p-3 lg:pl-6 rounded-lg border border-slate-100/70 bg-white shadow-[0_4px_15px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_35px_rgba(0,0,0,0.04)] hover:border-emerald-500/20 transition-all duration-300 group"
               >
                 {/* ২. হাই-ফোকাস রিয়েল ক্যালেন্ডার শিট ডিজাইন (ফোকাস সমস্যার সমাধান) */}
                 <div className="flex flex-col items-center justify-center w-14 h-14 md:w-16 md:h-16 shrink-0 bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm transition-all duration-300 group-hover:border-emerald-600/30">
@@ -143,7 +143,7 @@ export default function NoticeSection() {
                 </div>
 
                 {/* ৩. সাধারণ ডাউনলোড আইকনের পরিবর্তে লাল রঙের ডেডিকেটেড মডার่น PDF বাটন */}
-                <div className="pl-1 shrink-0">
+                <div className="shrink-0 pl-0 sm:pl-1">
                   {notice.pdf_url ? (
                     <a
                       href={notice.pdf_url}
