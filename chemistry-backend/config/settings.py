@@ -99,9 +99,18 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 MAILERS = {
     "default": {
-        "BACKEND": "django.core.mail.backends.console.EmailBackend",
+        "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+        "HOST": os.environ["EMAIL_HOST"],
+        "PORT": int(os.environ.get("EMAIL_PORT", "587")),
+        "USERNAME": os.environ["EMAIL_HOST_USER"],
+        "PASSWORD": os.environ["EMAIL_HOST_PASSWORD"],
+        "USE_TLS": env_bool("EMAIL_USE_TLS", True),
+        "USE_SSL": env_bool("EMAIL_USE_SSL", False),
     },
 }
+
+DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 CORS_ALLOWED_ORIGINS = env_list(
     "DJANGO_CORS_ALLOWED_ORIGINS",
