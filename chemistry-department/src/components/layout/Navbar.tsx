@@ -79,13 +79,13 @@ const navigationItems: NavigationItem[] = [
     label: "যোগাযোগ",
     href: "/contact",
   },
-    {
-    label: "অন্যান্য",
-    href: "/other",
-    children: [
-      { label: "Not available", href: "#" },
-    ],
-  },
+  //   {
+  //   label: "অন্যান্য",
+  //   href: "/other",
+  //   children: [
+  //     { label: "Not available", href: "#" },
+  //   ],
+  // },
 ];
 
 /* ---------- Active link helpers ---------- */
