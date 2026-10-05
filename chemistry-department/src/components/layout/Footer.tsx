@@ -89,7 +89,7 @@ export default function Footer() {
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white p-1.5">
                 <Image
-                  src="/images/branding/igc-logo.jpg"
+                  src="/images/branding/igc-logo.png"
                   alt="Bangladesh government Logo"
                   width={64}
                   height={64}
