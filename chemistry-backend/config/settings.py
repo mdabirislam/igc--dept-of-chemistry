@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
 ]
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
