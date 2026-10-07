@@ -145,8 +145,10 @@ class ResourceSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
+            "resource_type",
             "file",
             "file_url",
+            "url",
             "created_at",
             "updated_at",
         ]
@@ -158,13 +160,30 @@ class ResourceSerializer(serializers.ModelSerializer):
         ]
 
     ALLOWED_FILE_TYPES = {
+        # PDF
         "application/pdf",
+
+        # Word
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+
+        # Excel
         "application/vnd.ms-excel",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+
+        # PowerPoint
         "application/vnd.ms-powerpoint",
         "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+
+        # Images
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+
+        # Videos
+        "video/mp4",
+        "video/webm",
+        "video/quicktime",
     }
 
     def validate_file(self, value):
@@ -174,12 +193,47 @@ class ResourceSerializer(serializers.ModelSerializer):
             )
 
         content_type = getattr(value, "content_type", "").lower()
+
         if content_type not in self.ALLOWED_FILE_TYPES:
             raise serializers.ValidationError(
-                "Only PDF, Word, Excel, and PowerPoint files are allowed."
+                "Allowed files are PDF, Word, Excel, PowerPoint, "
+                "JPG, PNG, WebP, MP4, WebM, and MOV."
             )
 
         return value
+
+    def validate(self, attrs):
+        resource_type = attrs.get(
+            "resource_type",
+            getattr(self.instance, "resource_type", Resource.FILE),
+        )
+
+        file_value = attrs.get("file")
+        url_value = attrs.get("url")
+
+        if resource_type == Resource.FILE:
+            if not file_value and not self.instance:
+                raise serializers.ValidationError({
+                    "file": "A file is required for a file resource."
+                })
+
+            if url_value:
+                raise serializers.ValidationError({
+                    "url": "URL cannot be provided for a file resource."
+                })
+
+        elif resource_type == Resource.LINK:
+            if not url_value:
+                raise serializers.ValidationError({
+                    "url": "A URL is required for a link resource."
+                })
+
+            if file_value:
+                raise serializers.ValidationError({
+                    "file": "File cannot be provided for a link resource."
+                })
+
+        return attrs
 
     def get_file_url(self, obj):
         if not obj.file:
@@ -191,7 +245,6 @@ class ResourceSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.file.url)
 
         return obj.file.url
-
 
 class EventSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
