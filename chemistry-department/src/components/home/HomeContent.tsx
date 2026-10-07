@@ -5,10 +5,13 @@ import FacultyPreview from "@/components/home/FacultyPreview";
 import ImportantResources from "@/components/home/ImportantResources";
 import HeadMessage from "@/components/home/HeadMessage";
 import GalleryPreview from "@/components/home/GalleryPreview";
+import "@/components/home/home-content.css";
 
 export default function HomeContent() {
   return (
-    <main className="bg-[url('/images/background/bg-2.jpg')] bg-cover bg-center bg-no-repeat">
+    // <main className="bg-[url('/images/background/bg-2.jpg')] bg-cover bg-center bg-no-repeat">
+    <main className="bg-grad">
+
       {/* Message from Department Head */}
       <HeadMessage />
 
