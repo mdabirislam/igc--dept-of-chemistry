@@ -109,16 +109,53 @@ class Faculty(models.Model):
         return self.name
 
 
+# class Resource(models.Model):
+#     title = models.CharField(max_length=255)
+#     file = models.FileField(
+#         upload_to=resource_upload_path,
+#         blank=True,
+#         null=True
+#     )
+
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+
 class Resource(models.Model):
+    FILE = "file"
+    LINK = "link"
+
+    RESOURCE_TYPE_CHOICES = [
+        (FILE, "File"),
+        (LINK, "External Link"),
+    ]
+
     title = models.CharField(max_length=255)
+
+    resource_type = models.CharField(
+        max_length=10,
+        choices=RESOURCE_TYPE_CHOICES,
+        default=FILE,
+    )
+
     file = models.FileField(
         upload_to=resource_upload_path,
         blank=True,
-        null=True
+        null=True,
+    )
+
+    url = models.URLField(
+        max_length=1000,
+        blank=True,
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         ordering = ["-created_at"]

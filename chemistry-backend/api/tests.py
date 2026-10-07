@@ -960,10 +960,10 @@ class SerializerValidationTests(APITestCase):
 
     def test_resource_accepts_file(self):
         resource_file = SimpleUploadedFile(
-            "notes.txt",
-            b"Chemistry notes",
-            content_type="text/plain",
-        )
+    "../../outside.pdf",
+    b"%PDF-1.4 test pdf content",
+    content_type="application/pdf",
+)
 
         response = self.client.post(
             "/api/resources/",
@@ -1276,10 +1276,10 @@ class SerializerValidationTests(APITestCase):
         )
 
         resource_file = SimpleUploadedFile(
-            "../../outside.txt",
-            b"test resource",
-            content_type="text/plain",
-        )
+    "outside.pdf",
+    b"%PDF-1.4 test pdf content",
+    content_type="application/pdf",
+)
 
         response = self.client.post(
             "/api/resources/",
@@ -1289,7 +1289,6 @@ class SerializerValidationTests(APITestCase):
             },
             format="multipart",
         )
-
         self.assertEqual(
             response.status_code,
             status.HTTP_201_CREATED,
