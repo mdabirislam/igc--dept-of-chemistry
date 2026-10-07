@@ -60,10 +60,14 @@ class FacultyAdmin(admin.ModelAdmin):
 class ResourceAdmin(admin.ModelAdmin):
     list_display = (
         "title",
+        "resource_type",
         "created_at",
     )
 
-    list_filter = ("created_at",)
+    list_filter = (
+        "resource_type",
+        "created_at",
+    )
 
     search_fields = ("title",)
 
@@ -71,7 +75,6 @@ class ResourceAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
-
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
