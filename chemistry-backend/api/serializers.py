@@ -227,27 +227,55 @@ class ResourceSerializer(serializers.ModelSerializer):
 
         return value
 
+    def validate_url(self, value):
+        # Only web links: no ftp:// and similar.
+        if value and not value.lower().startswith(("http://", "https://")):
+            raise serializers.ValidationError(
+                "Only http:// and https:// links are allowed."
+            )
+
+        return value
+
     def validate(self, attrs):
+        instance = self.instance
+
         resource_type = attrs.get(
             "resource_type",
-            getattr(self.instance, "resource_type", Resource.FILE),
+            getattr(instance, "resource_type", Resource.FILE),
         )
 
         file_value = attrs.get("file")
-        url_value = attrs.get("url")
 
         if resource_type == Resource.FILE:
-            if not file_value and not self.instance:
+            # A file is mandatory when creating, or when switching a link
+            # resource to a file. Editing an existing file resource without
+            # re-uploading keeps the stored file (and old file-less rows stay
+            # editable).
+            needs_new_file = (
+                instance is None
+                or instance.resource_type != Resource.FILE
+            )
+
+            if not file_value and needs_new_file:
                 raise serializers.ValidationError({
                     "file": "A file is required for a file resource."
                 })
 
-            if url_value:
+            if attrs.get("url"):
                 raise serializers.ValidationError({
                     "url": "URL cannot be provided for a file resource."
                 })
 
+            # Switching from a link to a file must not keep the old link.
+            attrs["url"] = ""
+
         elif resource_type == Resource.LINK:
+            # A partial update (e.g. only the title) keeps the saved URL.
+            url_value = attrs.get(
+                "url",
+                getattr(instance, "url", ""),
+            )
+
             if not url_value:
                 raise serializers.ValidationError({
                     "url": "A URL is required for a link resource."
@@ -257,6 +285,10 @@ class ResourceSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     "file": "File cannot be provided for a link resource."
                 })
+
+            # Switching from a file to a link drops the old file; the
+            # pre_save signal in models.py deletes it from disk.
+            attrs["file"] = None
 
         return attrs
 
