@@ -29,8 +29,10 @@ export interface Faculty {
 export interface Resource {
   id: number;
   title: string;
+  resource_type: "file" | "link";
   file: string | null;
   file_url: string | null;
+  url: string;
   created_at: string;
   updated_at: string;
 }

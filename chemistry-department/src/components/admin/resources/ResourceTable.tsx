@@ -3,6 +3,7 @@
 import {
   Download,
   Edit3,
+  ExternalLink,
   FileText,
   Trash2,
 } from "lucide-react";
@@ -49,7 +50,7 @@ export default function ResourceTable({
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[650px] text-sm">
+        <table className="w-full min-w-[700px] text-sm">
           <thead>
             <tr className="border-b bg-gray-50 text-left text-xs text-gray-500">
               <th className="px-5 py-3 font-semibold">
@@ -57,7 +58,11 @@ export default function ResourceTable({
               </th>
 
               <th className="px-5 py-3 font-semibold">
-                File
+                ধরন
+              </th>
+
+              <th className="px-5 py-3 font-semibold">
+                Resource
               </th>
 
               <th className="px-5 py-3 text-right font-semibold">
@@ -75,19 +80,58 @@ export default function ResourceTable({
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     <div className="rounded-lg bg-green-50 p-2 text-[#1b5e20]">
-                      <FileText size={17} />
+                      {resource.resourceType === "link" ? (
+                        <ExternalLink size={17} />
+                      ) : (
+                        <FileText size={17} />
+                      )}
                     </div>
 
                     <div>
                       <p className="font-medium text-gray-800">
                         {resource.title}
                       </p>
+
+                      {resource.resourceType === "file" &&
+                        resource.fileName && (
+                          <p className="mt-0.5 max-w-[300px] truncate text-xs text-gray-400">
+                            {resource.fileName}
+                          </p>
+                        )}
                     </div>
                   </div>
                 </td>
 
                 <td className="px-5 py-4">
-                  {resource.fileUrl ? (
+                  {resource.resourceType === "link" ? (
+                    <span className="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600">
+                      External Link
+                    </span>
+                  ) : (
+                    <span className="inline-flex rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-[#1b5e20]">
+                      File
+                    </span>
+                  )}
+                </td>
+
+                <td className="px-5 py-4">
+                  {resource.resourceType === "link" ? (
+                    resource.url ? (
+                      <a
+                        href={resource.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:underline"
+                      >
+                        <ExternalLink size={15} />
+                        Open Link
+                      </a>
+                    ) : (
+                      <span className="text-xs text-gray-400">
+                        কোনো link নেই
+                      </span>
+                    )
+                  ) : resource.fileUrl ? (
                     <a
                       href={resource.fileUrl}
                       download={resource.fileName}

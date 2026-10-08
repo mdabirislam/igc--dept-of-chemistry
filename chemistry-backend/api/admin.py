@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 
 from .models import (
     Event,
@@ -56,8 +57,46 @@ class FacultyAdmin(admin.ModelAdmin):
     )
 
 
+class ResourceAdminForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = "__all__"
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        resource_type = cleaned_data.get("resource_type")
+        file = cleaned_data.get("file")
+        url = cleaned_data.get("url")
+
+        if resource_type == Resource.FILE:
+            if not file and not self.instance.pk:
+                raise forms.ValidationError(
+                    "Please upload a file for a File resource."
+                )
+
+            if url:
+                raise forms.ValidationError(
+                    "URL cannot be provided for a File resource."
+                )
+
+        elif resource_type == Resource.LINK:
+            if not url:
+                raise forms.ValidationError(
+                    "Please provide a URL for an External Link."
+                )
+
+            if file:
+                raise forms.ValidationError(
+                    "File cannot be provided for an External Link."
+                )
+
+        return cleaned_data
+        
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
+    form = ResourceAdminForm
+
     list_display = (
         "title",
         "resource_type",

@@ -6,7 +6,12 @@ import {
   useState,
 } from "react";
 
-import { FileUp, Plus, X } from "lucide-react";
+import {
+  ExternalLink,
+  FileUp,
+  Plus,
+  X,
+} from "lucide-react";
 
 import {
   apiPost,
@@ -18,8 +23,10 @@ import type { Resource } from "@/types/api";
 export interface ResourceData {
   id: number;
   title: string;
+  resourceType: "file" | "link";
   fileName?: string;
   fileUrl?: string;
+  url?: string;
 }
 
 interface ResourceFormProps {
@@ -34,10 +41,12 @@ export function mapResourceToResourceData(
   return {
     id: resource.id,
     title: resource.title,
+    resourceType: resource.resource_type,
     fileName: resource.file
       ? resource.file.split("/").pop()
       : undefined,
     fileUrl: resource.file_url ?? undefined,
+    url: resource.url || undefined,
   };
 }
 
@@ -54,8 +63,17 @@ export default function ResourceForm({
     editingResource?.title ?? ""
   );
 
+  const [resourceType, setResourceType] =
+    useState<"file" | "link">(
+      editingResource?.resourceType ?? "file"
+    );
+
   const [file, setFile] =
     useState<File | null>(null);
+
+  const [url, setUrl] = useState(
+    editingResource?.url ?? ""
+  );
 
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -81,9 +99,28 @@ export default function ResourceForm({
     setFile(selected);
   }
 
+  function handleResourceTypeChange(
+    type: "file" | "link"
+  ) {
+    setResourceType(type);
+    setError("");
+
+    if (type === "file") {
+      setUrl("");
+    } else {
+      setFile(null);
+
+      if (fileRef.current) {
+        fileRef.current.value = "";
+      }
+    }
+  }
+
   function resetForm() {
     setTitle("");
+    setResourceType("file");
     setFile(null);
+    setUrl("");
     setError("");
     setSaving(false);
 
@@ -108,6 +145,25 @@ export default function ResourceForm({
       return;
     }
 
+    if (resourceType === "file" && !file && !editingResource) {
+      setError("একটি ফাইল নির্বাচন করুন।");
+      return;
+    }
+
+    if (resourceType === "link") {
+      if (!url.trim()) {
+        setError("একটি URL দিন।");
+        return;
+      }
+
+      try {
+        new URL(url.trim());
+      } catch {
+        setError("সঠিক URL দিন।");
+        return;
+      }
+    }
+
     setSaving(true);
     setError("");
 
@@ -115,9 +171,14 @@ export default function ResourceForm({
       const formData = new FormData();
 
       formData.append("title", title.trim());
+      formData.append("resource_type", resourceType);
 
-      if (file) {
-        formData.append("file", file);
+      if (resourceType === "file") {
+        if (file) {
+          formData.append("file", file);
+        }
+      } else {
+        formData.append("url", url.trim());
       }
 
       let saved: Resource;
@@ -207,33 +268,119 @@ export default function ResourceForm({
 
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">
-            ফাইল
+            রিসোর্সের ধরন
           </label>
 
-          <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 px-5 py-8 text-center hover:border-[#1b5e20] hover:bg-gray-50">
-            <FileUp
-              size={28}
-              className="mb-2 text-gray-400"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                handleResourceTypeChange("file")
+              }
+              className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm transition ${
+                resourceType === "file"
+                  ? "border-[#1b5e20] bg-green-50 text-[#1b5e20]"
+                  : "border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              <FileUp size={20} />
 
-            <span className="text-sm font-medium text-gray-700">
-              {file?.name ??
-                editingResource?.fileName ??
-                "ফাইল নির্বাচন করুন"}
-            </span>
+              <div>
+                <div className="font-semibold">
+                  ফাইল
+                </div>
 
-            <span className="mt-1 text-xs text-gray-400">
-              সর্বোচ্চ 10 MB
-            </span>
+                <div className="mt-0.5 text-xs text-gray-400">
+                  PDF, Word, Excel, Image, Video
+                </div>
+              </div>
+            </button>
 
-            <input
-              ref={fileRef}
-              type="file"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-          </label>
+            <button
+              type="button"
+              onClick={() =>
+                handleResourceTypeChange("link")
+              }
+              className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm transition ${
+                resourceType === "link"
+                  ? "border-[#1b5e20] bg-green-50 text-[#1b5e20]"
+                  : "border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              <ExternalLink size={20} />
+
+              <div>
+                <div className="font-semibold">
+                  External Link
+                </div>
+
+                <div className="mt-0.5 text-xs text-gray-400">
+                  Facebook, YouTube, Google Drive ইত্যাদি
+                </div>
+              </div>
+            </button>
+          </div>
         </div>
+
+        {resourceType === "file" ? (
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">
+              ফাইল
+            </label>
+
+            <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-200 px-5 py-8 text-center hover:border-[#1b5e20] hover:bg-gray-50">
+              <FileUp
+                size={28}
+                className="mb-2 text-gray-400"
+              />
+
+              <span className="text-sm font-medium text-gray-700">
+                {file?.name ??
+                  editingResource?.fileName ??
+                  "ফাইল নির্বাচন করুন"}
+              </span>
+
+              <span className="mt-1 text-xs text-gray-400">
+                PDF, Word, Excel, PowerPoint, JPG, PNG,
+                WebP, MP4, WebM, MOV — সর্বোচ্চ 10 MB
+              </span>
+
+              <input
+                ref={fileRef}
+                type="file"
+                onChange={handleFileChange}
+                className="hidden"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp,.mp4,.webm,.mov"
+              />
+            </label>
+          </div>
+        ) : (
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-gray-700">
+              External URL
+            </label>
+
+            <div className="relative">
+              <ExternalLink
+                size={18}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              />
+
+              <input
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://www.youtube.com/..."
+                className="w-full rounded-lg border py-2.5 pl-10 pr-3 text-sm outline-none focus:border-[#1b5e20]"
+              />
+            </div>
+
+            <p className="mt-1.5 text-xs text-gray-400">
+              Facebook, YouTube, Google Drive অথবা যেকোনো
+              valid external URL দিতে পারবেন।
+            </p>
+          </div>
+        )}
 
         {error && (
           <div className="rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-600">
