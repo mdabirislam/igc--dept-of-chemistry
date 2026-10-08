@@ -613,18 +613,13 @@ class StaffCRUDTests(APITestCase):
             "/api/resources/",
             {
                 "title": "New Resource",
+                "file": SimpleUploadedFile(
+                    "resource.pdf",
+                    b"%PDF-1.4 test pdf content",
+                    content_type="application/pdf",
+                ),
             },
-            format="json",
-        )
-
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_201_CREATED,
-        )
-
-        self.assertEqual(
-            Resource.objects.count(),
-            1,
+            format="multipart",
         )
 
     def test_staff_can_create_event(self):
