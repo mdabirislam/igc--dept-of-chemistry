@@ -7,6 +7,8 @@ import {
   apiFetch,
 } from "@/lib/api";
 
+import { useDeleteConfirm } from "@/components/admin/ui/useDeleteConfirm";
+
 import type { Event } from "@/types/api";
 
 import EventForm, {
@@ -71,27 +73,19 @@ export default function AdminEventsPage() {
     setEditingEvent(null);
   }
 
-  async function handleDelete(id: number) {
-    const confirmed = window.confirm(
-      "এই ইভেন্টটি মুছে ফেলতে চান?"
-    );
-
-    if (!confirmed) return;
-
-    try {
-      await apiDelete(`/events/${id}/`);
+  const { requestDelete, dialog } = useDeleteConfirm<EventData>({
+    onDelete: async (item) => {
+      await apiDelete(`/events/${item.id}/`);
 
       setEvents((current) =>
-        current.filter((item) => item.id !== id)
+        current.filter((entry) => entry.id !== item.id)
       );
-    } catch (error) {
-      alert(
-        error instanceof Error
-          ? error.message
-          : "ইভেন্ট মুছে ফেলা যায়নি।"
-      );
-    }
-  }
+    },
+    title: () => "ইভেন্ট মুছে ফেলবেন?",
+    description: (item) =>
+      `"${item.title}" স্থায়ীভাবে মুছে যাবে। এই কাজটি আর undo করা যাবে না।`,
+    fallbackError: "ইভেন্ট মুছে ফেলা যায়নি।",
+  });
 
   function handleEdit(event: EventData) {
     setEditingEvent(event);
@@ -143,9 +137,11 @@ export default function AdminEventsPage() {
         <EventTable
           events={events}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={requestDelete}
         />
       )}
+
+      {dialog}
     </div>
   );
 }

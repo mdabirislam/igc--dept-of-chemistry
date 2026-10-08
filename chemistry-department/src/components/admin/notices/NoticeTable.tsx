@@ -12,7 +12,7 @@ import type { NoticeData } from "./NoticeForm";
 interface NoticeTableProps {
   notices: NoticeData[];
   onEdit: (notice: NoticeData) => void;
-  onDelete: (id: number) => void;
+  onDelete: (notice: NoticeData) => void;
 }
 
 export default function NoticeTable({
@@ -20,16 +20,6 @@ export default function NoticeTable({
   onEdit,
   onDelete,
 }: NoticeTableProps) {
-  function deleteNotice(notice: NoticeData) {
-    const confirmed = window.confirm(
-      `"${notice.title}" মুছে ফেলতে চান?`
-    );
-
-    if (confirmed) {
-      onDelete(notice.id);
-    }
-  }
-
   return (
     <section className="overflow-hidden rounded-xl border bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
@@ -145,7 +135,7 @@ export default function NoticeTable({
                     <button
                       type="button"
                       title="Delete"
-                      onClick={() => deleteNotice(notice)}
+                      onClick={() => onDelete(notice)}
                       className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600"
                     >
                       <Trash2 size={16} />

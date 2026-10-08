@@ -13,7 +13,7 @@ import Image from "next/image";
 interface FacultyTableProps {
   faculty: FacultyData[];
   onEdit: (faculty: FacultyData) => void;
-  onDelete: (id: number) => void;
+  onDelete: (person: FacultyData) => void;
 }
 
 export default function FacultyTable({
@@ -21,16 +21,6 @@ export default function FacultyTable({
   onEdit,
   onDelete,
 }: FacultyTableProps) {
-  function deleteFaculty(person: FacultyData) {
-    const confirmed = window.confirm(
-      `"${person.name}"-কে তালিকা থেকে মুছে ফেলতে চান?`
-    );
-
-    if (confirmed) {
-      onDelete(person.id);
-    }
-  }
-
   return (
     <section className="overflow-hidden rounded-xl border bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
@@ -142,7 +132,7 @@ export default function FacultyTable({
                     <button
                       type="button"
                       title="Delete"
-                      onClick={() => deleteFaculty(person)}
+                      onClick={() => onDelete(person)}
                       className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600"
                     >
                       <Trash2 size={16} />

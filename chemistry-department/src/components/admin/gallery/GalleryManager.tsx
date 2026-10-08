@@ -23,6 +23,7 @@ import ImagePicker from "@/components/admin/ui/ImagePicker";
 import AdminLoading from "@/components/admin/ui/AdminLoading";
 import AdminError from "@/components/admin/ui/AdminError";
 import AdminEmpty from "@/components/admin/ui/AdminEmpty";
+import { useDeleteConfirm } from "@/components/admin/ui/useDeleteConfirm";
 
 const categories: { value: GalleryCategory; label: string }[] = [
   { value: "photo", label: "ছবি" },
@@ -280,7 +281,6 @@ export default function GalleryManager() {
   );
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<GalleryItem | null>(null);
-  const [busyId, setBusyId] = useState<number | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -329,27 +329,19 @@ export default function GalleryManager() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  async function remove(item: GalleryItem) {
-    if (!window.confirm(`"${item.title}" মুছে ফেলতে চান?`)) return;
-
-    setBusyId(item.id);
-
-    try {
+  const { requestDelete, dialog } = useDeleteConfirm<GalleryItem>({
+    onDelete: async (item) => {
       await apiDelete(`/gallery/${item.id}/`);
 
       setItems((current) =>
         current.filter((entry) => entry.id !== item.id)
       );
-    } catch (error) {
-      alert(
-        error instanceof Error
-          ? error.message
-          : "মুছে ফেলা যায়নি।"
-      );
-    } finally {
-      setBusyId(null);
-    }
-  }
+    },
+    title: () => "গ্যালারি আইটেম মুছে ফেলবেন?",
+    description: (item) =>
+      `"${item.title}" স্থায়ীভাবে মুছে যাবে। এই কাজটি আর undo করা যাবে না।`,
+    fallbackError: "মুছে ফেলা যায়নি।",
+  });
 
   const visible =
     filter === "all"
@@ -488,8 +480,7 @@ export default function GalleryManager() {
                   <button
                     type="button"
                     title="Delete"
-                    disabled={busyId === item.id}
-                    onClick={() => void remove(item)}
+                    onClick={() => requestDelete(item)}
                     className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
                   >
                     <Trash2 size={16} />
@@ -500,6 +491,8 @@ export default function GalleryManager() {
           ))}
         </div>
       )}
+
+      {dialog}
     </div>
   );
 }

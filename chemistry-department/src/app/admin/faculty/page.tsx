@@ -7,6 +7,8 @@ import {
   apiFetch,
 } from "@/lib/api";
 
+import { useDeleteConfirm } from "@/components/admin/ui/useDeleteConfirm";
+
 import type { Faculty } from "@/types/api";
 
 import FacultyForm, {
@@ -69,27 +71,19 @@ export default function AdminFacultyPage() {
     setEditingFaculty(null);
   }
 
-  async function handleDelete(id: number) {
-    const confirmed = window.confirm(
-      "এই শিক্ষককে মুছে ফেলতে চান?"
-    );
-
-    if (!confirmed) return;
-
-    try {
-      await apiDelete(`/faculty/${id}/`);
+  const { requestDelete, dialog } = useDeleteConfirm<FacultyData>({
+    onDelete: async (item) => {
+      await apiDelete(`/faculty/${item.id}/`);
 
       setFaculty((current) =>
-        current.filter((item) => item.id !== id)
+        current.filter((entry) => entry.id !== item.id)
       );
-    } catch (error) {
-      alert(
-        error instanceof Error
-          ? error.message
-          : "শিক্ষকের তথ্য মুছে ফেলা যায়নি।"
-      );
-    }
-  }
+    },
+    title: () => "শিক্ষকের তথ্য মুছে ফেলবেন?",
+    description: (item) =>
+      `"${item.name}" স্থায়ীভাবে মুছে যাবে। এই কাজটি আর undo করা যাবে না।`,
+    fallbackError: "শিক্ষকের তথ্য মুছে ফেলা যায়নি।",
+  });
 
   function handleEdit(person: FacultyData) {
     setEditingFaculty(person);
@@ -141,9 +135,11 @@ export default function AdminFacultyPage() {
         <FacultyTable
           faculty={faculty}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={requestDelete}
         />
       )}
+
+      {dialog}
     </div>
   );
 }

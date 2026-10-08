@@ -13,7 +13,7 @@ import type { ResourceData } from "./ResourceForm";
 interface ResourceTableProps {
   resources: ResourceData[];
   onEdit: (resource: ResourceData) => void;
-  onDelete: (id: number) => void;
+  onDelete: (resource: ResourceData) => void;
 }
 
 export default function ResourceTable({
@@ -21,16 +21,6 @@ export default function ResourceTable({
   onEdit,
   onDelete,
 }: ResourceTableProps) {
-  function deleteResource(resource: ResourceData) {
-    const confirmed = window.confirm(
-      `"${resource.title}" মুছে ফেলতে চান?`
-    );
-
-    if (confirmed) {
-      onDelete(resource.id);
-    }
-  }
-
   return (
     <section className="overflow-hidden rounded-xl border bg-white shadow-sm">
       <div className="flex items-center justify-between border-b px-5 py-4">
@@ -161,7 +151,7 @@ export default function ResourceTable({
                     <button
                       type="button"
                       title="Delete"
-                      onClick={() => deleteResource(resource)}
+                      onClick={() => onDelete(resource)}
                       className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600"
                     >
                       <Trash2 size={16} />

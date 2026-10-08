@@ -7,6 +7,8 @@ import {
   apiFetch,
 } from "@/lib/api";
 
+import { useDeleteConfirm } from "@/components/admin/ui/useDeleteConfirm";
+
 import type { Notice } from "@/types/api";
 
 import NoticeForm, {
@@ -69,27 +71,19 @@ export default function AdminNoticesPage() {
     setEditingNotice(null);
   }
 
-  async function handleDelete(id: number) {
-    const confirmed = window.confirm(
-      "এই নোটিশটি মুছে ফেলতে চান?"
-    );
-
-    if (!confirmed) return;
-
-    try {
-      await apiDelete(`/notices/${id}/`);
+  const { requestDelete, dialog } = useDeleteConfirm<NoticeData>({
+    onDelete: async (item) => {
+      await apiDelete(`/notices/${item.id}/`);
 
       setNotices((current) =>
-        current.filter((item) => item.id !== id)
+        current.filter((entry) => entry.id !== item.id)
       );
-    } catch (error) {
-      alert(
-        error instanceof Error
-          ? error.message
-          : "নোটিশ মুছে ফেলা যায়নি।"
-      );
-    }
-  }
+    },
+    title: () => "নোটিশ মুছে ফেলবেন?",
+    description: (item) =>
+      `"${item.title}" স্থায়ীভাবে মুছে যাবে। এই কাজটি আর undo করা যাবে না।`,
+    fallbackError: "নোটিশ মুছে ফেলা যায়নি।",
+  });
 
   function handleEdit(notice: NoticeData) {
     setEditingNotice(notice);
@@ -141,9 +135,11 @@ export default function AdminNoticesPage() {
         <NoticeTable
           notices={notices}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={requestDelete}
         />
       )}
+
+      {dialog}
     </div>
   );
 }

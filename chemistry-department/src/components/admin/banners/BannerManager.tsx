@@ -16,6 +16,7 @@ import ImagePicker from "@/components/admin/ui/ImagePicker";
 import AdminLoading from "@/components/admin/ui/AdminLoading";
 import AdminError from "@/components/admin/ui/AdminError";
 import AdminEmpty from "@/components/admin/ui/AdminEmpty";
+import { useDeleteConfirm } from "@/components/admin/ui/useDeleteConfirm";
 
 export default function BannerManager() {
   const [banners, setBanners] = useState<HeroBanner[]>([]);
@@ -139,27 +140,21 @@ export default function BannerManager() {
     }
   }
 
-  async function removeBanner(banner: HeroBanner) {
-    if (!window.confirm("এই ব্যানারটি মুছে ফেলতে চান?")) return;
-
-    setBusyId(banner.id);
-
-    try {
+  const { requestDelete, dialog } = useDeleteConfirm<HeroBanner>({
+    onDelete: async (banner) => {
       await apiDelete(`/banners/${banner.id}/`);
 
       setBanners((current) =>
         current.filter((item) => item.id !== banner.id)
       );
-    } catch (error) {
-      alert(
-        error instanceof Error
-          ? error.message
-          : "ব্যানার মুছে ফেলা যায়নি।"
-      );
-    } finally {
-      setBusyId(null);
-    }
-  }
+    },
+    title: () => "ব্যানার মুছে ফেলবেন?",
+    description: (banner) =>
+      banner.alt_text
+        ? `"${banner.alt_text}" ব্যানারটি স্থায়ীভাবে মুছে যাবে। এই কাজটি আর undo করা যাবে না।`
+        : "ব্যানারটি স্থায়ীভাবে মুছে যাবে। এই কাজটি আর undo করা যাবে না।",
+    fallbackError: "ব্যানার মুছে ফেলা যায়নি।",
+  });
 
   return (
     <div className="space-y-6">
@@ -337,7 +332,7 @@ export default function BannerManager() {
                       type="button"
                       title="Delete"
                       disabled={busyId === banner.id}
-                      onClick={() => void removeBanner(banner)}
+                      onClick={() => requestDelete(banner)}
                       className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
                     >
                       <Trash2 size={17} />
@@ -349,6 +344,8 @@ export default function BannerManager() {
           ))}
         </div>
       )}
+
+      {dialog}
     </div>
   );
 }

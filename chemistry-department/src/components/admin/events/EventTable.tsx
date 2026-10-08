@@ -11,7 +11,7 @@ import type { EventData } from "./EventForm";
 interface EventTableProps {
   events: EventData[];
   onEdit: (event: EventData) => void;
-  onDelete: (id: number) => void;
+  onDelete: (event: EventData) => void;
 }
 
 export default function EventTable({
@@ -19,16 +19,6 @@ export default function EventTable({
   onEdit,
   onDelete,
 }: EventTableProps) {
-  function deleteEvent(event: EventData) {
-    const confirmed = window.confirm(
-      `"${event.title}" মুছে ফেলতে চান?`
-    );
-
-    if (confirmed) {
-      onDelete(event.id);
-    }
-  }
-
   return (
     <section className="overflow-hidden rounded-xl border bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
@@ -132,7 +122,7 @@ export default function EventTable({
                     <button
                       type="button"
                       title="Delete"
-                      onClick={() => deleteEvent(event)}
+                      onClick={() => onDelete(event)}
                       className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600"
                     >
                       <Trash2 size={16} />
