@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
@@ -43,6 +44,14 @@ class AuthenticationTests(APITestCase):
         )
 
         self.login_url = "/api/auth/login/"
+
+        # Login is throttled per IP and per username, and the counters live
+        # in the cache, which is shared by all tests. Start each test clean so
+        # the number of earlier logins can't cause a 429.
+        cache.clear()
+
+    def tearDown(self):
+        cache.clear()
 
     def test_staff_can_login(self):
         response = self.client.post(
@@ -613,8 +622,13 @@ class StaffCRUDTests(APITestCase):
             "/api/resources/",
             {
                 "title": "New Resource",
+                "file": SimpleUploadedFile(
+                    "resource.pdf",
+                    b"%PDF-1.4 test pdf content",
+                    content_type="application/pdf",
+                ),
             },
-            format="json",
+            format="multipart",
         )
 
         self.assertEqual(
@@ -2207,8 +2221,13 @@ class StaffCRUDIntegrationTests(APITestCase):
             "/api/resources/",
             {
                 "title": "Integration Resource",
+                "file": SimpleUploadedFile(
+                    "integration.pdf",
+                    b"%PDF-1.4 test pdf content",
+                    content_type="application/pdf",
+                ),
             },
-            format="json",
+            format="multipart",
         )
         self.assertEqual(create.status_code, 201)
 
