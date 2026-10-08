@@ -69,16 +69,29 @@ class ResourceAdminForm(forms.ModelForm):
         file = cleaned_data.get("file")
         url = cleaned_data.get("url")
 
+        # "changed" means a new value was typed/uploaded or the file was
+        # cleared. A saved value that is left untouched is not "changed".
+        file_changed = "file" in self.changed_data
+        url_changed = "url" in self.changed_data
+
+        was_file = (
+            bool(self.instance.pk)
+            and self.instance.resource_type == Resource.FILE
+        )
+
         if resource_type == Resource.FILE:
-            if not file and not self.instance.pk:
+            if not file and not was_file:
                 raise forms.ValidationError(
                     "Please upload a file for a File resource."
                 )
 
-            if url:
+            if url and url_changed:
                 raise forms.ValidationError(
                     "URL cannot be provided for a File resource."
                 )
+
+            # Switching from a link to a file drops the saved link.
+            cleaned_data["url"] = ""
 
         elif resource_type == Resource.LINK:
             if not url:
@@ -86,13 +99,19 @@ class ResourceAdminForm(forms.ModelForm):
                     "Please provide a URL for an External Link."
                 )
 
-            if file:
+            if file and file_changed:
                 raise forms.ValidationError(
                     "File cannot be provided for an External Link."
                 )
 
+            # Switching from a file to a link drops the saved file.
+            # False (not None) is what tells a Django FileField to clear it;
+            # the pre_save signal then deletes the old file from disk.
+            cleaned_data["file"] = False
+
         return cleaned_data
-        
+
+
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
     form = ResourceAdminForm

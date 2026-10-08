@@ -18,6 +18,8 @@ import {
   apiPut,
 } from "@/lib/api";
 
+import { isValidHttpUrl } from "@/lib/resources";
+
 import type { Resource } from "@/types/api";
 
 export interface ResourceData {
@@ -145,7 +147,13 @@ export default function ResourceForm({
       return;
     }
 
-    if (resourceType === "file" && !file && !editingResource) {
+    // A file is needed for a new resource, and also when an existing
+    // link resource is switched to a file.
+    const needsNewFile =
+      !editingResource ||
+      editingResource.resourceType !== "file";
+
+    if (resourceType === "file" && !file && needsNewFile) {
       setError("একটি ফাইল নির্বাচন করুন।");
       return;
     }
@@ -156,10 +164,10 @@ export default function ResourceForm({
         return;
       }
 
-      try {
-        new URL(url.trim());
-      } catch {
-        setError("সঠিক URL দিন।");
+      if (!isValidHttpUrl(url.trim())) {
+        setError(
+          "সঠিক URL দিন (http:// বা https:// দিয়ে শুরু হতে হবে)।"
+        );
         return;
       }
     }

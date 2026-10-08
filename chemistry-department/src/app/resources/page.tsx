@@ -7,11 +7,18 @@ import {
   ArrowDownToLine,
   BookOpen,
   ChevronLeft,
+  ExternalLink,
   FileText,
+  Link2,
 } from "lucide-react";
 
 import { apiFetch } from "@/lib/api";
 import type { Resource } from "@/types/api";
+import {
+  getLinkHost,
+  getResourceHref,
+  isLinkResource,
+} from "@/lib/resources";
 
 export default function ResourcesPage() {
   const [resources, setResources] = useState<Resource[]>([]);
@@ -79,7 +86,9 @@ export default function ResourcesPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {resources.map((resource) => {
-              const Icon = FileText;
+              const isLink = isLinkResource(resource);
+              const href = getResourceHref(resource);
+              const Icon = isLink ? Link2 : FileText;
 
               return (
                 <article
@@ -94,25 +103,35 @@ export default function ResourcesPage() {
                       <h2 className="font-semibold text-gray-800">
                         {resource.title}
                       </h2>
-                      <p className="mt-1 text-xs text-gray-500">
-                        শিক্ষা উপকরণ
+                      <p className="mt-1 break-all text-xs text-gray-500">
+                        {isLink && resource.url
+                          ? `ওয়েব লিংক · ${getLinkHost(resource.url)}`
+                          : "শিক্ষা উপকরণ"}
                       </p>
                     </div>
                   </div>
 
-                  {resource.file_url ? (
+                  {href ? (
                     <a
-                      href={resource.file_url}
+                      href={href}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#1b5e20] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#145218]"
                     >
-                      <ArrowDownToLine size={16} />
-                      ফাইল দেখুন / ডাউনলোড
+                      {isLink ? (
+                        <ExternalLink size={16} />
+                      ) : (
+                        <ArrowDownToLine size={16} />
+                      )}
+                      {isLink
+                        ? "লিংকে যান"
+                        : "ফাইল দেখুন / ডাউনলোড"}
                     </a>
                   ) : (
                     <p className="mt-5 rounded-lg bg-gray-50 px-3 py-2.5 text-center text-xs text-gray-400">
-                      ফাইল এখনো সংযুক্ত করা হয়নি
+                      {isLink
+                        ? "লিংক এখনো যোগ করা হয়নি"
+                        : "ফাইল এখনো সংযুক্ত করা হয়নি"}
                     </p>
                   )}
                 </article>

@@ -1,13 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowDownToLine, FileText, FileDown, FileImage, FileVideo } from "lucide-react";
+import { ArrowDownToLine, ExternalLink, FileText, FileDown, FileImage, FileVideo, Link2 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import type { Resource } from "@/types/api";
 import {ArrowRight} from "lucide-react";
+import { getLinkHost, getResourceHref, isLinkResource } from "@/lib/resources";
 
 // ফাইল এক্সটেনশন চেক করে নির্দিষ্ট মেটাডাটা ও আইকন রিটার্ন করার ফাংশন
-function getResourceMeta(url: string | null) {
+function getResourceMeta(resource: Resource) {
+  if (isLinkResource(resource)) {
+    return {
+      icon: <Link2 size={18} />,
+      badge: "ওয়েব লিংক",
+      badgeClass: "text-sky-700 bg-sky-50/80 border-sky-100",
+    };
+  }
+
+  const url = resource.file_url;
+
   if (!url) return { icon: <FileText size={18} />, badge: "ফাইল", badgeClass: "text-slate-700 bg-slate-100 border-slate-200" };
   
   const ext = url.split('.').pop()?.toLowerCase();
@@ -97,14 +108,16 @@ export default function ImportantResources() {
         /* ইভেন্ট সেকশনের মতো সমান ভারসাম্যপূর্ণ ও তথ্যবহুল মডার্ন লেআউট */
         <div className="min-w-0 space-y-3.5 pr-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overflow-x-hidden animate-fade-in-up">
           {resources.slice(0, 4).map((resource) => {
-            const { icon, badge, badgeClass } = getResourceMeta(resource.file_url);
+            const { icon, badge, badgeClass } = getResourceMeta(resource);
+            const href = getResourceHref(resource);
+            const isLink = isLinkResource(resource);
             
             return (
               <a
                 key={resource.id}
-                href={resource.file_url ?? "#"}
-                target={resource.file_url ? "_blank" : undefined}
-                rel={resource.file_url ? "noopener noreferrer" : undefined}
+                href={href ?? "#"}
+                target={href ? "_blank" : undefined}
+                rel={href ? "noopener noreferrer" : undefined}
                 className="flex min-w-0 items-center gap-4 p-3 rounded-xl bg-slate-50/60 border border-slate-100 hover:border-emerald-500/20 hover:bg-white hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)] transition-all duration-300 group cursor-pointer"
               >
                 {/* ফাইল ক্যাটাগরি অনুযায়ী আধুনিক স্পেসিফিক রাউন্ডেড আইকন বক্স */}
@@ -129,18 +142,27 @@ export default function ImportantResources() {
                       {badge}
                     </span>
                     <span className="text-[10px] md:text-[11px] font-semibold text-slate-400 font-mono">
-                      অনলাইন সংস্করণ
+                      {isLink && resource.url
+                        ? getLinkHost(resource.url)
+                        : "অনলাইন সংস্করণ"}
                     </span>
                   </div>
                 </div>
 
                 {/* ইন্টারেক্টিভ ডাউনলোড বাটন অ্যাকশন */}
-                {resource.file_url && (
+                {href && (
                   <div className="text-slate-400 group-hover:text-emerald-600 group-hover:bg-emerald-50 p-1.5 rounded-lg transition-all duration-200 self-center">
-                    <ArrowDownToLine
-                      size={16}
-                      className="shrink-0 transition-transform duration-300 transform group-hover:translate-y-0.5"
-                    />
+                    {isLink ? (
+                      <ExternalLink
+                        size={16}
+                        className="shrink-0 transition-transform duration-300 transform group-hover:translate-x-0.5"
+                      />
+                    ) : (
+                      <ArrowDownToLine
+                        size={16}
+                        className="shrink-0 transition-transform duration-300 transform group-hover:translate-y-0.5"
+                      />
+                    )}
                   </div>
                 )}
               </a>
@@ -148,7 +170,7 @@ export default function ImportantResources() {
           })}
           <div className="flex items-center justify-center p-1 lg:p-1 mt-auto pl-4 bg-gradient-to-t from-transparent via-white to-white">
             <a
-              href="/events"
+              href="/resources"
               className="inline-flex items-center gap-1.5 text-xs md:text-sm font-bold text-[#1b5e20] hover:text-emerald-700 group transition-colors"
             >
               <span>সব দেখুন</span>

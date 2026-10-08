@@ -16,6 +16,8 @@ import ResourceForm, {
 
 import ResourceTable from "@/components/admin/resources/ResourceTable";
 
+type ResourceFilter = "all" | "file" | "link";
+
 export default function AdminResourcesPage() {
   const [resources, setResources] =
     useState<ResourceData[]>([]);
@@ -23,31 +25,11 @@ export default function AdminResourcesPage() {
   const [editingResource, setEditingResource] =
     useState<ResourceData | null>(null);
 
+  const [filter, setFilter] =
+    useState<ResourceFilter>("all");
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  // async function loadResources() {
-  //   try {
-  //     setLoading(true);
-  //     setError("");
-
-  //     const data = await apiFetch<Resource[]>(
-  //       "/resources/"
-  //     );
-
-  //     setResources(
-  //       data.map(mapResourceToResourceData)
-  //     );
-  //   } catch (error) {
-  //     setError(
-  //       error instanceof Error
-  //         ? error.message
-  //         : "রিসোর্স লোড করা যায়নি।"
-  //     );
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
 
   useEffect(() => {
     async function fetchResources() {
@@ -84,7 +66,9 @@ export default function AdminResourcesPage() {
 
       if (exists) {
         return current.map((item) =>
-          item.id === resource.id ? resource : item
+          item.id === resource.id
+            ? resource
+            : item
         );
       }
 
@@ -125,6 +109,14 @@ export default function AdminResourcesPage() {
     });
   }
 
+  const filteredResources =
+    filter === "all"
+      ? resources
+      : resources.filter(
+          (resource) =>
+            resource.resourceType === filter
+        );
+
   return (
     <div className="space-y-6 p-5 lg:p-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -151,7 +143,9 @@ export default function AdminResourcesPage() {
           key={editingResource.id}
           editingResource={editingResource}
           onSave={handleSave}
-          onCancelEdit={() => setEditingResource(null)}
+          onCancelEdit={() =>
+            setEditingResource(null)
+          }
         />
       )}
 
@@ -164,11 +158,75 @@ export default function AdminResourcesPage() {
           {error}
         </div>
       ) : (
-        <ResourceTable
-          resources={resources}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <div className="space-y-4">
+          {/* Resource Filter */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setFilter("all")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                filter === "all"
+                  ? "bg-[#1b5e20] text-white"
+                  : "border bg-white text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              সব
+              <span className="ml-1.5">
+                ({resources.length})
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setFilter("file")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                filter === "file"
+                  ? "bg-[#1b5e20] text-white"
+                  : "border bg-white text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              File
+              <span className="ml-1.5">
+                (
+                {
+                  resources.filter(
+                    (resource) =>
+                      resource.resourceType === "file"
+                  ).length
+                }
+                )
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setFilter("link")}
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                filter === "link"
+                  ? "bg-[#1b5e20] text-white"
+                  : "border bg-white text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              External Link
+              <span className="ml-1.5">
+                (
+                {
+                  resources.filter(
+                    (resource) =>
+                      resource.resourceType === "link"
+                  ).length
+                }
+                )
+              </span>
+            </button>
+          </div>
+
+          <ResourceTable
+            resources={filteredResources}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </div>
       )}
     </div>
   );

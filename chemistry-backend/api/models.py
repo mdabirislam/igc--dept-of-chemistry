@@ -157,12 +157,6 @@ class Resource(models.Model):
     def __str__(self):
         return self.title
 
-    class Meta:
-        ordering = ["-created_at"]
-
-    def __str__(self):
-        return self.title
-
 
 class Event(models.Model):
     title = models.CharField(max_length=255)
