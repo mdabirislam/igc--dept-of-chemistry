@@ -126,6 +126,9 @@ CORS_ALLOWED_ORIGINS = env_list(
     "http://localhost:3000,http://127.0.0.1:3000",
 )
 
+# Lets the browser read Retry-After on 429 (throttled) responses.
+CORS_EXPOSE_HEADERS = ["Retry-After"]
+
 CSRF_TRUSTED_ORIGINS = env_list(
     "DJANGO_CSRF_TRUSTED_ORIGINS",
     "http://localhost:3000,http://127.0.0.1:3000",
@@ -160,5 +163,24 @@ REST_FRAMEWORK = {
         "anon": "120/min",
         "user": "300/min",
         "login": "5/min",
+        "login_user": "30/hour",
     },
+    # How many reverse proxies sit in front of Django. DRF uses this to pick
+    # the real client IP out of X-Forwarded-For. If it is unset, DRF trusts the
+    # whole header, so anyone could dodge the login throttle by sending a fake
+    # one. Locally there is no proxy; PythonAnywhere has one.
+    "NUM_PROXIES": int(
+        os.environ.get("DJANGO_NUM_PROXIES", "0" if DEBUG else "1")
+    ),
 }
+
+# Throttle counters live in the cache. The default in-memory cache is separate
+# for every worker process, so with several workers the real limit is multiplied.
+# Set DJANGO_CACHE_DIR to a writable folder to share counters between workers.
+if os.environ.get("DJANGO_CACHE_DIR"):
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+            "LOCATION": os.environ["DJANGO_CACHE_DIR"],
+        }
+    }

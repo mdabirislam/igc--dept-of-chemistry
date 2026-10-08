@@ -7,10 +7,13 @@ from rest_framework.views import APIView
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.authentication import TokenAuthentication
 
+from .throttles import LoginUsernameThrottle
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
-    throttle_classes = [ScopedRateThrottle]
+    # "login": per IP address. LoginUsernameThrottle: per username.
+    throttle_classes = [ScopedRateThrottle, LoginUsernameThrottle]
     throttle_scope = "login"
 
     def post(self, request):

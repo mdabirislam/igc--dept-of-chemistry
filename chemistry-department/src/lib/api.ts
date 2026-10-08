@@ -2,6 +2,7 @@ import {
   clearAdminSession,
   getAdminToken,
 } from "@/lib/auth";
+import { getThrottleMessage } from "@/lib/throttle";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -76,9 +77,13 @@ export async function apiFetch<T>(
     let message =
       `API request failed: ${response.status}`;
 
+    let errorDetail: unknown;
+
     try {
       const errorData =
         await response.json();
+
+      errorDetail = (errorData as { detail?: unknown })?.detail;
 
       if (
         typeof errorData === "object" &&
@@ -116,6 +121,13 @@ export async function apiFetch<T>(
     if (response.status === 403) {
       message =
         "এই কাজটি করার অনুমতি আপনার নেই।";
+    }
+
+    if (response.status === 429) {
+      message = getThrottleMessage(
+        response.headers.get("Retry-After"),
+        errorDetail
+      );
     }
 
     throw new Error(message);

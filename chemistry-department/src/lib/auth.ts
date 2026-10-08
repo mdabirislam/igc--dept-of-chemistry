@@ -1,3 +1,5 @@
+import { getThrottleMessage } from "@/lib/throttle";
+
 export interface AdminUser {
   id: number;
   username: string;
@@ -78,15 +80,29 @@ export async function loginAdmin(
     );
   }
 
-  const data =
-    (await response.json()) as Partial<LoginResponse> & {
-      detail?: string;
-    };
+  let data: Partial<LoginResponse> & {
+    detail?: string;
+  } = {};
+
+  try {
+    data = await response.json();
+  } catch {
+    // The server did not send JSON (for example a 500 error page).
+  }
+
+  if (response.status === 429) {
+    throw new Error(
+      getThrottleMessage(
+        response.headers.get("Retry-After"),
+        data.detail
+      )
+    );
+  }
 
   if (!response.ok) {
     throw new Error(
       data.detail ||
-        "Username অথবা password সঠিক নয়।"
+        "Username অথবা password সঠিক নয়।"
     );
   }
 
