@@ -14,6 +14,10 @@ export default function UnderConstruction({
 }: UnderConstructionProps) {
   return (
     <PublicSiteLayout>
+      {/* A page without content should not appear in search results. The
+          tag disappears together with this component once the page is real. */}
+      <meta name="robots" content="noindex, follow" />
+
       <main className="uc-page">
         <div className="uc-card">
           <svg
