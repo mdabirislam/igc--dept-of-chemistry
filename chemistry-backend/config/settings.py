@@ -184,3 +184,5 @@ if os.environ.get("DJANGO_CACHE_DIR"):
             "LOCATION": os.environ["DJANGO_CACHE_DIR"],
         }
     }
+
+TEST_RUNNER = "config.test_runner.TempMediaTestRunner"
