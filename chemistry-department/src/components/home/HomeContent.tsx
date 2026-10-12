@@ -45,11 +45,11 @@ export default function HomeContent() {
       <GalleryPreview />
 
       {/* Department Summary */}
-      <section>
+      {/* <section>
         <div className="mx-auto w-full max-w-screen">
           <DepartmentSummary />
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }
