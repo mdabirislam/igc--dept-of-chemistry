@@ -71,7 +71,7 @@ export default function HeroBanner() {
   }, [slides.length]);
 
   return (
-    <section className="relative h-[400px] md:h-[550px] w-full overflow-hidden bg-slate-900">
+    <section className="relative h-[360px] md:h-[550px] w-full overflow-hidden bg-slate-900">
       {/* মডার্ন সিনেমাটিক ব্যাকগ্রাউন্ড স্লাইডার */}
       <div
         className={`absolute inset-0 transition-opacity duration-1000 ${
