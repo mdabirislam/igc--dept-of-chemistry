@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 def notice_upload_path(instance, filename):
     extension = filename.rsplit(".", 1)[-1].lower()
@@ -49,6 +50,7 @@ class Notice(models.Model):
         choices=CATEGORY_CHOICES
     )
     details = models.TextField(blank=True)
+    date = models.DateField(default=timezone.localdate)
     pdf = models.FileField(
         upload_to=notice_upload_path,
         blank=True,
@@ -59,7 +61,7 @@ class Notice(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ["-date", "created_at", "id"]
 
     def __str__(self):
         return self.title
@@ -176,7 +178,7 @@ class Event(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["date", "-created_at"]
+        ordering = ["-date", "created_at", "id"]
 
     def __str__(self):
         return self.title

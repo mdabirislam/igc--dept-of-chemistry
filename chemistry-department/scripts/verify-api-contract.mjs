@@ -74,7 +74,7 @@ function hasKeys(item, keys) {
 }
 
 const listContracts = [
-  ["/notices/", ["id", "title"]],
+  ["/notices/", ["id", "title", "date"]],
   ["/resources/", ["id", "title", "file_url"]],
   [
     "/faculty/",

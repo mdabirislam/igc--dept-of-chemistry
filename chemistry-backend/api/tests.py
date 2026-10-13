@@ -596,6 +596,30 @@ class StaffCRUDTests(APITestCase):
             1,
         )
 
+    def test_staff_can_create_notice_with_date(self):
+        response = self.client.post(
+            "/api/notices/",
+            {
+                "title": "Dated Notice",
+                "category": "general",
+                "details": "Notice details",
+                "date": "2026-10-17",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        self.assertEqual(response.data["date"], "2026-10-17")
+
+        self.assertEqual(
+            str(Notice.objects.get(id=response.data["id"]).date),
+            "2026-10-17",
+        )
+
     def test_staff_can_create_faculty(self):
         response = self.client.post(
             "/api/faculty/",
@@ -1703,20 +1727,56 @@ class ModelConstraintTests(APITestCase):
             event.full_clean()
 
 class ModelOrderingTests(APITestCase):
-    def test_notice_ordering_newest_first(self):
-        first = Notice.objects.create(
-            title="First Notice",
+    def test_notice_ordering_by_date_newest_first(self):
+        earlier = Notice.objects.create(
+            title="Earlier Notice",
             category="general",
+            date="2026-10-15",
         )
-        second = Notice.objects.create(
-            title="Second Notice",
+        later = Notice.objects.create(
+            title="Later Notice",
             category="general",
+            date="2026-10-17",
+        )
+        middle = Notice.objects.create(
+            title="Middle Notice",
+            category="general",
+            date="2026-10-16",
         )
 
         notices = list(Notice.objects.all())
 
-        self.assertEqual(notices[0].id, second.id)
-        self.assertEqual(notices[1].id, first.id)
+        self.assertEqual(
+            [notice.id for notice in notices],
+            [later.id, middle.id, earlier.id],
+        )
+
+    def test_notice_same_date_first_created_first(self):
+        first = Notice.objects.create(
+            title="First Notice",
+            category="general",
+            date="2026-10-16",
+        )
+        second = Notice.objects.create(
+            title="Second Notice",
+            category="general",
+            date="2026-10-16",
+        )
+
+        notices = list(Notice.objects.all())
+
+        self.assertEqual(notices[0].id, first.id)
+        self.assertEqual(notices[1].id, second.id)
+
+    def test_notice_date_defaults_to_today(self):
+        from django.utils import timezone
+
+        notice = Notice.objects.create(
+            title="Default Date Notice",
+            category="general",
+        )
+
+        self.assertEqual(notice.date, timezone.localdate())
 
     def test_resource_ordering_newest_first(self):
         first = Resource.objects.create(title="First Resource")
@@ -1754,10 +1814,10 @@ class ModelOrderingTests(APITestCase):
 
         events = list(Event.objects.all())
 
-        self.assertEqual(events[0].id, earlier.id)
-        self.assertEqual(events[1].id, later.id)
+        self.assertEqual(events[0].id, later.id)
+        self.assertEqual(events[1].id, earlier.id)
 
-    def test_event_same_date_newest_created_first(self):
+    def test_event_same_date_first_created_first(self):
         first = Event.objects.create(
             title="First Event",
             date="2026-10-01",
@@ -1769,8 +1829,8 @@ class ModelOrderingTests(APITestCase):
 
         events = list(Event.objects.all())
 
-        self.assertEqual(events[0].id, second.id)
-        self.assertEqual(events[1].id, first.id)
+        self.assertEqual(events[0].id, first.id)
+        self.assertEqual(events[1].id, second.id)
 
 class MissingObjectCRUDTests(APITestCase):
     def setUp(self):

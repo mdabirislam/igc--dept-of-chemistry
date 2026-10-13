@@ -17,11 +17,12 @@ class NoticeAdmin(admin.ModelAdmin):
     list_display = (
         "title",
         "category",
+        "date",
         "created_at",
         "updated_at",
     )
 
-    list_filter = ("category", "created_at")
+    list_filter = ("category", "date")
 
     search_fields = (
         "title",

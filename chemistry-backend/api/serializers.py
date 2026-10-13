@@ -71,6 +71,7 @@ class NoticeSerializer(serializers.ModelSerializer):
             "title",
             "category",
             "details",
+            "date",
             "pdf",
             "pdf_url",
             "created_at",

@@ -17,7 +17,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("bn-BD", {
+  return new Date(`${value}T00:00:00`).toLocaleDateString("bn-BD", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -139,7 +139,7 @@ export default function NoticesPage() {
                     )}
 
                     <p className="mt-2 text-xs text-gray-400">
-                      প্রকাশিত: {formatDate(notice.created_at)}
+                      প্রকাশিত: {formatDate(notice.date)}
                     </p>
                   </div>
 

@@ -42,7 +42,7 @@ function toBanglaNumber(value: string | number) {
 
 // তারিখ থেকে দিন ও মাস আলাদা করার রিফাইনড ফাংশন
 function getSplitDate(dateString: string) {
-  const date = new Date(dateString);
+  const date = new Date(`${dateString}T00:00:00`);
   const day = toBanglaNumber(date.getDate());
   const month = date.toLocaleDateString("bn-BD", { month: "short" });
   return { day, month };
@@ -108,7 +108,7 @@ export default function NoticeSection() {
         /* স্লিক অ্যান্ড ক্লিন বর্ডারহীন নিউজ-লিস্ট লেআউট উইথ সফট এন্ট্রি অ্যানিমেশন */
         <div className="min-w-0 lg:h-full lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overflow-x-hidden space-y-3.5 animate-fade-in-up pr-1">
           {notices.slice(0, 6).map((notice) => {
-            const { day, month } = getSplitDate(notice.created_at);
+            const { day, month } = getSplitDate(notice.date);
             const badgeColor = categoryColors[notice.category] ?? "text-slate-700 bg-slate-100 border-slate-200";
 
             return (

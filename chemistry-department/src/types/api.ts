@@ -3,6 +3,7 @@ export interface Notice {
   title: string;
   category: string;
   details: string;
+  date: string;
   pdf: string | null;
   pdf_url: string | null;
   created_at: string;

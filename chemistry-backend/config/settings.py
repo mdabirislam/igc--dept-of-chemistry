@@ -1,5 +1,6 @@
 """Django production-aware settings for the Chemistry Department API."""
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -17,6 +18,7 @@ def env_list(name: str, default: str = "") -> list[str]:
 
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 DEBUG = env_bool("DJANGO_DEBUG", False)
+TESTING = "test" in sys.argv
 
 ALLOWED_HOSTS = env_list(
     "DJANGO_ALLOWED_HOSTS",
@@ -135,7 +137,7 @@ CSRF_TRUSTED_ORIGINS = env_list(
 )
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = not TESTING
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

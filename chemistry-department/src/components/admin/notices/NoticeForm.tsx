@@ -20,6 +20,7 @@ export interface NoticeData {
   category: string;
   details: string;
   date: string;
+  dateValue: string;
   time: string;
   pdfName?: string;
   pdfUrl?: string;
@@ -62,6 +63,26 @@ function formatDateTime(value: string) {
   };
 }
 
+function formatNoticeDate(value: string) {
+  return new Date(`${value}T00:00:00`).toLocaleDateString(
+    "bn-BD",
+    {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    }
+  );
+}
+
+function todayString() {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+
+  return new Date(now.getTime() - offset)
+    .toISOString()
+    .slice(0, 10);
+}
+
 export function mapNoticeToNoticeData(
   notice: Notice
 ): NoticeData {
@@ -72,7 +93,8 @@ export function mapNoticeToNoticeData(
     title: notice.title,
     category: categoryLabel(notice.category),
     details: notice.details,
-    date: formatted.date,
+    date: formatNoticeDate(notice.date),
+    dateValue: notice.date,
     time: formatted.time,
     pdfName: notice.pdf
       ? notice.pdf.split("/").pop()
@@ -113,6 +135,10 @@ export default function NoticeForm({
     editingNotice?.details ?? ""
   );
 
+  const [date, setDate] = useState(
+    editingNotice?.dateValue ?? todayString()
+  );
+
   const [pdf, setPdf] = useState<File | null>(null);
 
   const [error, setError] = useState("");
@@ -148,6 +174,7 @@ export default function NoticeForm({
     setTitle("");
     setCategory("");
     setDetails("");
+    setDate(todayString());
     setPdf(null);
     setError("");
     setSaving(false);
@@ -178,6 +205,11 @@ export default function NoticeForm({
       return;
     }
 
+    if (!date) {
+      setError("তারিখ নির্বাচন করুন।");
+      return;
+    }
+
     setSaving(true);
     setError("");
 
@@ -187,6 +219,7 @@ export default function NoticeForm({
       formData.append("title", title.trim());
       formData.append("category", category);
       formData.append("details", details.trim());
+      formData.append("date", date);
 
       if (pdf) {
         formData.append("pdf", pdf);
@@ -303,6 +336,21 @@ export default function NoticeForm({
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">
+            তারিখ
+          </label>
+
+          <input
+            type="date"
+            value={date}
+            onChange={(event) =>
+              setDate(event.target.value)
+            }
+            className="w-full rounded-lg border bg-white px-3 py-2.5 text-sm outline-none focus:border-[#1b5e20] focus:ring-1 focus:ring-[#1b5e20]"
+          />
         </div>
 
         <div>
